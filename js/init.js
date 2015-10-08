@@ -8,18 +8,27 @@ function init() {
 
 	createScene(config);
 
+	config.player = new Player(config.keyBindings);
+
 	loadAssets(config.meshes);
 }
 
 function createScene(config) {
 	window.engine = new BABYLON.Engine(render_canvas, true);
 	window.scene = new BABYLON.Scene(window.engine);
-	config.camera = new BABYLON.ArcRotateCamera("Camera", 1.0, 1.0, 12, BABYLON.Vector3.Zero(), window.scene);
 	config.light = new BABYLON.HemisphericLight("hemi",new BABYLON.Vector3(0, 1, 0), window.scene);
-	config.camera.attachControl(render_canvas, false);
+	//config.camera = new BABYLON.ArcRotateCamera("Camera", 1.0, 1.0, 12, BABYLON.Vector3.Zero(), window.scene);
+	//config.camera.attachControl(render_canvas, false);
 
 	window.scene.clearColor = new BABYLON.Color3(0,0,0.2);
 	config.light.groundColor = new BABYLON.Color3(0.5, 0, 0.5);
+
+	var material = new BABYLON.StandardMaterial("std", window.scene);
+	material.diffuseColor = new BABYLON.Color3(64/255, 66/255, 66/255);
+	var plan = BABYLON.Mesh.CreatePlane("plane", 100.0, window.scene);
+	plan.material = material;
+	plan.rotation.x = Math.PI /2;
+	plan.checkCollisions = true;
 }
 
 function loadAssets(meshesList) {
