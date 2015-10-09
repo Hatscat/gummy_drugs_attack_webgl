@@ -4,15 +4,15 @@ function getConfig() {
 	var config = {};
 
 	config.meshesToLoad = {
-		"ship" : "assets/ares.babylon",
-		"gun" : "assets/gun.babylon"
+		"enemy" : ["meshes/PoisonMushroom/", "DolPoisonMushroom.babylon"],
+		"gun" : ["assets/", "gun.babylon"]
 	};
 
 	config.keyBindings = {
-		"forward" :  [90],
-		"backward" : [83],
-		"left" : 	 [81],
-		"right" : 	 [68]
+		"forward" :  [90], // Z
+		"backward" : [83], // S
+		"left" : 	 [81], // Q
+		"right" : 	 [68] // D
 	};
 
 	config.mapSize = 200;

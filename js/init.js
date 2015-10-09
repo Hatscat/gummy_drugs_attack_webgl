@@ -4,7 +4,7 @@ function init() {
 	render_canvas.width = window.innerWidth;
 	render_canvas.height = window.innerHeight;
 
-	var config = getConfig();
+	window.config = getConfig();
 	config.meshes = {};
 
 	createScene(config);
@@ -34,8 +34,9 @@ function loadAssets(config) {
 	var loader = new BABYLON.AssetsManager(window.scene);
 
 	for(var i in config.meshesToLoad) {
-		var task = loader.addMeshTask(i, '', '', config.meshesToLoad[i]);
+		var task = loader.addMeshTask(i, '', config.meshesToLoad[i][0], config.meshesToLoad[i][1]);
 		task.onSuccess = meshLoaded.bind(window, config);
+		task.onError = function(err) { console.log(err)};
 	}
 
 	loader.onFinish = onAssetsLoaded.bind(window, config);
@@ -44,7 +45,7 @@ function loadAssets(config) {
 
 function meshLoaded(config, task) {
 	config.meshes[task.name] = task.loadedMeshes[0]; // one mesh per task !
-	task.loadedMeshes[0].isVisible = false;
+	//task.loadedMeshes[0].isVisible = false;
 }
 
 function pointerLock() {
@@ -58,13 +59,14 @@ function pointerLock() {
 
 function onAssetsLoaded(config) {
 	config.player = new Player(config);
+
+	render_canvas.addEventListener("click", config.player.bindedFire);
 	
 	pointerLock();
 
 	window.engine.runRenderLoop(render);
 }
 function groundSetup(ground) {
-   //deactivateSpecular(ground);
    var material = new BABYLON.StandardMaterial("std", window.scene);
    material.diffuseTexture = new BABYLON.Texture("./assets/stone_wall.jpg", scene);
    material.specularColor = new BABYLON.Color3(0, 0, 0);
