@@ -20,12 +20,14 @@ function createScene(config) {
 	window.scene.clearColor = new BABYLON.Color3(0,0,0.2);
 	config.light.groundColor = new BABYLON.Color3(0.5,0.5,0.5);
 
-	var material = new BABYLON.StandardMaterial("std", window.scene);
+	BABYLON.Mesh.CreateGroundFromHeightMap("ground", "./assets/map_test.png", config.mapSize, config.mapSize, 100, -10, 0, window.scene, false, groundSetup);
+
+	/*var material = new BABYLON.StandardMaterial("std", window.scene);
 	material.diffuseColor = new BABYLON.Color3(64/255, 66/255, 66/255);
 	var plan = BABYLON.Mesh.CreatePlane("plane", 100.0, window.scene);
 	plan.material = material;
 	plan.rotation.x = Math.PI /2;
-	plan.checkCollisions = true;
+	plan.checkCollisions = true;*/
 }
 
 function loadAssets(config) {
@@ -60,4 +62,13 @@ function onAssetsLoaded(config) {
 	pointerLock();
 
 	window.engine.runRenderLoop(render);
+}
+function groundSetup(ground) {
+   //deactivateSpecular(ground);
+   var material = new BABYLON.StandardMaterial("std", window.scene);
+   material.diffuseTexture = new BABYLON.Texture("./assets/stone_wall.jpg", scene);
+   material.specularColor = new BABYLON.Color3(0, 0, 0);
+
+   ground.material = material;
+   ground.checkCollisions = true;
 }

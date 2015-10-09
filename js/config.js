@@ -15,5 +15,7 @@ function getConfig() {
 		"right" : 	 [68]
 	};
 
+	config.mapSize = 200;
+
 	return config;
 }
