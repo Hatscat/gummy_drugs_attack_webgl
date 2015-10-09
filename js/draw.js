@@ -3,4 +3,3 @@
 function draw () {
 	window.scene.render();
 }
-

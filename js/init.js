@@ -20,12 +20,18 @@ function createScene(config) {
 	window.scene.clearColor = new BABYLON.Color3(0,0,0.2);
 	config.light.groundColor = new BABYLON.Color3(0.5,0.5,0.5);
 
-	var material = new BABYLON.StandardMaterial("std", window.scene);
-	material.diffuseColor = new BABYLON.Color3(64/255, 66/255, 66/255);
-	config.ground = BABYLON.Mesh.CreatePlane("plane", 200, window.scene);
-	config.ground.material = material;
-	config.ground.rotation.x = Math.PI /2;
-	config.ground.checkCollisions = true;
+	function groundSetup(ground) {
+	   //deactivateSpecular(ground);
+	   var material = new BABYLON.StandardMaterial("std", window.scene);
+	   material.diffuseTexture = new BABYLON.Texture("./assets/stone_wall.jpg", scene);
+	   material.specularColor = new BABYLON.Color3(0, 0, 0);
+
+	   ground.material = material;
+	   ground.checkCollisions = true;
+	   config.ground = ground;
+	}
+
+	BABYLON.Mesh.CreateGroundFromHeightMap("ground", "./assets/map_test.png", config.mapSize, config.mapSize, 200, config.y_min, config.y_max, window.scene, false, groundSetup);
 }
 
 function loadAssets(config) {
