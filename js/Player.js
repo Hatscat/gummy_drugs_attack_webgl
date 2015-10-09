@@ -1,4 +1,4 @@
-var Player = function(keyBindings) {
+var Player = function(config) {
     this.height = 2;
     this.speed = 1;
     this.inertia = 0.9; 
@@ -12,12 +12,20 @@ var Player = function(keyBindings) {
     this.camera.checkCollisions = true;
     this.camera.applyGravity = true;
 
-    this.camera.keysUp = keyBindings.forward;
-    this.camera.keysDown = keyBindings.backward;
-    this.camera.keysLeft = keyBindings.left;
-    this.camera.keysRight = keyBindings.right;
+    this.camera.keysUp = config.keyBindings.forward;
+    this.camera.keysDown = config.keyBindings.backward;
+    this.camera.keysLeft = config.keyBindings.left;
+    this.camera.keysRight = config.keyBindings.right;
 
     this.camera.speed = this.speed;
     this.camera.inertia = this.inertia;
     this.camera.angularSensibility = this.angularSensibility;
+
+    this.weapon = config.meshes.gun;
+    this.weapon.isVisible = true;
+    this.weapon.rotationQuaternion = null;
+    this.weapon.rotation.x = -Math.PI/2;
+    this.weapon.rotation.y = Math.PI;
+    this.weapon.parent = this.camera; // The weapon will move with the player camera
+    this.weapon.position = new BABYLON.Vector3(0.25,-0.4,1);
 }

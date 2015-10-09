@@ -3,16 +3,17 @@
 function getConfig() {
 	var config = {};
 
-	config.meshes = [
-		"assets/ares.babylon",
-	]
+	config.meshesToLoad = {
+		"ship" : "assets/ares.babylon",
+		"gun" : "assets/gun.babylon"
+	};
 
 	config.keyBindings = {
 		"forward" :  [90],
 		"backward" : [83],
 		"left" : 	 [81],
 		"right" : 	 [68]
-	}
+	};
 
 	return config;
 }

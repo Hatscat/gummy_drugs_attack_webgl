@@ -5,25 +5,20 @@ function init() {
 	render_canvas.height = window.innerHeight;
 
 	var config = getConfig();
+	config.meshes = {};
 
 	createScene(config);
 
-	config.player = new Player(config.keyBindings);
-
-	loadAssets(config.meshes);
-
-	pointerLock();
+	loadAssets(config);
 }
 
 function createScene(config) {
 	window.engine = new BABYLON.Engine(render_canvas, true);
 	window.scene = new BABYLON.Scene(window.engine);
 	config.light = new BABYLON.HemisphericLight("hemi",new BABYLON.Vector3(0, 1, 0), window.scene);
-	//config.camera = new BABYLON.ArcRotateCamera("Camera", 1.0, 1.0, 12, BABYLON.Vector3.Zero(), window.scene);
-	//config.camera.attachControl(render_canvas, false);
 
 	window.scene.clearColor = new BABYLON.Color3(0,0,0.2);
-	config.light.groundColor = new BABYLON.Color3(0.5, 0, 0.5);
+	config.light.groundColor = new BABYLON.Color3(0.5,0.5,0.5);
 
 	var material = new BABYLON.StandardMaterial("std", window.scene);
 	material.diffuseColor = new BABYLON.Color3(64/255, 66/255, 66/255);
@@ -33,25 +28,21 @@ function createScene(config) {
 	plan.checkCollisions = true;
 }
 
-function loadAssets(meshesList) {
+function loadAssets(config) {
 	var loader = new BABYLON.AssetsManager(window.scene);
 
-	for(var i in meshesList) {
-		var task = loader.addMeshTask('mesh', '', '', meshesList[i]);
-		task.onSuccess = meshLoaded;
+	for(var i in config.meshesToLoad) {
+		var task = loader.addMeshTask(i, '', '', config.meshesToLoad[i]);
+		task.onSuccess = meshLoaded.bind(window, config);
 	}
 
-	loader.onFinish = function (tasks) {
-		window.engine.runRenderLoop(render);
-	};
-
+	loader.onFinish = onAssetsLoaded.bind(window, config);
 	loader.load(); // Démarre le chargement
 }
 
-function meshLoaded(task) {
-	for(var i in task.loadedMeshes) {
-		task.loadedMeshes[i].isVisible = false;
-	}
+function meshLoaded(config, task) {
+	config.meshes[task.name] = task.loadedMeshes[0]; // one mesh per task !
+	task.loadedMeshes[0].isVisible = false;
 }
 
 function pointerLock() {
@@ -61,4 +52,12 @@ function pointerLock() {
 	        render_canvas.requestPointerLock();
 	    }
 	}, false);
+}
+
+function onAssetsLoaded(config) {
+	config.player = new Player(config);
+	
+	pointerLock();
+
+	window.engine.runRenderLoop(render);
 }
