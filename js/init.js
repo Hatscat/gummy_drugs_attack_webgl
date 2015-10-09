@@ -22,10 +22,10 @@ function createScene(config) {
 
 	var material = new BABYLON.StandardMaterial("std", window.scene);
 	material.diffuseColor = new BABYLON.Color3(64/255, 66/255, 66/255);
-	var plan = BABYLON.Mesh.CreatePlane("plane", 100.0, window.scene);
-	plan.material = material;
-	plan.rotation.x = Math.PI /2;
-	plan.checkCollisions = true;
+	config.ground = BABYLON.Mesh.CreatePlane("plane", 200, window.scene);
+	config.ground.material = material;
+	config.ground.rotation.x = Math.PI /2;
+	config.ground.checkCollisions = true;
 }
 
 function loadAssets(config) {
@@ -55,9 +55,25 @@ function pointerLock() {
 }
 
 function onAssetsLoaded(config) {
+
 	config.player = new Player(config);
 	
 	pointerLock();
 
-	window.engine.runRenderLoop(render);
+	window.onkeydown = function (evt) {
+		config.player.onKeyDown(evt.keyCode);
+	}
+
+	window.onkeyup = function (evt) {
+		config.player.onKeyUp(evt.keyCode);
+	}
+
+	function renderLoop () {
+
+		update(config);
+		draw();
+	}
+
+	window.engine.runRenderLoop(renderLoop);
 }
+

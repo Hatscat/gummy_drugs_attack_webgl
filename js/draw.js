@@ -1,6 +1,6 @@
 "use strict"
 
-function render() {
+function draw () {
 	window.scene.render();
 }
 
