@@ -11,6 +11,8 @@ function init() {
 	config.player = new Player(config.keyBindings);
 
 	loadAssets(config.meshes);
+
+	pointerLock();
 }
 
 function createScene(config) {
@@ -50,4 +52,13 @@ function meshLoaded(task) {
 	for(var i in task.loadedMeshes) {
 		task.loadedMeshes[i].isVisible = false;
 	}
+}
+
+function pointerLock() {
+	render_canvas.addEventListener("click", function(evt) {
+	    render_canvas.requestPointerLock = render_canvas.requestPointerLock || render_canvas.msRequestPointerLock || render_canvas.mozRequestPointerLock || render_canvas.webkitRequestPointerLock;
+	    if (render_canvas.requestPointerLock) {
+	        render_canvas.requestPointerLock();
+	    }
+	}, false);
 }
