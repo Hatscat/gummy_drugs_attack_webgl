@@ -7,3 +7,12 @@ html, body {
     position: fixed;
     background: #000;
 }
+#gunsight {
+    position:absolute;
+    top:50%;
+    left:50%;
+    width: 50px;
+    height: 50px;
+    margin-top:-25px;
+    margin-left:-25px;
+}
