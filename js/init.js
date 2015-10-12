@@ -1,4 +1,5 @@
 "use strict"
+window.onload = init;
 
 function init() {
 	render_canvas.width = window.innerWidth;
@@ -15,14 +16,13 @@ function init() {
 function createScene(config) {
 	window.engine = new BABYLON.Engine(render_canvas, true);
 	window.scene = new BABYLON.Scene(window.engine);
-	config.light = new BABYLON.HemisphericLight("hemi",new BABYLON.Vector3(0, 1, 0), window.scene);
+	config.light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(0, 1, 0), window.scene);
 
 	window.scene.clearColor = new BABYLON.Color3(0,0,0.2);
 	config.light.groundColor = new BABYLON.Color3(0.5,0.5,0.5);
 
 	function groundSetup(ground) {
 	   var material = new BABYLON.StandardMaterial("std", window.scene);
-	   material.diffuseTexture = new BABYLON.Texture("./assets/stone_wall.jpg", scene);
 	   material.specularColor = new BABYLON.Color3(0, 0, 0);
 
 	   ground.material = material;

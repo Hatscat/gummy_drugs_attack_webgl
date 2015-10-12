@@ -6,7 +6,7 @@ var Player = function(config) {
 	this.speed = 0.1;
 	this.dir_z = 0;
 	this.dir_x = 0;
-	this.jmp_str = 0.09;
+	this.jmp_str = 0.1;
 	this.force_y = 0;
 	this.can_jmp = true;
 	
@@ -22,6 +22,7 @@ var Player = function(config) {
 
     this.camera.attachControl(render_canvas);
     this.camera.fov = 90;
+    this.camera.minZ = 0.1;
     this.camera.ellipsoid = null;
     this.camera.checkCollisions = false;
     this.camera.applyGravity = false;
@@ -31,19 +32,21 @@ var Player = function(config) {
     this.camera.keysRight = [];
     this.camera.speed = 0;
     this.camera.inertia = 0;
-    this.camera.angularSensibility = 700; // lower is more senesible
+    this.camera.angularSensibility = 1000; // lower is more senesible
 
     /* --- WEAPON --- */
     this.weapon = this.config.meshes.gun;
     this.weapon.isVisible = true;
-    this.weapon.rotationQuaternion = null;
-    this.weapon.rotation.x = -Math.PI/2;
-    this.weapon.rotation.y = Math.PI;
     this.weapon.parent = this.camera; // The weapon will move with the player camera
-    this.weapon.position = new BABYLON.Vector3(0.25,-0.4,1);
+    this.weapon.material = new BABYLON.StandardMaterial("weaponMat", window.scene);
+    this.weapon.material.diffuseColor = new BABYLON.Color3(0, 0, 0);
+    this.weapon.material.specularColor = new BABYLON.Color3(0.5, 1, 0.5);
+    //this.weapon.material.wireframe = true;
+    this.weapon.scaling = new BABYLON.Vector3(0.1, 0.1, 0.1);
+    this.weapon.position = new BABYLON.Vector3(0.2, -0.35, 0.2);
 
     var endRotation = this.weapon.rotation.clone();
-    endRotation.x += Math.PI/12;
+    endRotation.x -= Math.PI / 12;
     var display = new BABYLON.Animation("fire", "rotation", 60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
     var animKeys = [
         {
