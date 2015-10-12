@@ -51,30 +51,12 @@ function meshLoaded(config, task) {
 	//task.loadedMeshes[0].isVisible = false;
 }
 
-function pointerLock() {
-	render_canvas.addEventListener("click", function(evt) {
-	    render_canvas.requestPointerLock = render_canvas.requestPointerLock || render_canvas.msRequestPointerLock || render_canvas.mozRequestPointerLock || render_canvas.webkitRequestPointerLock;
-	    if (render_canvas.requestPointerLock) {
-	        render_canvas.requestPointerLock();
-	    }
-	}, false);
-}
-
 function onAssetsLoaded(config) {
 
 	config.player = new Player(config);
+	// config.map 
 
-	render_canvas.addEventListener("click", config.player.bindedFire);
-	
-	pointerLock();
-
-	window.onkeydown = function (evt) {
-		config.player.onKeyDown(evt.keyCode);
-	}
-
-	window.onkeyup = function (evt) {
-		config.player.onKeyUp(evt.keyCode);
-	}
+	init_events(config);
 
 	function renderLoop () {
 

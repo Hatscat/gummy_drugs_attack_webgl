@@ -2,6 +2,10 @@
 
 function update (config) {
 
+	if (config.is_game_paused) {
+		return;
+	}
+
 	var deltaTime = window.engine.getDeltaTime();
 
 	if (config.player.dir_x || config.player.dir_z) { // pré-déplacements
