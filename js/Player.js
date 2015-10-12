@@ -1,7 +1,7 @@
-var Player = function(config) {
+var Player = function (config) {
 	
 	this.config = config;
-	this.startPosition = new BABYLON.Vector3(0, config.y_max + 5, 0);
+	this.startPosition = new BABYLON.Vector3(0, 10, 0);
 	this.previous_pos = { x: this.startPosition.x, y: this.startPosition.y, z: this.startPosition.z };
 	this.speed = 0.1;
 	this.dir_z = 0;
@@ -11,12 +11,13 @@ var Player = function(config) {
 	this.can_jmp = true;
 	
 	/* --- SPHERE COLLIDER --- */
+	/*
 	this.sphere = BABYLON.Mesh.CreateSphere("collider", 16, 8, window.scene);
 	this.sphere.checkCollisions = true;
 	this.sphere.position.x = this.startPosition.x;
 	this.sphere.position.y = this.startPosition.y;
 	this.sphere.position.z = this.startPosition.z;
-
+*/
     /* --- CAMERA --- */
     this.camera = new BABYLON.FreeCamera("camera", this.startPosition, window.scene); // change with a simpler camera
 
