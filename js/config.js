@@ -6,8 +6,8 @@ function getConfig() {
 	config.is_game_paused = true;
 	config.half_PI = Math.PI * 0.5;
 	config.gravity = 0.0055;
-	config.map_cols_nb = 16;
-	config.map_rows_nb = 16;
+	config.map_side_n = 4;
+	config.cube_size = 8;
 	config.meshesToLoad = {
 		"enemy" : ["assets/PoisonMushroom/", "DolPoisonMushroom.babylon"],
 		"gun" : ["assets/PowerRifle/", "PowerRifle.babylon"]

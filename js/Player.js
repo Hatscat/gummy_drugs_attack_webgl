@@ -1,14 +1,15 @@
 var Player = function (config) {
 	
 	this.config = config;
-	this.startPosition = new BABYLON.Vector3(0, 10, 0);
+	this.startPosition = new BABYLON.Vector3(0, 80, 0);
 	this.previous_pos = { x: this.startPosition.x, y: this.startPosition.y, z: this.startPosition.z };
-	this.speed = 0.1;
+	this.height = 3;
+	this.speed = 0.015;
 	this.dir_z = 0;
 	this.dir_x = 0;
 	this.jmp_str = 0.1;
 	this.force_y = 0;
-	this.can_jmp = true;
+	//this.can_jmp = true;
 	
 	/* --- SPHERE COLLIDER --- */
 	/*

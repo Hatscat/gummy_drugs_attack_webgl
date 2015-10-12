@@ -27,6 +27,9 @@ function update (config) {
 		config.player.force_y -= config.gravity;
 		//config.player.sphere.position.y += config.player.force_y * deltaTime;
 		config.player.camera.position.y += config.player.force_y * deltaTime;
+	} else {
+		config.player.camera.position.y = config.map.get_raw_y(config.player.camera.position.x, config.player.camera.position.z) + config.player.height;
+		//console.log(config.player.camera.position.y)
 	}
 
 /*	if (config.player.sphere.intersectsMesh(config.ground, true)) {
