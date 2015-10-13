@@ -10,8 +10,9 @@ function Map (config) {
 	this.y_max  = this.side_len >> 1;
 	this.values = new Int16Array(this.vals_nb);
 //	this.values = new Float32Array(this.vals_nb);
-	this.x0 = -this.side_len * this.config.cube_size >> 1;
-	this.z0 = -this.side_len * this.config.cube_size >> 1;
+	this.half_cube_size = this.config.cube_size * 0.5;
+	this.x0 = -this.side_len * this.half_cube_size;
+	this.z0 = -this.side_len * this.half_cube_size;
 
 	this.reset();
 }
@@ -85,8 +86,8 @@ Map.prototype.diamond_sqrt = function (tl, tr, bl, br) {
 	}
 }
 
-Map.prototype.get_raw_y = function (x, z) {
-	return this.values[this._get_index_from_xz(x, z)] + (this.config.cube_size * this.side_len >> 1);
+Map.prototype.get_raw_y = function (cell_index) {
+	return this.values[cell_index] + (this.config.cube_size * this.side_len >> 1);
 }
 
 /*
@@ -95,8 +96,12 @@ Map.prototype.get_smooth_y = function (x, z) {
 }
 */
 
-Map.prototype._get_index_from_xz = function (x, z) {
+Map.prototype.get_index_from_xz = function (x, z) {
 	return this._get_index_from_col_row(this._get_col_from_x(x), this._get_row_from_z(z));
+}
+
+Map.prototype.is_in_map = function (x, z) {
+	return x > this.x0 - this.half_cube_size && x < -this.x0 - this.half_cube_size && z > this.z0 - this.half_cube_size && z < -this.z0 - this.half_cube_size;
 }
 
 Map.prototype._get_index_from_col_row = function (col, row) {
@@ -112,11 +117,11 @@ Map.prototype._get_row_from_index = function (index) {
 }
 
 Map.prototype._get_col_from_x = function (x) {
-	return (x - this.x0 + this.config.cube_size * 0.5) / this.config.cube_size | 0;
+	return (x - this.x0 + this.half_cube_size) / this.config.cube_size | 0;
 }
 
 Map.prototype._get_row_from_z = function (z) {
-	return (z - this.z0 + this.config.cube_size * 0.5) / this.config.cube_size | 0;
+	return (z - this.z0 + this.half_cube_size) / this.config.cube_size | 0;
 }
 
 function get_noise_1 () {

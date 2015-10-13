@@ -2,25 +2,20 @@ var Player = function (config) {
 	
 	this.config = config;
 
+	this.hp_max = 100;
 	this.height = 3;
 	this.speed = 0.016;
 	this.jmp_str = 0.05;
-
-	this.y_min = config.map.get_raw_y(0, 0) + this.height;
-	this.startPosition = new BABYLON.Vector3(0, this.y_min, 0);
-	this.next_pos = { x: this.startPosition.x, y: this.startPosition.y, z: this.startPosition.z };
-	this.next_cell = 0;
-	this.dir_z = 0;
-	this.dir_x = 0;
-	this.force_y = 0;
-	this.can_jmp = true;
+	this.y_step_max = 1;
+	
+	this.reset();
 
     /* --- CAMERA --- */
-    this.camera = new BABYLON.FreeCamera("camera", this.startPosition, window.scene); // change with a simpler camera
+    this.camera = new BABYLON.FreeCamera("camera", this.start_pos, window.scene); // change with a simpler camera
 
     this.camera.attachControl(render_canvas);
     this.camera.fov = 90;
-    this.camera.minZ = 0.01;
+    this.camera.minZ = 0.001;
     this.camera.ellipsoid = null;
     this.camera.checkCollisions = false;
     this.camera.applyGravity = false;
@@ -83,40 +78,79 @@ var Player = function (config) {
     this.bindedFire = this.fire.bind(this);
 }
 
+Player.prototype.reset = function () {
+	this.current_cell = this.config.map.get_index_from_xz(0, 0);
+	this.current_map_y = config.map.get_raw_y(this.current_cell) + this.height;
+	this.start_pos = new BABYLON.Vector3(0, this.current_map_y, 0);
+	this.next_pos = { x: this.start_pos.x, y: this.start_pos.y, z: this.start_pos.z };
+	//this.previous_cell = 0;
+	this.previous_map_y = this.current_map_y;
+	this.dir_z = 0;
+	this.dir_x = 0;
+	this.force_y = 0;
+	this.can_jmp = true;
+	this.hp = this.hp_max;
+}
+
 Player.prototype.update = function () {
 	
 	var deltaTime = window.engine.getDeltaTime();
-	this.y_min = this.config.map.get_raw_y(this.camera.position.x, this.camera.position.z) + this.height;
+	//this.previous_cell = this.current_cell;
+	var cell = this.config.map.get_index_from_xz(this.next_pos.x, this.next_pos.z);
 	
-	if (this.y_min !== undefined) { // dans les limites de la map
+	this.previous_map_y = this.current_map_y;
+
+	if (this.current_cell != cell) {
+		//this.previous_map_y = this.current_map_y;
+		this.current_cell = cell;
+		this.current_map_y = this.config.map.get_raw_y(this.current_cell) + this.height;
+	}
+	
+	if (	!this.config.map.is_in_map(this.next_pos.x, this.next_pos.z) // limites de la map
+		|| (this.next_pos.y <= this.current_map_y && Math.abs(this.current_map_y - this.previous_map_y) > this.y_step_max) ) {
+
+		this.next_pos.x = this.camera.position.x;
+		this.next_pos.z = this.camera.position.z;
+		this.next_pos.y = this.camera.position.y;
+		//this.dir_x = this.dir_z = 0;
+
+	} else {
+
+		this.camera.position.x = this.next_pos.x;
+		this.camera.position.z = this.next_pos.z;
+		this.camera.position.y = this.next_pos.y;
 
 		if (this.dir_x || this.dir_z) { // déplacements
 			
 			var angle = this.camera.rotation.y;
 
-			this.camera.position.x -= Math.cos(angle) * this.dir_x * this.speed * deltaTime;
-			this.camera.position.z += Math.sin(angle) * this.dir_x * this.speed * deltaTime;
-			this.camera.position.x -= Math.cos(angle + this.config.half_PI) * this.dir_z * this.speed * deltaTime;
-			this.camera.position.z += Math.sin(angle + this.config.half_PI) * this.dir_z * this.speed * deltaTime;
+			this.next_pos.x -= Math.cos(angle) * this.dir_x * this.speed * deltaTime;
+			this.next_pos.z += Math.sin(angle) * this.dir_x * this.speed * deltaTime;
+			this.next_pos.x -= Math.cos(angle + this.config.half_PI) * this.dir_z * this.speed * deltaTime;
+			this.next_pos.z += Math.sin(angle + this.config.half_PI) * this.dir_z * this.speed * deltaTime;
 		}
 		
 		// gravité
 		this.force_y -= this.config.gravity * deltaTime;
-		this.camera.position.y += this.force_y * deltaTime;
+		this.next_pos.y += this.force_y * deltaTime;
 		
 		// collision avec le terrain
-		if (this.camera.position.y <= this.y_min) {
-			this.camera.position.y = this.y_min;
+		if (this.next_pos.y <= this.current_map_y) {
+
 			this.force_y = 0;
 			this.can_jmp = true;
+
+			this.next_pos.y = this.current_map_y;
+			//this.camera.position.y = lerp(this.previous_map_y, this.current_map_y, );
 		}
+
 	}
 
 }
 
 Player.prototype.fire = function () {
     window.scene.beginAnimation(this.weapon, 0, 100, false, 10, function() {
-        console.log("endAnim");
+        //console.log("endAnim");
     });
 }
 
@@ -144,3 +178,4 @@ Player.prototype.onKeyUp = function (keyCode) {
 		this.dir_x = 0;
 	}
 }
+
