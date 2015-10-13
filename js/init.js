@@ -12,6 +12,14 @@ function init () {
 	loadAssets(config);
 }
 
+function initUI() {
+	UI_canvas.width = window.innerWidth;
+	UI_canvas.height = window.innerHeight;
+	window.context = UI_canvas.getContext('2d');
+	drawCircle(config.healthCircle);
+	drawCircle(config.drugCircle);
+}
+
 function createScene (config) {
 	window.engine = new BABYLON.Engine(render_canvas, true);
 	window.scene = new BABYLON.Scene(window.engine);
@@ -51,6 +59,8 @@ function onAssetsLoaded (config) {
 		config.meshes.enemy.position.y = config.map.get_raw_y(config.meshes.enemy.position.x, config.meshes.enemy.position.z) + 2
 
 	init_events(config);
+
+	initUI();
 
 	function renderLoop () {
 		update(config);
