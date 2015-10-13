@@ -101,7 +101,7 @@ Player.prototype.update = function () {
 		}
 		
 		// gravité
-		this.force_y -= this.config.gravity;
+		this.force_y -= this.config.gravity * deltaTime;
 		this.camera.position.y += this.force_y * deltaTime;
 		
 		// collision avec le terrain
