@@ -2,11 +2,11 @@
 
 function init_events (config) {
 
-	render_canvas.requestPointerLock = render_canvas.requestPointerLock || render_canvas.msRequestPointerLock || render_canvas.mozRequestPointerLock || render_canvas.webkitRequestPointerLock;
+	document.requestPointerLock = document.requestPointerLock || document.msRequestPointerLock || document.mozRequestPointerLock || document.webkitRequestPointerLock;
 
-	render_canvas.addEventListener("click", function (evt) {
-		if (config.is_game_paused && render_canvas.requestPointerLock) {
-			render_canvas.requestPointerLock();
+	document.addEventListener("click", function (evt) {
+		if (config.is_game_paused && document.requestPointerLock) {
+			document.requestPointerLock();
 		}
 		config.player.bindedFire(evt);
 	}, false);
