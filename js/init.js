@@ -45,6 +45,10 @@ function meshLoaded (config, task) {
 function onAssetsLoaded (config) {
 	config.map = new Map(config);
 	config.player = new Player(config);
+	
+	// TMP:
+		console.log(config.meshes)
+		config.meshes.enemy.position.y = config.map.get_raw_y(config.meshes.enemy.position.x, config.meshes.enemy.position.z) + 2
 
 	init_events(config);
 

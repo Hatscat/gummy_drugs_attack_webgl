@@ -29,7 +29,7 @@ Map.prototype.reset = function () {
 	var bot_left = this.side_len * (this.side_len - 1);
 	var bot_right = this.side_len * this.side_len - 1;
 
-	var y_max = this.side_len * this.config.cube_size >> 2;
+	var y_max = this.side_len * this.config.cube_size * 0.3;
 	this.values[top_left] = Math.random() * y_max;
 	this.values[top_right] = Math.random() * y_max;
 	this.values[bot_left] = Math.random() * y_max;
