@@ -9,7 +9,6 @@ function init () {
 	config.meshes = {};
 
 	createScene(config);
-
 	loadAssets(config);
 }
 
@@ -17,22 +16,10 @@ function createScene (config) {
 	window.engine = new BABYLON.Engine(render_canvas, true);
 	window.scene = new BABYLON.Scene(window.engine);
 	var map_side_size = config.cube_size * (Math.pow(2,config.map_side_n) + 1);
-	config.light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(-map_side_size, map_side_size * 1.1, map_side_size >> 1), window.scene);
+	config.light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(-map_side_size >> 1, map_side_size << 1, map_side_size >> 1), window.scene);
 
 	window.scene.clearColor = new BABYLON.Color3(1, 0.5, 0);
 	config.light.groundColor = new BABYLON.Color3(0.5, 0.5, 0.5);
-/*
-	function groundSetup(ground) {
-	   var material = new BABYLON.StandardMaterial("std", window.scene);
-	   material.specularColor = new BABYLON.Color3(0, 0, 0);
-
-	   ground.material = material;
-	   ground.checkCollisions = true;
-	   config.ground = ground;
-	}
-
-	BABYLON.Mesh.CreateGroundFromHeightMap("ground", "./assets/map_test.png", config.mapSize, config.mapSize, 200, config.y_min, config.y_max, window.scene, false, groundSetup);
-*/
 }
 
 function loadAssets (config) {
@@ -50,20 +37,18 @@ function loadAssets (config) {
 
 function meshLoaded (config, task) {
 	config.meshes[task.name] = task.loadedMeshes[0]; // one mesh per task !
-	//task.loadedMeshes[0].isVisible = false;
 }
 
 function onAssetsLoaded (config) {
-	config.player = new Player(config);
 	config.map = new Map(config);
+	config.player = new Player(config);
 
 	init_events(config);
 
 	function renderLoop () {
-
 		update(config);
 		draw();
 	}
-
 	window.engine.runRenderLoop(renderLoop);
 }
+

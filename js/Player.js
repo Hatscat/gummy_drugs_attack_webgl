@@ -1,25 +1,20 @@
 var Player = function (config) {
 	
 	this.config = config;
-	this.startPosition = new BABYLON.Vector3(0, 80, 0);
-	this.previous_pos = { x: this.startPosition.x, y: this.startPosition.y, z: this.startPosition.z };
+
 	this.height = 3;
-	this.y_min = 0;
 	this.speed = 0.016;
+	this.jmp_str = 0.05;
+
+	this.y_min = config.map.get_raw_y(0, 0) + this.height;
+	this.startPosition = new BABYLON.Vector3(0, this.y_min, 0);
+	this.next_pos = { x: this.startPosition.x, y: this.startPosition.y, z: this.startPosition.z };
+	this.next_cell = 0;
 	this.dir_z = 0;
 	this.dir_x = 0;
-	this.jmp_str = 0.04;
 	this.force_y = 0;
 	this.can_jmp = true;
-	
-	/* --- SPHERE COLLIDER --- */
-	/*
-	this.sphere = BABYLON.Mesh.CreateSphere("collider", 16, 8, window.scene);
-	this.sphere.checkCollisions = true;
-	this.sphere.position.x = this.startPosition.x;
-	this.sphere.position.y = this.startPosition.y;
-	this.sphere.position.z = this.startPosition.z;
-*/
+
     /* --- CAMERA --- */
     this.camera = new BABYLON.FreeCamera("camera", this.startPosition, window.scene); // change with a simpler camera
 
@@ -88,7 +83,38 @@ var Player = function (config) {
     this.bindedFire = this.fire.bind(this);
 }
 
-Player.prototype.fire = function() {
+Player.prototype.update = function () {
+	
+	var deltaTime = window.engine.getDeltaTime();
+	this.y_min = this.config.map.get_raw_y(this.camera.position.x, this.camera.position.z) + this.height;
+	
+	if (this.y_min !== undefined) { // dans les limites de la map
+
+		if (this.dir_x || this.dir_z) { // déplacements
+			
+			var angle = this.camera.rotation.y;
+
+			this.camera.position.x -= Math.cos(angle) * this.dir_x * this.speed * deltaTime;
+			this.camera.position.z += Math.sin(angle) * this.dir_x * this.speed * deltaTime;
+			this.camera.position.x -= Math.cos(angle + this.config.half_PI) * this.dir_z * this.speed * deltaTime;
+			this.camera.position.z += Math.sin(angle + this.config.half_PI) * this.dir_z * this.speed * deltaTime;
+		}
+		
+		// gravité
+		this.force_y -= this.config.gravity;
+		this.camera.position.y += this.force_y * deltaTime;
+		
+		// collision avec le terrain
+		if (this.camera.position.y <= this.y_min) {
+			this.camera.position.y = this.y_min;
+			this.force_y = 0;
+			this.can_jmp = true;
+		}
+	}
+
+}
+
+Player.prototype.fire = function () {
     window.scene.beginAnimation(this.weapon, 0, 100, false, 10, function() {
         console.log("endAnim");
     });
