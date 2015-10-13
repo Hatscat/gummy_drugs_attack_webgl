@@ -4,12 +4,13 @@ var Player = function (config) {
 	this.startPosition = new BABYLON.Vector3(0, 80, 0);
 	this.previous_pos = { x: this.startPosition.x, y: this.startPosition.y, z: this.startPosition.z };
 	this.height = 3;
-	this.speed = 0.015;
+	this.y_min = 0;
+	this.speed = 0.016;
 	this.dir_z = 0;
 	this.dir_x = 0;
-	this.jmp_str = 0.1;
+	this.jmp_str = 0.04;
 	this.force_y = 0;
-	//this.can_jmp = true;
+	this.can_jmp = true;
 	
 	/* --- SPHERE COLLIDER --- */
 	/*
@@ -24,7 +25,7 @@ var Player = function (config) {
 
     this.camera.attachControl(render_canvas);
     this.camera.fov = 90;
-    this.camera.minZ = 0.1;
+    this.camera.minZ = 0.01;
     this.camera.ellipsoid = null;
     this.camera.checkCollisions = false;
     this.camera.applyGravity = false;
@@ -34,7 +35,7 @@ var Player = function (config) {
     this.camera.keysRight = [];
     this.camera.speed = 0;
     this.camera.inertia = 0;
-    this.camera.angularSensibility = 700; // lower is more senesible
+    this.camera.angularSensibility = 500; // lower is more sensible
 
     /* --- WEAPON --- */
     this.weapon = this.config.meshes.gun;
@@ -44,8 +45,8 @@ var Player = function (config) {
     this.weapon.material.diffuseColor = new BABYLON.Color3(0, 0, 0);
     this.weapon.material.specularColor = new BABYLON.Color3(0.5, 1, 0.5);
     //this.weapon.material.wireframe = true;
-    this.weapon.scaling = new BABYLON.Vector3(0.1, 0.1, 0.1);
-    this.weapon.position = new BABYLON.Vector3(0.2, -0.35, 0.2);
+    this.weapon.scaling = new BABYLON.Vector3(0.01, 0.01, 0.01);
+    this.weapon.position = new BABYLON.Vector3(0.02, -0.035, 0.02);
 
     var endRotation = this.weapon.rotation.clone();
     endRotation.x -= Math.PI / 12;

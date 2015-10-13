@@ -23,12 +23,17 @@ function update (config) {
 		config.player.camera.position.z += Math.sin(angle + config.half_PI) * config.player.dir_z * config.player.speed * deltaTime;
 	}
 
-	if (config.player.force_y) {
+	//if (config.player.force_y) {
 		config.player.force_y -= config.gravity;
 		//config.player.sphere.position.y += config.player.force_y * deltaTime;
 		config.player.camera.position.y += config.player.force_y * deltaTime;
-	} else {
-		config.player.camera.position.y = config.map.get_raw_y(config.player.camera.position.x, config.player.camera.position.z) + config.player.height;
+	//}
+	config.player.y_min = config.map.get_raw_y(config.player.camera.position.x, config.player.camera.position.z) + config.player.height;
+	
+	if (config.player.camera.position.y <= config.player.y_min) {
+		config.player.camera.position.y = config.player.y_min;
+		config.player.force_y = 0;
+		config.player.can_jmp = true;
 		//console.log(config.player.camera.position.y)
 	}
 
