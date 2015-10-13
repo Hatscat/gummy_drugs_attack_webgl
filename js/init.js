@@ -18,7 +18,10 @@ function createScene (config) {
 	var map_side_size = config.cube_size * (Math.pow(2,config.map_side_n) + 1);
 	config.light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(-map_side_size >> 1, map_side_size << 1, map_side_size >> 1), window.scene);
 
+	window.scene.fogMode = BABYLON.Scene.FOGMODE_EXP;
+	window.scene.fogDensity = 0.02;
 	window.scene.clearColor = new BABYLON.Color3(1, 0.5, 0);
+	window.scene.fogColor = new BABYLON.Color3(1, 0.5, 0);
 	config.light.groundColor = new BABYLON.Color3(0.5, 0.5, 0.5);
 }
 
