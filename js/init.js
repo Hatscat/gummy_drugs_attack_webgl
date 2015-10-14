@@ -28,9 +28,9 @@ function createScene (config) {
 
 	window.scene.fogMode = BABYLON.Scene.FOGMODE_EXP;
 	window.scene.fogDensity = 0.02;
-	window.scene.clearColor = new BABYLON.Color3(1, 0.5, 0);
-	window.scene.fogColor = new BABYLON.Color3(1, 0.5, 0);
-	config.light.groundColor = new BABYLON.Color3(0.5, 0.5, 0.5);
+	window.scene.clearColor = new BABYLON.Color3(1, 0, 0);
+	window.scene.fogColor = new BABYLON.Color3(1, 0, 0);
+	config.light.groundColor = new BABYLON.Color3(1, 0, 0);
 }
 
 function loadAssets (config) {

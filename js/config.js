@@ -7,6 +7,7 @@ function getConfig() {
 	config.is_game_paused = true;
 	config.half_PI = Math.PI * 0.5;
 	config.gravity = 0.00016;
+	config.fog_limit = 10;
 	config.map_side_n = 4;
 	config.cube_size = 10;
 	config.meshesToLoad = {

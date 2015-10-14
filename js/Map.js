@@ -11,8 +11,8 @@ function Map (config) {
 	this.values = new Int16Array(this.vals_nb);
 //	this.values = new Float32Array(this.vals_nb);
 	this.half_cube_size = this.config.cube_size * 0.5;
-	this.x0 = -this.side_len * this.half_cube_size;
-	this.z0 = -this.side_len * this.half_cube_size;
+	this.x0 = (1 - this.side_len) * this.half_cube_size;
+	this.z0 = (1 - this.side_len) * this.half_cube_size;
 
 	this.reset();
 }
@@ -44,9 +44,19 @@ Map.prototype.reset = function () {
 	origin_box.position.z = this.z0;
 	origin_box.position.y = this.values[0];
 	origin_box.material = new BABYLON.StandardMaterial("cubeMat", window.scene);
-	origin_box.material.diffuseColor = new BABYLON.Color3(0.3, 0, 0.9);
-	origin_box.material.specularColor = new BABYLON.Color3(0, 0, 0);
-    	
+	origin_box.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
+	origin_box.material.specularColor = new BABYLON.Color3(0.5, 0, 0);
+
+	//origin_box.material.diffuseTexture = new BABYLON.BrickProceduralTexture("texture", 1024, window.scene);
+
+/*
+	origin_box.material = new BABYLON.ShaderMaterial("ground", scene, "./shaders/ground",
+        {
+            attributes: ["position", "normal", "uv"],
+            uniforms: ["world", "worldViewProjection"]
+        });
+
+*/
 	var cubes = [origin_box];
 
 	for (var i = this.vals_nb; --i;) {
@@ -100,7 +110,7 @@ Map.prototype.get_index_from_xz = function (x, z) {
 	return this._get_index_from_col_row(this._get_col_from_x(x), this._get_row_from_z(z));
 }
 
-Map.prototype.is_in_map = function (x, z) {
+Map.prototype.is_in_map = function (x, z) { // à revoir...
 	return x > this.x0 - this.half_cube_size && x < -this.x0 - this.half_cube_size && z > this.z0 - this.half_cube_size && z < -this.z0 - this.half_cube_size;
 }
 

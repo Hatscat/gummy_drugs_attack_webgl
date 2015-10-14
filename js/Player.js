@@ -3,7 +3,7 @@ var Player = function (config) {
 	this.config = config;
 
 	this.hp_max = 100;
-	this.height = 3;
+	this.height = 2;
 	this.speed = 0.016;
 	this.jmp_str = 0.05;
 	this.y_step_max = 1;
@@ -33,10 +33,10 @@ var Player = function (config) {
     this.weapon.parent = this.camera; // The weapon will move with the player camera
     this.weapon.material = new BABYLON.StandardMaterial("weaponMat", window.scene);
     this.weapon.material.diffuseColor = new BABYLON.Color3(0, 0, 0);
-    this.weapon.material.specularColor = new BABYLON.Color3(0.5, 1, 0.5);
+    this.weapon.material.specularColor = new BABYLON.Color3(1, 0, 0);
     //this.weapon.material.wireframe = true;
-    this.weapon.scaling = new BABYLON.Vector3(0.01, 0.01, 0.01);
-    this.weapon.position = new BABYLON.Vector3(0.02, -0.035, 0.02);
+    this.weapon.scaling = new BABYLON.Vector3(0.001, 0.001, 0.001);
+    this.weapon.position = new BABYLON.Vector3(0.002, -0.0035, 0.002);
 
     var endRotation = this.weapon.rotation.clone();
     endRotation.x -= Math.PI / 12;
@@ -80,11 +80,11 @@ var Player = function (config) {
 
 Player.prototype.reset = function () {
 	this.current_cell = this.config.map.get_index_from_xz(0, 0);
-	this.current_map_y = config.map.get_raw_y(this.current_cell) + this.height;
-	this.start_pos = new BABYLON.Vector3(0, this.current_map_y, 0);
+	this.next_map_y = config.map.get_raw_y(this.current_cell) + this.height;
+	this.start_pos = new BABYLON.Vector3(0, this.next_map_y, 0);
 	this.next_pos = { x: this.start_pos.x, y: this.start_pos.y, z: this.start_pos.z };
 	//this.previous_cell = 0;
-	this.previous_map_y = this.current_map_y;
+	this.current_map_y = this.next_map_y;
 	this.dir_z = 0;
 	this.dir_x = 0;
 	this.force_y = 0;
@@ -98,16 +98,16 @@ Player.prototype.update = function () {
 	//this.previous_cell = this.current_cell;
 	var cell = this.config.map.get_index_from_xz(this.next_pos.x, this.next_pos.z);
 	
-	this.previous_map_y = this.current_map_y;
+	this.current_map_y = this.next_map_y;
 
 	if (this.current_cell != cell) {
-		//this.previous_map_y = this.current_map_y;
+		//this.current_map_y = this.next_map_y;
 		this.current_cell = cell;
-		this.current_map_y = this.config.map.get_raw_y(this.current_cell) + this.height;
+		this.next_map_y = this.config.map.get_raw_y(this.current_cell) + this.height;
 	}
 	
 	if (	!this.config.map.is_in_map(this.next_pos.x, this.next_pos.z) // limites de la map
-		|| (this.next_pos.y <= this.current_map_y && Math.abs(this.current_map_y - this.previous_map_y) > this.y_step_max) ) {
+		|| (this.next_pos.y <= this.next_map_y && Math.abs(this.next_map_y - this.current_map_y) > this.y_step_max) ) {
 
 		this.next_pos.x = this.camera.position.x;
 		this.next_pos.z = this.camera.position.z;
@@ -135,13 +135,13 @@ Player.prototype.update = function () {
 		this.next_pos.y += this.force_y * deltaTime;
 		
 		// collision avec le terrain
-		if (this.next_pos.y <= this.current_map_y) {
+		if (this.next_pos.y <= this.next_map_y) {
 
 			this.force_y = 0;
 			this.can_jmp = true;
 
-			this.next_pos.y = this.current_map_y;
-			//this.camera.position.y = lerp(this.previous_map_y, this.current_map_y, );
+			this.next_pos.y = this.next_map_y;
+			//this.camera.position.y = lerp(this.current_map_y, this.next_map_y, );
 		}
 
 	}
