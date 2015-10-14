@@ -27,7 +27,6 @@ function createScene (config) {
 	config.light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(-map_side_size >> 1, map_side_size << 1, map_side_size >> 1), window.scene);
 
 	window.scene.fogMode = BABYLON.Scene.FOGMODE_LINEAR;
-	//window.scene.fogDensity = 0.02;
 	window.scene.fogStart = config.fog_start;
 	window.scene.fogEnd = config.fog_end;
 	window.scene.clearColor = new BABYLON.Color3(1, 0, 0);

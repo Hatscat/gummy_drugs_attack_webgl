@@ -111,7 +111,7 @@ Map.prototype.get_index_from_xz = function (x, z) {
 }
 
 Map.prototype.is_in_map = function (x, z) { // à revoir...
-	return x > this.x0 - this.half_cube_size && x < -this.x0 - this.half_cube_size && z > this.z0 - this.half_cube_size && z < -this.z0 - this.half_cube_size;
+	return x > this.x0 - this.half_cube_size && x < this.half_cube_size - this.x0 && z > this.z0 - this.half_cube_size && z < this.half_cube_size - this.z0;
 }
 
 Map.prototype._get_index_from_col_row = function (col, row) {
