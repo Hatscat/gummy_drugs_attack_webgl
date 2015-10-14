@@ -38,7 +38,7 @@ function getConfig() {
 		radius: 0.05,
 		innerColor: "rainbow",
 		outterColor: "black",
-		fillPercent: 0.6
+		fillPercent: 1
 	}
 
 	return config;
