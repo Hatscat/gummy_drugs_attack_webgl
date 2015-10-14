@@ -12,7 +12,7 @@ function getConfig() {
 	config.map_side_n = 4;
 	config.cube_size = 10;
 	config.meshesToLoad = {
-		"enemy" : ["assets/PoisonMushroom/", "DolPoisonMushroom.babylon"],
+		"enemy" : ["assets/Mushroom/", "Mushroom.babylon"],
 		"gun" : ["assets/PowerRifle/", "PowerRifle.babylon"]
 	};
 

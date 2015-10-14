@@ -1,0 +1,49 @@
+	Exporter version: 3.0.6, Blender version: 2.76 (sub 0)
+========= Conversion from Blender to Babylon.js =========
+	Python World class constructor completed
+	processing begun of mesh:  polygon1
+		processing begun of Standard material:  mat1
+		Diffuse texture found
+			Image texture found, type:  diffuseTexture, mapped using: "UVMap"
+		num positions      :  82
+		num normals        :  82
+		num uvs            :  164
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  438
+	processing begun of mesh:  polygon0
+		processing begun of Standard material:  mat2
+		Diffuse texture found
+			Image texture found, type:  diffuseTexture, mapped using: "UVMap"
+		num positions      :  22
+		num normals        :  22
+		num uvs            :  44
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  108
+	processing begun of mesh:  polygon2
+		processing begun of Standard material:  mat3
+		Diffuse texture found
+			Image texture found, type:  diffuseTexture, mapped using: "UVMap"
+		num positions      :  145
+		num normals        :  145
+		num uvs            :  290
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  588
+	processing begun of mesh:  polygon3
+		processing begun of Standard material:  mat4
+		Diffuse texture found
+			Image texture found, type:  diffuseTexture, mapped using: "UVMap"
+		num positions      :  48
+		num normals        :  48
+		num uvs            :  96
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  228
+	processing begun of camera (FreeCamera):  Camera
+	processing begun of light (POINT):  Lamp
+========= Writing of scene file started =========
+========= Writing of scene file completed =========
+========= end of processing =========
+elapsed time:  0 min, 0.0293 secs
