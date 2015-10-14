@@ -111,8 +111,6 @@ Player.prototype.update = function () {
 
 		this.next_pos.x = this.camera.position.x;
 		this.next_pos.z = this.camera.position.z;
-		this.next_pos.y = this.camera.position.y;
-		//this.dir_x = this.dir_z = 0;
 
 	} else {
 
