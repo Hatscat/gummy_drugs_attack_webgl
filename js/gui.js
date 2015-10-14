@@ -1,3 +1,13 @@
+function initUI() {
+	UI_canvas.width = window.innerWidth;
+	UI_canvas.height = window.innerHeight;
+	window.context = UI_canvas.getContext('2d');
+	context.font = 0.05 * window.innerHeight +"px Comic Sans MS";
+	drawCircle(config.healthCircle);
+	drawCircle(config.drugCircle);
+	drawScore(165000);
+}
+
 function drawCircle(circleConfig) {
 
 	var radius = circleConfig.radius*window.innerWidth | 0;
@@ -5,6 +15,7 @@ function drawCircle(circleConfig) {
 	var centerY = window.innerHeight - window.innerHeight*circleConfig.y - radius | 0;
 	var amount = radius*2*circleConfig.fillPercent;
 
+	context.clearRect(centerX - radius, centerY - radius, radius*2, radius*2);
 	context.save();
 
 	context.beginPath();
@@ -43,4 +54,18 @@ function drawCircle(circleConfig) {
 	context.lineWidth = 0;
 	context.strokeStyle = circleConfig.outterColor;
 	context.stroke();
+}
+
+function drawScore(score) {
+	context.clearRect(0,0,window.innerWidth, (0.07 * window.innerHeight | 0));
+	var string = "Score: " + score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "); // espace les nombres (merci stackoverflow)
+	context.fillText(string, (window.innerWidth/2 - context.measureText(string).width/2 | 0), (0.06 * window.innerHeight | 0));
+}
+
+function drawEatHint() {
+	var string = 'Press "F"!';
+	context.fillText(string, (window.innerWidth/2 - context.measureText(string).width/2 | 0), (0.4 * window.innerHeight | 0));
+}
+function clearEatHint() {
+	context.clearRect(0, 0.4 * window.innerHeight, window.innerWidth, 0.06 * window.innerHeight);
 }
