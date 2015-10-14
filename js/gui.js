@@ -61,3 +61,11 @@ function drawScore(score) {
 	var string = "Score: " + score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "); // espace les nombres (merci stackoverflow)
 	context.fillText(string, (window.innerWidth/2 - context.measureText(string).width/2 | 0), (0.06 * window.innerHeight | 0));
 }
+
+function drawEatHint() {
+	var string = 'Press "F"!';
+	context.fillText(string, (window.innerWidth/2 - context.measureText(string).width/2 | 0), (0.4 * window.innerHeight | 0));
+}
+function clearEatHint() {
+	context.clearRect(0, 0.4 * window.innerHeight, window.innerWidth, 0.06 * window.innerHeight);
+}
