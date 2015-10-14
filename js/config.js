@@ -36,9 +36,9 @@ function getConfig() {
 		x: 0.44,
 		y: 0.01,
 		radius: 0.05,
-		innerColor: "blue",
+		innerColor: "rainbow",
 		outterColor: "black",
-		fillPercent: 0.5
+		fillPercent: 0.6
 	}
 
 	return config;
