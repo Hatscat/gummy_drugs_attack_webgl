@@ -3,12 +3,12 @@
 function getConfig() {
 	var config = {};
 
-	config.is_dev_mode = true;
+	config.is_dev_mode = location.href.indexOf('?') != -1;
 	config.is_game_paused = true;
 	config.half_PI = Math.PI * 0.5;
 	config.gravity = 0.00016;
 	config.fog_start = 0;
-	config.fog_end = 80;
+	config.fog_end = 70;
 	config.map_side_n = 4;
 	config.cube_size = 10;
 	config.meshesToLoad = {

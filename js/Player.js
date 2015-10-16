@@ -13,9 +13,10 @@ var Player = function (config) {
     /* --- CAMERA --- */
     this.camera = new BABYLON.FreeCamera("camera", this.start_pos, window.scene); // change with a simpler camera
 
-    this.camera.attachControl(render_canvas);
-    this.camera.fov = 90;
+    this.camera.attachControl(window.render_canvas);
+    this.camera.fov = this.config.half_PI;
     this.camera.minZ = 0.001;
+    this.camera.maxZ = this.config.fog_end;
     this.camera.ellipsoid = null;
     this.camera.checkCollisions = false;
     this.camera.applyGravity = false;
@@ -36,26 +37,45 @@ var Player = function (config) {
     this.weapon.material.specularColor = new BABYLON.Color3(1, 0, 0);
     //this.weapon.material.wireframe = true;
     this.weapon.scaling = new BABYLON.Vector3(0.001, 0.001, 0.001);
-    this.weapon.position = new BABYLON.Vector3(0.002, -0.0035, 0.002);
-
-    var endRotation = this.weapon.rotation.clone();
-    endRotation.x -= Math.PI / 12;
+    this.weapon.position = new BABYLON.Vector3(0.002, -0.0035, 0.0025);
+/*
+    var end_rotation = this.weapon.rotation.clone();
+    end_rotation.x -= Math.PI / 12;
     var display = new BABYLON.Animation("fire", "rotation", 60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-    var animKeys = [
+    var anim_keys = [
         {
             frame: 0,
             value: this.weapon.rotation
         },
         {
             frame: 10,
-            value: endRotation
+            value: end_rotation
         },
         {
             frame: 100,
             value: this.weapon.rotation
         }
     ];
-    display.setKeys(animKeys);
+  */
+	var end_position = this.weapon.position.clone();
+	end_position.z -= 0.001;
+	var display = new BABYLON.Animation("fire", "position", 60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+	var anim_keys = [
+		{
+			frame: 0,
+			value: this.weapon.position
+		},
+		{
+			frame: 10,
+			value: end_position
+		},
+		{
+			frame: 100,
+			value: this.weapon.position
+		}
+	];
+
+    display.setKeys(anim_keys);
     this.weapon.animations.push(display);
 
 

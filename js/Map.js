@@ -6,10 +6,10 @@ function Map (config) {
 	this.side_len = Math.pow(2, config.map_side_n) + 1;
 	//this.half_side_len = this.side_len >> 1;
 	this.vals_nb = this.side_len * this.side_len;
-	this.y_min  = this.side_len >> 1;
-	this.y_max  = this.side_len >> 1;
-	this.values = new Int16Array(this.vals_nb);
-//	this.values = new Float32Array(this.vals_nb);
+	this.y_min  = 0x100;
+	this.y_max  = 0;
+	//this.values = new Int16Array(this.vals_nb);
+	this.values = new Uint8ClampedArray(this.vals_nb);
 	this.half_cube_size = this.config.cube_size * 0.5;
 	this.x0 = (1 - this.side_len) * this.half_cube_size;
 	this.z0 = (1 - this.side_len) * this.half_cube_size;
@@ -46,30 +46,58 @@ Map.prototype.reset = function () {
 	origin_box.material = new BABYLON.StandardMaterial("cubeMat", window.scene);
 	origin_box.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
 	origin_box.material.specularColor = new BABYLON.Color3(0.5, 0, 0);
+	origin_box.material.checkReadyOnEveryCall = false;
 
 	//origin_box.material.diffuseTexture = new BABYLON.BrickProceduralTexture("texture", 1024, window.scene);
-
-/*
-	origin_box.material = new BABYLON.ShaderMaterial("ground", scene, "./shaders/ground",
-        {
-            attributes: ["position", "normal", "uv"],
-            uniforms: ["world", "worldViewProjection"]
-        });
-
-*/
+	
+	//origin_box.material = new BABYLON.ShaderMaterial("ground", scene, "./shaders/ground",
+        //{
+        //    attributes: ["position", "normal", "uv"],
+        //    uniforms: ["world", "worldViewProjection"]
+        //});
+	
 	var cubes = [origin_box];
 
-	for (var i = this.vals_nb; --i;) {
-		var clone = origin_box.clone();
+	for (var i = this.vals_nb; i--;) {
+		var clone = origin_box.clone("box" + i, null, true);
 		clone.position.x += this._get_col_from_index(i) * this.config.cube_size;
 		clone.position.z += this._get_row_from_index(i) * this.config.cube_size;
 		clone.position.y = this.values[i];
 
 		cubes[i] = clone;
 	}
-
+	origin_box.setEnabled(false);
 	this.config.ground = BABYLON.Mesh.MergeMeshes(cubes, true);
+	//window.scene.createOrUpdateSelectionOctree();
 
+/*
+	var buffer = new Uint8ClampedArray(this.vals_nb << 2);
+
+	for (var i = 0; i < this.vals_nb; ++i) {
+		
+		var ii = i << 2;
+		
+		buffer[ii] = buffer[ii+1] = buffer[ii+2] = this.values[i];
+		buffer[ii+3] = 0xff;
+
+		if (this.values[i] < this.y_min) this.y_min = this.values[i];
+		if (this.values[i] > this.y_max) this.y_max = this.values[i];
+	}
+
+	console.log("y min:",this.y_min)
+	console.log("y max:",this.y_max)
+
+	this.config.ground = new BABYLON.GroundMesh("ground", window.scene);
+
+	this.config.ground._subdivisions = 400;
+	this.config.ground._setReady(false);
+
+	var vertex_data = BABYLON.VertexData.CreateGroundFromHeightMap(this.side_len * this.config.cube_size, this.side_len * this.config.cube_size, 400, 0, 255, buffer, this.side_len, this.side_len);
+	this.config.ground.rotation.y = Math.PI;
+	//this.config.ground.rotation.y = -this.config.half_PI;
+	vertex_data.applyToMesh(this.config.ground, false);
+	this.config.ground._setReady(true);
+*/
 }
 
 Map.prototype.diamond_sqrt = function (tl, tr, bl, br) {
