@@ -1,8 +1,12 @@
-function initUI() {
+function initUI(config) {
 	UI_canvas.width = window.innerWidth;
 	UI_canvas.height = window.innerHeight;
 	window.context = UI_canvas.getContext('2d');
+}
+function inGameGUI(config) {
 	context.font = 0.05 * window.innerHeight +"px Comic Sans MS";
+	context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+	gunsight.style.visibility = "visible";
 	drawCircle(config.healthCircle);
 	drawCircle(config.drugCircle);
 	drawScore(165000);
@@ -68,4 +72,12 @@ function drawEatHint() {
 }
 function clearEatHint() {
 	context.clearRect(0, 0.4 * window.innerHeight, window.innerWidth, 0.06 * window.innerHeight);
+}
+
+function drawTitleScreen(titleImg) {
+	context.drawImage(titleImg, window.innerWidth/2 - titleImg.naturalWidth/2, window.innerHeight * 0.1 - titleImg.naturalHeight/2);
+
+	context.font = 0.03 * window.innerHeight +"px Helvetica";
+	var string = 'Click to play!';
+	context.fillText(string, (window.innerWidth/2 - context.measureText(string).width/2 | 0), (window.innerHeight * 0.9 | 0));
 }

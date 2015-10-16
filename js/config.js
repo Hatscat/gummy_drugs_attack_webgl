@@ -11,6 +11,14 @@ function getConfig() {
 	config.fog_end = 80;
 	config.map_side_n = 4;
 	config.cube_size = 10;
+
+	config.meshes = {};
+	config.imgs= {};
+
+	config.imgToLoad = {
+		"title": "assets/title" + (Math.random()*4 | 0) + ".png" // to choose a title font img in random,
+	}
+
 	config.meshesToLoad = {
 		"enemy" : ["assets/mushroom_final/", "mushroom_final.babylon"],
 		"gun" : ["assets/PowerRifle/", "PowerRifle.babylon"]
@@ -40,6 +48,10 @@ function getConfig() {
 		outterColor: "black",
 		fillPercent: 1
 	}
+
+	config.titleScreenCameraBeta = Math.PI/6;
+	config.titleScreenCameraRadius = 150;
+	config.titleScreenCameraSpeed = 0.05;
 
 	return config;
 }

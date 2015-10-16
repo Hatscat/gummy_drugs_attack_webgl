@@ -6,7 +6,6 @@ function init () {
 	render_canvas.height = window.innerHeight;
 
 	window.config = getConfig();
-	config.meshes = {};
 
 	createScene(config);
 	loadAssets(config);
@@ -29,36 +28,70 @@ function createScene (config) {
 function loadAssets (config) {
 	var loader = new BABYLON.AssetsManager(window.scene);
 
+	var meshLoadedBinded =  meshLoaded.bind(window, config);
+	var imgLoadBinded =  imgLoaded.bind(window, config);
+
 	for(var i in config.meshesToLoad) {
 		var task = loader.addMeshTask(i, '', config.meshesToLoad[i][0], config.meshesToLoad[i][1]);
-		task.onSuccess = meshLoaded.bind(window, config);
-		task.onError = function(err) { console.log(err)};
+		task.onSuccess = meshLoadedBinded;
+		task.onError = loadError;
+	}
+	for(var i in config.imgToLoad) {
+		var img = loader.addImageTask(i, config.imgToLoad[i]);
+		img.onSuccess = imgLoadBinded;
+		img.onError = loadError;
 	}
 
 	loader.onFinish = onAssetsLoaded.bind(window, config);
 	loader.load(); // Démarre le chargement
 }
 
+function loadError(err) {
+	console.error(err)
+}
+
 function meshLoaded (config, task) {
 	config.meshes[task.name] = task.loadedMeshes[0]; // one mesh per task !
 }
 
+function imgLoaded(config, task) {
+	config.imgs[task.name] = task.image;
+}
+
 function onAssetsLoaded (config) {
+	initUI(config);
+	drawTitleScreen(config.imgs.title);
+
 	config.map = new Map(config);
-	config.player = new Player(config);
-	
-	// TMP:
-		console.log(config.meshes)
-		config.meshes.enemy.position.y = config.map.get_raw_y(config.meshes.enemy.position.x, config.meshes.enemy.position.z) + 2
 
-	init_events(config);
+	window.camera = new BABYLON.ArcRotateCamera("Camera", 0, config.titleScreenCameraBeta, config.titleScreenCameraRadius, BABYLON.Vector3.Zero(), scene);
+	//camera.attachControl(render_canvas, false);
+	camera.fov = 90;
 
-	initUI();
+	console.log(config.meshes)
 
 	function renderLoop () {
 		update(config);
+		window.scene.activeCamera.alpha -= config.titleScreenCameraSpeed * window.engine.getDeltaTime() / 1000;
 		draw();
 	}
 	window.engine.runRenderLoop(renderLoop);
+
+	window.playBinded = play.bind(window, config);
+	document.addEventListener("click", window.playBinded, false)
+}
+function play(config) {
+	document.removeEventListener("click", window.playBinded, false);
+	window.playBinded = null;
+
+	config.meshes.enemy.position.y = config.map.get_raw_y(config.meshes.enemy.position.x, config.meshes.enemy.position.z) + 2 //TMP
+
+	//config.map.reset(); // ça fait des trucs chelou
+
+	window.camera.dispose();
+	config.player = new Player(config);
+	init_events(config);
+	
+	inGameGUI(config);
 }
 
