@@ -68,7 +68,6 @@ function onAssetsLoaded (config) {
 	//camera.attachControl(render_canvas, false);
 	camera.fov = 90;
 
-	console.log(config.meshes)
 
 	function renderLoop () {
 		update(config);
@@ -84,7 +83,12 @@ function play(config) {
 	document.removeEventListener("click", window.playBinded, false);
 	window.playBinded = null;
 
-	config.meshes.enemy.position.y = config.map.get_raw_y(config.meshes.enemy.position.x, config.meshes.enemy.position.z) + 2 //TMP
+	// TMP:
+		console.log(config.meshes)
+		config.meshes.enemy.position.x = 1
+		config.meshes.enemy.position.z = 1
+		config.meshes.enemy.position.y = config.map.get_raw_y(config.map.get_index_from_xz(config.meshes.enemy.position.x, config.meshes.enemy.position.z))
+		config.meshes.enemy.scaling.x = config.meshes.enemy.scaling.z = config.meshes.enemy.scaling.y = 0.5
 
 	//config.map.reset(); // ça fait des trucs chelou
 
