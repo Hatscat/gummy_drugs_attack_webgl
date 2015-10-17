@@ -3,8 +3,10 @@
 function getConfig() {
 	var config = {};
 
-	config.is_dev_mode = true;
-	config.is_game_paused = true;
+	config.is_dev_mode = false;
+	config.is_game_title = true;
+	config.is_player_dead = false;
+
 	config.half_PI = Math.PI * 0.5;
 	config.gravity = 0.00016;
 	config.fog_start = 0;
@@ -48,10 +50,31 @@ function getConfig() {
 		outterColor: "black",
 		fillPercent: 1
 	}
-
 	config.titleScreenCameraBeta = Math.PI/6;
 	config.titleScreenCameraRadius = 150;
-	config.titleScreenCameraSpeed = 0.05;
+	config.titleScreenCameraSpeed = 0.00005;
+
+	config.score = 0;
+	config.pointsPerSecond = 100;
+	config.pointPerEnemyKilled = 250;
+	config.scoreUpdateTimer = 100;
+	config.scoreUpdateInterval = 100;
+
+	config.AIs = [];
+
+	config.AICanfollowPlayer = true;
+	config.AICanRandomMove = true;
+	config.AICanJump = true;
+
+	config.AIDetectionDistance = 150;
+	config.AITouchingDistance = 5;
+	config.AIRotOffset = 3*Math.PI/4;
+	config.AIspeed = 0.005;
+	config.maxAINb = 500;
+	config.AIDirChangeTimer = 1000;
+	config.AIJumpTimer = 500;
+	config.AIJumpRandomTimer = 500;
+	config.AIDammage = 10;
 
 	return config;
 }

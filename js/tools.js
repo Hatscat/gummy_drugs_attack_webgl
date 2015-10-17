@@ -9,6 +9,6 @@ function sign (n) {
 }
 
 function dist_3d_sqrt (a, b) {
-	return a.x * a.x + a.y * a.y + a.z * a.z;
+	return (a.x-b.x) * (a.x-b.x) + (a.y-b.y) * (a.y-b.y) + (a.z-b.z) * (a.z-b.z);
 }
 

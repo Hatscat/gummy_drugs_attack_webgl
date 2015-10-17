@@ -7,11 +7,14 @@ var Player = function (config) {
 	this.speed = 0.016;
 	this.jmp_str = 0.05;
 	this.y_step_max = 1;
+    this.canTakeDammage = true;
+    this.dammageCoolDown = 1000;
 	
 	this.reset();
 
     /* --- CAMERA --- */
     this.camera = new BABYLON.FreeCamera("camera", this.start_pos, window.scene); // change with a simpler camera
+    window.scene.activeCamera = this.camera;
 
     this.camera.attachControl(render_canvas);
     this.camera.fov = 90;
@@ -76,6 +79,7 @@ var Player = function (config) {
 
 
     this.bindedFire = this.fire.bind(this);
+    this.bindedSetCanTakeDammage = this.setCanTakeDammage.bind(this);
 }
 
 Player.prototype.reset = function () {
@@ -151,6 +155,34 @@ Player.prototype.fire = function () {
         //console.log("endAnim");
     });
 }
+Player.prototype.takeDammage = function (dam) {
+    if(!this.canTakeDammage || this.config.is_player_dead) {
+        return;
+    }
+
+    this.hp -= dam;
+
+    if(this.hp <= 0) {
+        if(this.config.is_dev_mode) {
+            this.hp = this.hp_max;
+        }
+        else {
+            this.die();
+            return;
+        }
+    }
+
+    this.config.healthCircle.fillPercent = Math.max(0, (this.hp/this.hp_max));
+    drawCircle(this.config.healthCircle);
+
+    this.canTakeDammage = false;
+    window.setTimeout(this.bindedSetCanTakeDammage, this.dammageCoolDown);
+
+}
+
+Player.prototype.setCanTakeDammage = function() {
+    this.canTakeDammage = true;
+}
 
 Player.prototype.onKeyDown = function (keyCode) {
 	if (this.config.keyBindings.jump.indexOf(keyCode) != -1) {
@@ -175,5 +207,22 @@ Player.prototype.onKeyUp = function (keyCode) {
 	} else if (this.config.keyBindings.left.indexOf(keyCode) != -1 || this.config.keyBindings.right.indexOf(keyCode) != -1) {
 		this.dir_x = 0;
 	}
+}
+
+Player.prototype.die = function() {
+    gunsight.style.visibility = "hidden";
+    window.scene.activeCamera = window.menuCamera;
+    this.config.is_player_dead = true;
+    drawDeadScreen(this.config.imgs.title, this.config.score);
+}
+
+Player.prototype.respawn = function() {
+    window.scene.activeCamera = this.camera;
+    gunsight.style.visibility = "visible";
+    this.reset();
+    this.config.score = 0;
+    this.config.healthCircle.fillPercent = 1;
+    inGameGUI(this.config)
+    this.config.is_player_dead = false;
 }
 

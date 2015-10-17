@@ -51,7 +51,7 @@ function loadError(err) {
 }
 
 function meshLoaded (config, task) {
-	config.meshes[task.name] = task.loadedMeshes[0]; // one mesh per task !
+	config.meshes[task.name] = task.loadedMeshes[0]; // one mesh per task ! currently we have no multimesh
 }
 
 function imgLoaded(config, task) {
@@ -59,19 +59,19 @@ function imgLoaded(config, task) {
 }
 
 function onAssetsLoaded (config) {
+	config.meshes.enemy.isVisible = false;
+
 	initUI(config);
 	drawTitleScreen(config.imgs.title);
 
 	config.map = new Map(config);
 
-	window.camera = new BABYLON.ArcRotateCamera("Camera", 0, config.titleScreenCameraBeta, config.titleScreenCameraRadius, BABYLON.Vector3.Zero(), scene);
-	//camera.attachControl(render_canvas, false);
-	camera.fov = 90;
+	window.menuCamera = new BABYLON.ArcRotateCamera("Camera", 0, config.titleScreenCameraBeta, config.titleScreenCameraRadius, BABYLON.Vector3.Zero(), scene);
+	menuCamera.fov = 90;
 
 
 	function renderLoop () {
 		update(config);
-		window.scene.activeCamera.alpha -= config.titleScreenCameraSpeed * window.engine.getDeltaTime() / 1000;
 		draw();
 	}
 	window.engine.runRenderLoop(renderLoop);
@@ -85,17 +85,20 @@ function play(config) {
 
 	// TMP:
 		console.log(config.meshes)
-		config.meshes.enemy.position.x = 1
-		config.meshes.enemy.position.z = 1
-		config.meshes.enemy.position.y = config.map.get_raw_y(config.map.get_index_from_xz(config.meshes.enemy.position.x, config.meshes.enemy.position.z))
-		config.meshes.enemy.scaling.x = config.meshes.enemy.scaling.z = config.meshes.enemy.scaling.y = 0.5
 
 	//config.map.reset(); // ça fait des trucs chelou
 
-	window.camera.dispose();
 	config.player = new Player(config);
+
 	init_events(config);
-	
+	render_canvas.click();
+
+	for(var i=0; i<config.maxAINb; i++) {
+		spawnAI(config);
+	}
+
 	inGameGUI(config);
+
+	config.is_game_title = false;
 }
 
