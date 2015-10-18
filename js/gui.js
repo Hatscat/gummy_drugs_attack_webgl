@@ -1,11 +1,16 @@
-function initUI() {
+function initUI(config) {
 	UI_canvas.width = window.innerWidth;
 	UI_canvas.height = window.innerHeight;
 	window.context = UI_canvas.getContext('2d');
-	context.font = 0.05 * window.innerHeight +"px Comic Sans MS";
+	window.currentFont = "fantasy";
+}
+function inGameGUI(config) {
+	context.font = 0.05 * window.innerHeight +"px " + window.currentFont;
+	context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+	gunsight.style.visibility = "visible";
 	drawCircle(config.healthCircle);
 	drawCircle(config.drugCircle);
-	drawScore(165000);
+	drawScore(0);
 }
 
 function drawCircle(circleConfig) {
@@ -56,10 +61,17 @@ function drawCircle(circleConfig) {
 	context.stroke();
 }
 
-function drawScore(score) {
+function drawScore(score, overrideSize, overrideX, overrideY) {
+	if(overrideSize) {
+		context.font = overrideSize*window.innerHeight + "px " + window.currentFont
+	}
 	context.clearRect(0,0,window.innerWidth, (0.07 * window.innerHeight | 0));
+
 	var string = "Score: " + score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "); // espace les nombres (merci stackoverflow)
-	context.fillText(string, (window.innerWidth/2 - context.measureText(string).width/2 | 0), (0.06 * window.innerHeight | 0));
+	var x = overrideX * window.innerWidth || window.innerWidth/2 - context.measureText(string).width/2 | 0;
+	var y = overrideY * window.innerHeight || 0.06 * window.innerHeight | 0
+
+	context.fillText(string, x, y);
 }
 
 function drawEatHint() {
@@ -68,4 +80,18 @@ function drawEatHint() {
 }
 function clearEatHint() {
 	context.clearRect(0, 0.4 * window.innerHeight, window.innerWidth, 0.06 * window.innerHeight);
+}
+
+function drawTitleScreen(titleImg, overRideText) {
+	context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+	context.drawImage(titleImg, window.innerWidth/2 - titleImg.naturalWidth/2, window.innerHeight * 0.1 - titleImg.naturalHeight/2);
+
+	context.font = 0.03 * window.innerHeight +"px " + window.currentFont;
+	var string = overRideText || 'Click to play!';
+	context.fillText(string, (window.innerWidth/2 - context.measureText(string).width/2 | 0), (window.innerHeight * 0.9 | 0));
+}
+
+function drawDeadScreen(titleImg, score) {
+	drawTitleScreen(titleImg, "Click to respawn!");
+	drawScore(score, 0.1, false, 0.45);
 }

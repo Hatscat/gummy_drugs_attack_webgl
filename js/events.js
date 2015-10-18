@@ -1,14 +1,19 @@
 "use strict"
 
 function init_events (config) {
-
 	render_canvas.requestPointerLock = render_canvas.requestPointerLock || render_canvas.msRequestPointerLock || render_canvas.mozRequestPointerLock || render_canvas.webkitRequestPointerLock;
 
 	document.addEventListener("click", function (evt) {
 		if (render_canvas.requestPointerLock) {
-			config.is_game_paused = false;
 			render_canvas.requestPointerLock();
+		} else {
+			alert("No pointer lock possible, please use a real browser");
 		}
+
+		if (config.player.hp <= 0) {
+			config.player.respawn();
+		}
+
 		config.player.bindedFire(evt);
 	}, false);
 
