@@ -30,6 +30,8 @@ var Player = function (config) {
     this.camera.speed = 0;
     this.camera.inertia = 0;
     this.camera.angularSensibility = 500; // lower is more sensible
+	
+    this.position = this.camera.position;
 
     /* --- WEAPON --- */
     this.weapon = this.config.meshes.gun;

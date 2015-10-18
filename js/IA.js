@@ -3,8 +3,9 @@
 function spawnAI(config) {
 	var AI = config.meshes.enemy.clone();
 	AI.isVisible = true;
-	AI.position.x = Math.random()*150 - 75 | 0;
-	AI.position.z = Math.random()*150 - 75 | 0;
+	var angle = Math.random() * Math.PI * 2;
+	AI.position.x = config.player.position.x + Math.cos(angle) * config.fog_end;
+	AI.position.z = config.player.position.z - Math.sin(angle) * config.fog_end;
 	AI.position.y = config.map.get_raw_y(config.map.get_index_from_xz(AI.position.x,AI.position.z));
 	AI.scaling.x = AI.scaling.z = AI.scaling.y = 0.5;
 	AI.force_y = 0;
