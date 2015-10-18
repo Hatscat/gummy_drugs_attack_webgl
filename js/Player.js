@@ -19,7 +19,7 @@ var Player = function (config) {
     this.camera.attachControl(window.render_canvas);
     this.camera.fov = this.config.half_PI;
     this.camera.minZ = 0.001;
-    this.camera.maxZ = this.config.fog_end;
+    //this.camera.maxZ = this.config.fog_end;
     this.camera.ellipsoid = null;
     this.camera.checkCollisions = false;
     this.camera.applyGravity = false;
@@ -128,12 +128,18 @@ Player.prototype.update = function () {
 
 	if (this.current_cell != cell) {
 		//this.current_map_y = this.next_map_y;
+		var dir_x = this.config.map.get_col_from_x(this.next_pos.x) - this.config.map.get_col_from_x(this.camera.position.x);
+		var dir_z = this.config.map.get_row_from_z(this.next_pos.z) - this.config.map.get_row_from_z(this.camera.position.z);
 		this.current_cell = cell;
 		this.next_map_y = this.config.map.get_raw_y(this.current_cell) + this.height;
+		this.config.map.set_cubes_pos(this.next_pos.x, this.next_pos.z, dir_x, dir_z);
+		console.log(dir_x, dir_z)
+		//console.log(this.config.map.get_col_from_index(cell))
+		//console.log(this.config.map.get_row_from_index(cell))
 	}
 	
-	if (	!this.config.map.is_in_map(this.next_pos.x, this.next_pos.z) // limites de la map
-		|| (this.next_pos.y <= this.next_map_y && Math.abs(this.next_map_y - this.current_map_y) > this.y_step_max) ) {
+
+	if (this.next_pos.y <= this.next_map_y && Math.abs(this.next_map_y - this.current_map_y) > this.y_step_max) {
 
 		this.next_pos.x = this.camera.position.x;
 		this.next_pos.z = this.camera.position.z;
@@ -173,6 +179,8 @@ Player.prototype.update = function () {
 }
 
 Player.prototype.fire = function () {
+		console.log(">>", this.config.map.get_col_from_x(this.camera.position.x), this.config.map.get_row_from_z(this.camera.position.z))
+		console.log(">>>", this.current_cell);
     window.scene.beginAnimation(this.weapon, 0, 100, false, 10, function() {
         //console.log("endAnim");
     });
