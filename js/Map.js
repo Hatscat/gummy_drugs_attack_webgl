@@ -138,8 +138,18 @@ Map.prototype.get_index_from_xz = function (x, z) {
 	return this._get_index_from_col_row(this._get_col_from_x(x), this._get_row_from_z(z));
 }
 
-Map.prototype.is_in_map = function (x, z) { // à revoir...
+Map.prototype.get_yoyo_index_col_row = function (col, row) {
+	col = this._get_yoyo_col_or_row(col);
+	row = this._get_yoyo_col_or_row(row);
+	return this._get_index_from_col_row(col, row);
+}
+
+Map.prototype.is_in_map = function (x, z) {
 	return x > this.x0 - this.half_cube_size && x < this.half_cube_size - this.x0 && z > this.z0 - this.half_cube_size && z < this.half_cube_size - this.z0;
+}
+
+Map.prototype._get_yoyo_col_or_row = function (axis) {
+	return this.side_len - Math.abs( this.side_len - Math.abs(axis % (this.side_len << 1)) );
 }
 
 Map.prototype._get_index_from_col_row = function (col, row) {
