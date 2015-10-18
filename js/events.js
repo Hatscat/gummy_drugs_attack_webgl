@@ -6,12 +6,11 @@ function init_events (config) {
 	document.addEventListener("click", function (evt) {
 		if (render_canvas.requestPointerLock) {
 			render_canvas.requestPointerLock();
-		}
-		else {
+		} else {
 			alert("No pointer lock possible, please use a real browser");
 		}
 
-		if(config.is_player_dead) {
+		if (config.player.hp <= 0) {
 			config.player.respawn();
 		}
 

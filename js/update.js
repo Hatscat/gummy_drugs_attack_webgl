@@ -3,19 +3,21 @@
 function update (config) {
 	var deltaTime = window.engine.getDeltaTime();
 
-	if (config.is_game_title || config.is_player_dead) {
+	if (config.is_game_title || config.player.hp <= 0) {
 		window.menuCamera.alpha -= config.titleScreenCameraSpeed * deltaTime;
+		return;
 	}
-	else if(!config.is_player_dead) {
-		config.scoreUpdateTimer -= deltaTime;
-		config.score += config.pointsPerSecond * deltaTime/1000 | 0;
-		if(config.scoreUpdateTimer <= 0) {
-			drawScore(config.score);
-			config.scoreUpdateTimer = config.scoreUpdateInterval;
-		}
-		
-		config.player.update();
+	
+	config.scoreUpdateTimer -= deltaTime;
+	//config.score += config.pointsPerSecond * deltaTime/1000 | 0; // horrible...
+	
+	if (config.scoreUpdateTimer <= 0) {
+	
+		drawScore(config.score);
+		config.scoreUpdateTimer = config.scoreUpdateInterval;
 	}
-	updateAIs(config)
+	
+	config.player.update();
+	updateAIs(config);
 }
 

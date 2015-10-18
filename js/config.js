@@ -3,14 +3,13 @@
 function getConfig() {
 	var config = {};
 
-	config.is_dev_mode = false;
+	config.is_dev_mode = location.href.indexOf('?') != -1;
 	config.is_game_title = true;
-	config.is_player_dead = false;
 
 	config.half_PI = Math.PI * 0.5;
 	config.gravity = 0.00016;
 	config.fog_start = 0;
-	config.fog_end = 80;
+	config.fog_end = 70;
 	config.map_side_n = 4;
 	config.cube_size = 10;
 

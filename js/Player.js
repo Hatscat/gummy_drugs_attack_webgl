@@ -156,7 +156,7 @@ Player.prototype.fire = function () {
     });
 }
 Player.prototype.takeDammage = function (dam) {
-    if(!this.canTakeDammage || this.config.is_player_dead) {
+    if(!this.canTakeDammage) {
         return;
     }
 
@@ -212,7 +212,6 @@ Player.prototype.onKeyUp = function (keyCode) {
 Player.prototype.die = function() {
     gunsight.style.visibility = "hidden";
     window.scene.activeCamera = window.menuCamera;
-    this.config.is_player_dead = true;
     drawDeadScreen(this.config.imgs.title, this.config.score);
 }
 
@@ -223,6 +222,5 @@ Player.prototype.respawn = function() {
     this.config.score = 0;
     this.config.healthCircle.fillPercent = 1;
     inGameGUI(this.config)
-    this.config.is_player_dead = false;
 }
 
