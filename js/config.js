@@ -54,7 +54,7 @@ function getConfig() {
 	config.titleScreenCameraSpeed = 0.00005;
 
 	config.score = 0;
-	config.pointsPerSecond = 100;
+	config.pointsPerMiliSecond = 0.1;
 	config.pointPerEnemyKilled = 250;
 	config.scoreUpdateTimer = 100;
 	config.scoreUpdateInterval = 100;
