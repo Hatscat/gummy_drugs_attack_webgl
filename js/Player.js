@@ -172,8 +172,7 @@ Player.prototype.takeDammage = function (dam) {
         }
     }
 
-    this.config.healthCircle.fillPercent = Math.max(0, (this.hp/this.hp_max));
-    drawCircle(this.config.healthCircle);
+    this.config.GUI.drawCircle('healthCircle', Math.max(0, (this.hp/this.hp_max)));
 
     this.canTakeDammage = false;
     window.setTimeout(this.bindedSetCanTakeDammage, this.dammageCoolDown);
@@ -212,7 +211,7 @@ Player.prototype.onKeyUp = function (keyCode) {
 Player.prototype.die = function() {
     gunsight.style.visibility = "hidden";
     window.scene.activeCamera = window.menuCamera;
-    drawDeadScreen(this.config.imgs.title, this.config.score);
+    this.config.GUI.drawDeadScreen();
 }
 
 Player.prototype.respawn = function() {
@@ -220,7 +219,6 @@ Player.prototype.respawn = function() {
     gunsight.style.visibility = "visible";
     this.reset();
     this.config.score = 0;
-    this.config.healthCircle.fillPercent = 1;
-    inGameGUI(this.config)
+    this.config.GUI.inGameGUI();
 }
 

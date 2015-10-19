@@ -12,7 +12,7 @@ function update (config) {
 	config.score += config.pointsPerMiliSecond * deltaTime | 0;
 	
 	if (config.scoreUpdateTimer <= 0) {
-		drawScore(config.score);
+		config.GUI.drawScore();
 		config.scoreUpdateTimer = config.scoreUpdateInterval;
 	}
 	

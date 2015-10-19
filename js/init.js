@@ -61,8 +61,8 @@ function imgLoaded(config, task) {
 function onAssetsLoaded (config) {
 	config.meshes.enemy.isVisible = false;
 
-	initUI(config);
-	drawTitleScreen(config.imgs.title);
+	config.GUI = new GUI(config);
+	config.GUI.drawTitleScreen();
 
 	config.map = new Map(config);
 
@@ -98,7 +98,7 @@ function play(config) {
 		config.AIManager.spawnAI(config);
 	}
 
-	inGameGUI(config);
+	config.GUI.inGameGUI();
 
 	config.is_game_title = false;
 }

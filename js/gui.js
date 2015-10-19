@@ -1,97 +1,133 @@
-function initUI(config) {
+var GUI = function(config) {
+	this.config = config;
+	this.context = UI_canvas.getContext('2d');
+	this.currentFont = "fantasy";
+
+	this.scoreY = 0.06;
+	this.hintY = 0.4;
+	this.titleY = 0.1;
+	this.fontHeight = 0.05;
+	this.titleBottomTextY = 0.9;
+	this.scoreDeadHeight = 0.1;
+	this.scoreDeadY = 0.45;
+	
 	UI_canvas.width = window.innerWidth;
 	UI_canvas.height = window.innerHeight;
-	window.context = UI_canvas.getContext('2d');
-	window.currentFont = "fantasy";
-}
-function inGameGUI(config) {
-	context.font = 0.05 * window.innerHeight +"px " + window.currentFont;
-	context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-	gunsight.style.visibility = "visible";
-	drawCircle(config.healthCircle);
-	drawCircle(config.drugCircle);
-	drawScore(0);
-}
 
-function drawCircle(circleConfig) {
-
-	var radius = circleConfig.radius*window.innerWidth | 0;
-	var centerX = window.innerWidth/2 + window.innerWidth*circleConfig.x | 0;
-	var centerY = window.innerHeight - window.innerHeight*circleConfig.y - radius | 0;
-	var amount = radius*2*circleConfig.fillPercent;
-
-	context.clearRect(centerX - radius, centerY - radius, radius*2, radius*2);
-	context.save();
-
-	context.beginPath();
-	context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-	context.clip(); 
-	if(circleConfig.innerColor == "rainbow") {
-		grd = context.createLinearGradient(centerX, centerY + radius, centerX, centerY - radius);
-		grd.addColorStop(0, 'rgba(255, 0, 0, 1)');
-		grd.addColorStop(0.15, 'rgba(255, 0, 255, 1)');
-		grd.addColorStop(0.33, 'rgba(0, 0, 255, 1)');
-		grd.addColorStop(0.49, 'rgba(0, 255, 255, 1)');
-		grd.addColorStop(0.67, 'rgba(0, 255, 0, 1)');
-		grd.addColorStop(0.84, 'rgba(255, 255, 0, 1)');
-		grd.addColorStop(1, 'rgba(255, 0, 0, 1)');
-		context.fillStyle = grd;
+	this.healthCircle = {
+		x: -0.44, //screenPercent from middle
+		y: 0.01, //screenPercent from bottom
+		radius: 0.05, //screenWidthPercent
+		innerColor: "red",
+		outterColor: "black",
+		fillPercent: 1
 	}
-	else {
-		context.fillStyle = circleConfig.innerColor;
+	this.drugCircle = {
+		x: 0.44,
+		y: 0.01,
+		radius: 0.05,
+		innerColor: '',
+		outterColor: "black",
+		fillPercent: 1
 	}
-	context.fillRect(centerX - radius, centerY + radius, radius * 2, -amount);
-
-	context.beginPath();
-	context.strokeStyle = 'black';
-	context.lineWidth = 5;
-	context.shadowBlur = 30;
-	context.shadowColor = 'black';
-	context.shadowOffsetX = 9;
-	context.shadowOffsetY = -9;
-	context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-	context.stroke();
-
-	context.restore(); // reset clipping region
-
-	context.beginPath();
-	context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-	context.lineWidth = 0;
-	context.strokeStyle = circleConfig.outterColor;
-	context.stroke();
+	this.drugCircle.innerColor = this.createRainbowGradient(this.drugCircle.x, this.drugCircle.y, this.drugCircle.radius);
 }
 
-function drawScore(score, overrideSize, overrideX, overrideY) {
+GUI.prototype.createRainbowGradient = function(x, y, radius) {
+	var radius = radius*window.innerWidth | 0;
+	var centerX = window.innerWidth/2 + window.innerWidth*x | 0;
+	var centerY = window.innerHeight - window.innerHeight*y - radius | 0;
+
+	var rainbowGradient = this.context.createLinearGradient(centerX, centerY + radius, centerX, centerY - radius);
+	rainbowGradient.addColorStop(0, 'rgba(255, 0, 0, 1)');
+	rainbowGradient.addColorStop(0.15, 'rgba(255, 0, 255, 1)');
+	rainbowGradient.addColorStop(0.33, 'rgba(0, 0, 255, 1)');
+	rainbowGradient.addColorStop(0.49, 'rgba(0, 255, 255, 1)');
+	rainbowGradient.addColorStop(0.67, 'rgba(0, 255, 0, 1)');
+	rainbowGradient.addColorStop(0.84, 'rgba(255, 255, 0, 1)');
+	rainbowGradient.addColorStop(1, 'rgba(255, 0, 0, 1)');
+
+	return rainbowGradient;
+}
+
+GUI.prototype.inGameGUI = function() {
+	this.context.font = 0.05 * window.innerHeight +"px " + this.currentFont;
+	this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+	gunsight.style.visibility = "visible"; //html div
+
+	this.drawCircle('healthCircle', 1);
+	this.drawCircle('drugCircle', 1);
+	this.drawScore(0);
+}
+
+GUI.prototype.drawCircle = function(circleName, newPercent) {
+	this[circleName].fillPercent = newPercent;
+
+	var radius = this[circleName].radius*window.innerWidth | 0;
+	var centerX = window.innerWidth/2 + window.innerWidth*this[circleName].x | 0;
+	var centerY = window.innerHeight - window.innerHeight*this[circleName].y - radius | 0;
+	var amount = radius*2*this[circleName].fillPercent;
+
+	this.context.clearRect(centerX - radius, centerY - radius, radius*2, radius*2);
+	this.context.save();
+
+	this.context.beginPath();
+	this.context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+	this.context.clip(); 
+	this.context.fillStyle = this[circleName].innerColor;
+	this.context.fillRect(centerX - radius, centerY + radius, radius * 2, -amount);
+
+	this.context.beginPath();
+	this.context.strokeStyle = 'black';
+	this.context.lineWidth = 5;
+	this.context.shadowBlur = 30;
+	this.context.shadowColor = 'black';
+	this.context.shadowOffsetX = 9;
+	this.context.shadowOffsetY = -9;
+	this.context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+	this.context.stroke();
+
+	this.context.restore(); // reset clipping region
+
+	this.context.beginPath();
+	this.context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+	this.context.lineWidth = 0;
+	this.context.strokeStyle = this[circleName].outterColor;
+	this.context.stroke();
+}
+
+GUI.prototype.drawScore = function(overrideScore, overrideSize, overrideX, overrideY) {
 	if(overrideSize) {
-		context.font = overrideSize*window.innerHeight + "px " + window.currentFont
+		this.context.font = overrideSize*window.innerHeight + "px " + this.currentFont
 	}
-	context.clearRect(0,0,window.innerWidth, (0.07 * window.innerHeight | 0));
-
+	var score = overrideScore || this.config.score;
 	var string = "Score: " + score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "); // espace les nombres (merci stackoverflow)
-	var x = overrideX * window.innerWidth || window.innerWidth/2 - context.measureText(string).width/2 | 0;
-	var y = overrideY * window.innerHeight || 0.06 * window.innerHeight | 0
+	var x = overrideX * window.innerWidth || window.innerWidth/2 - this.context.measureText(string).width/2 | 0;
+	var y = overrideY * window.innerHeight || this.scoreY * window.innerHeight | 0
+	this.context.clearRect(0, (y-this.fontHeight* window.innerHeight | 0), window.innerWidth, (this.fontHeight* 2* window.innerHeight | 0));
 
-	context.fillText(string, x, y);
+	this.context.fillText(string, x, y);
 }
 
-function drawEatHint() {
+GUI.prototype.drawEatHint = function() {
 	var string = 'Press "F"!';
-	context.fillText(string, (window.innerWidth/2 - context.measureText(string).width/2 | 0), (0.4 * window.innerHeight | 0));
+	this.context.fillText(string, (window.innerWidth/2 - this.context.measureText(string).width/2 | 0), (this.hintY * window.innerHeight | 0));
 }
-function clearEatHint() {
-	context.clearRect(0, 0.4 * window.innerHeight, window.innerWidth, 0.06 * window.innerHeight);
+GUI.prototype.clearEatHint = function() {
+	this.context.clearRect(0, this.hintY * window.innerHeight, window.innerWidth, this.fontHeight * window.innerHeight);
 }
 
-function drawTitleScreen(titleImg, overRideText) {
-	context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-	context.drawImage(titleImg, window.innerWidth/2 - titleImg.naturalWidth/2, window.innerHeight * 0.1 - titleImg.naturalHeight/2);
+GUI.prototype.drawTitleScreen = function(overRideText) {
+	this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+	this.context.drawImage(this.config.imgs.title, window.innerWidth/2 - config.imgs.title.naturalWidth/2, window.innerHeight * this.titleY - config.imgs.title.naturalHeight/2);
 
-	context.font = 0.03 * window.innerHeight +"px " + window.currentFont;
+	this.context.font = this.fontHeight/2 * window.innerHeight +"px " + this.currentFont;
 	var string = overRideText || 'Click to play!';
-	context.fillText(string, (window.innerWidth/2 - context.measureText(string).width/2 | 0), (window.innerHeight * 0.9 | 0));
+	this.context.fillText(string, (window.innerWidth/2 - this.context.measureText(string).width/2 | 0), (window.innerHeight * this.titleBottomTextY | 0));
 }
 
-function drawDeadScreen(titleImg, score) {
-	drawTitleScreen(titleImg, "Click to respawn!");
-	drawScore(score, 0.1, false, 0.45);
+GUI.prototype.drawDeadScreen = function() {
+	this.drawTitleScreen("Click to respawn!");
+	this.drawScore(null, this.scoreDeadHeight, false, this.scoreDeadY);
 }
