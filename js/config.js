@@ -59,21 +59,5 @@ function getConfig() {
 	config.scoreUpdateTimer = 100;
 	config.scoreUpdateInterval = 100;
 
-	config.AIs = [];
-
-	config.AICanfollowPlayer = true;
-	config.AICanRandomMove = true;
-	config.AICanJump = true;
-
-	config.AIDetectionDistance = 150;
-	config.AITouchingDistance = 5;
-	config.AIRotOffset = 3*Math.PI/4;
-	config.AIspeed = 0.005;
-	config.maxAINb = 500;
-	config.AIDirChangeTimer = 1000;
-	config.AIJumpTimer = 500;
-	config.AIJumpRandomTimer = 500;
-	config.AIDammage = 10;
-
 	return config;
 }

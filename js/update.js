@@ -17,6 +17,6 @@ function update (config) {
 	}
 	
 	config.player.update();
-	updateAIs(config);
+	config.AIManager.updateAllAI(config);
 }
 

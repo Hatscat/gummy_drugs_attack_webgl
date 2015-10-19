@@ -89,12 +89,13 @@ function play(config) {
 	//config.map.reset(); // ça fait des trucs chelou
 
 	config.player = new Player(config);
+	config.AIManager = new AIManager(config)
 
 	init_events(config);
 	render_canvas.click();
 
-	for(var i=0; i<config.maxAINb; i++) {
-		spawnAI(config);
+	for(var i=0; i<config.AIManager.maxAINb; i++) {
+		config.AIManager.spawnAI(config);
 	}
 
 	inGameGUI(config);
