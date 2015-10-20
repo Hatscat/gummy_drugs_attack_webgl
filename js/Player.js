@@ -105,12 +105,12 @@ var Player = function (config) {
 }
 
 Player.prototype.reset = function () {
-	this.next_cell = this.config.map.get_index_from_xz(0, 0);
-	this.current_cell = this.next_cell;
 	this.next_cell_col = this.config.map.get_col_from_x(0);
 	this.current_cell_col = this.next_cell_col;
 	this.next_cell_row = this.config.map.get_row_from_z(0);
 	this.current_cell_row = this.next_cell_row;
+	this.next_cell = this.config.map.get_index_from_col_row(this.next_cell_col, this.next_cell_row);
+	this.current_cell = this.next_cell;
 	this.next_map_y = config.map.get_raw_y(this.next_cell) + this.height;
 	this.start_pos = new BABYLON.Vector3(0, this.next_map_y, 0);
 	this.next_pos = { x: this.start_pos.x, y: this.start_pos.y, z: this.start_pos.z };
@@ -120,31 +120,23 @@ Player.prototype.reset = function () {
 	this.force_y = 0;
 	this.can_jmp = true;
 	this.hp = this.hp_max;
+	this.config.map.set_all_cubes_pos(0, 0);
 }
 
 Player.prototype.update = function () {
 	
 	var deltaTime = window.engine.getDeltaTime();
-	var cell = this.config.map.get_index_from_xz(this.next_pos.x, this.next_pos.z);
-	
-	this.current_map_y = this.next_map_y;
 
-	if (this.next_cell != cell) {
-		//this.current_map_y = this.next_map_y;
-		this.next_cell = cell;
-		this.next_cell_col = this.config.map.get_col_from_x(this.next_pos.x);
-		this.next_cell_row = this.config.map.get_row_from_z(this.next_pos.z);
-		this.next_map_y = this.config.map.get_raw_y(this.next_cell) + this.height;
-	}
-	
+	this.current_map_y = this.next_map_y;
+	this.next_map_y = this.config.map.get_raw_y(this.config.map.get_index_from_xz(this.next_pos.x, this.next_pos.z)) + this.height;
 
 	if (this.next_pos.y <= this.next_map_y && Math.abs(this.next_map_y - this.current_map_y) > this.y_step_max) {
 
 		this.next_pos.x = this.camera.position.x;
 		this.next_pos.z = this.camera.position.z;
-		this.next_cell = this.current_cell;
-		this.next_cell_col = this.current_cell_col;
-		this.next_cell_row = this.current_cell_row;
+		//this.next_cell_col = this.current_cell_col;
+		//this.next_cell_row = this.current_cell_row;
+		//this.next_cell = this.current_cell;
 
 	} else {
 
@@ -176,13 +168,30 @@ Player.prototype.update = function () {
 			//this.camera.position.y = lerp(this.current_map_y, this.next_map_y, );
 		}
 
-		// update de la map visible
-		var dir_x = this.next_cell_col - this.current_cell_col;
-		var dir_z = this.next_cell_row - this.current_cell_row;
-		this.config.map.set_cubes_pos(this.next_pos.x, this.next_pos.z, dir_x, dir_z);
-		this.current_cell = this.next_cell;
-		this.current_cell_col = this.next_cell_col;
-		this.current_cell_row = this.next_cell_row;
+		var col = this.config.map.get_col_from_x(this.position.x);
+		var row = this.config.map.get_row_from_z(this.position.z);
+
+		// new cell
+		if (col != this.next_cell_col || row != this.next_cell_row) {
+			console.log("new cell")
+			//this.current_map_y = this.next_map_y;
+			this.next_cell_col = col;
+			this.next_cell_row = row;
+			//this.next_cell = this.config.map.get_index_from_col_row(this.next_cell_col, this.next_cell_row);
+			//this.next_map_y = this.config.map.get_raw_y(this.next_cell) + this.height;
+			//this.next_map_y = this.config.map.get_raw_y(this.config.map.get_index_from_col_row(this.next_cell_col, this.next_cell_row)) + this.height;
+
+			// update de la map visible
+			var dir_x = this.next_cell_col - this.current_cell_col;
+			var dir_z = this.next_cell_row - this.current_cell_row;
+
+			this.config.map.set_cubes_pos(this.position.x, this.position.z, dir_x, dir_z);
+
+			this.current_cell_col = this.next_cell_col;
+			this.current_cell_row = this.next_cell_row;
+		}
+
+		//this.current_cell = this.next_cell;
 	}
 
 }

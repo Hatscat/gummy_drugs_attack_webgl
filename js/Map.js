@@ -16,10 +16,10 @@ function Map (config) {
 	this.x0 = (1 - this.side_len) * this.half_cube_size;
 	this.z0 = (1 - this.side_len) * this.half_cube_size;
 
-	this.reset();
+	this.create();
 }
 
-Map.prototype.reset = function () {
+Map.prototype.create = function () {
 
 	var top_left = 0;
 	var top_right = this.side_len - 1;
@@ -55,7 +55,7 @@ Map.prototype.reset = function () {
 	}
 	origin_box.setEnabled(false);
 
-	this.set_all_cubes_pos(0, 0);
+	//this.set_all_cubes_pos(0, 0);
 	//this.config.ground = BABYLON.Mesh.MergeMeshes(cubes, true);
 	//window.scene.createOrUpdateSelectionOctree();
 
@@ -149,6 +149,9 @@ Map.prototype.set_all_cubes_pos = function (x, z) {
 
 Map.prototype.set_cubes_pos = function (x, z, dir_x, dir_z) {
 	
+	console.log(dir_x, dir_z)
+	//dir_x = dir_x < -0.5 ? -1 : dir_x > 0.5 ? 1 : 0;
+	
 	if (dir_x == 1 || dir_x == -1) {
 		
 		var c = loop_index(dir_x == 1 ? this.moves_x : this.cubes_side_len - 1 + this.moves_x, this.cubes_side_len); 
@@ -160,7 +163,7 @@ Map.prototype.set_cubes_pos = function (x, z, dir_x, dir_z) {
 			var cube_i = i * this.cubes_side_len + c;
 			this.cubes[cube_i].col = new_col;
 			this.cubes[cube_i].position.x = this.x0 + new_col * this.config.cube_size;
-			this.cubes[cube_i].position.y = this.values[this.get_index_from_col_row(new_col, this.cubes[i].row)] - this.y_half_max;
+			this.cubes[cube_i].position.y = this.values[this.get_index_from_col_row(new_col, this.cubes[cube_i].row)] - this.y_half_max;
 		}
 	}
 
@@ -175,7 +178,7 @@ Map.prototype.set_cubes_pos = function (x, z, dir_x, dir_z) {
 			var cube_i = i + r;
 			this.cubes[cube_i].row = new_row;
 			this.cubes[cube_i].position.z = this.z0 + new_row * this.config.cube_size;
-			this.cubes[cube_i].position.y = this.values[this.get_index_from_col_row(this.cubes[i].col, new_row)] - this.y_half_max;
+			this.cubes[cube_i].position.y = this.values[this.get_index_from_col_row(this.cubes[cube_i].col, new_row)] - this.y_half_max;
 		}
 	}
 }

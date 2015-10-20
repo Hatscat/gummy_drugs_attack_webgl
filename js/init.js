@@ -17,13 +17,13 @@ function createScene (config) {
 	var map_side_size = config.cube_size * (Math.pow(2,config.map_side_n) + 1);
 	config.light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(-map_side_size >> 1, map_side_size << 1, map_side_size >> 1), window.scene);
 
-	window.scene.fogMode = BABYLON.Scene.FOGMODE_LINEAR; //BABYLON.Scene.FOGMODE_EXP //
+	window.scene.fogMode = BABYLON.Scene.FOGMODE_LINEAR;
 	//window.scene.fogDensity = 0.03;
 	window.scene.fogStart = config.fog_start;
 	window.scene.fogEnd = config.fog_end;
-	window.scene.clearColor = new BABYLON.Color3(1, 0, 0);
-	window.scene.fogColor = config.is_dev_mode ? new BABYLON.Color3(0, 1, 0) : new BABYLON.Color3(1, 0, 0);
-	config.light.groundColor = new BABYLON.Color3(1, 0, 0);
+	window.scene.clearColor = config.light_color;
+	window.scene.fogColor = config.is_dev_mode ? new BABYLON.Color3(0, 1, 0) : config.light_color;
+	config.light.groundColor = config.light_color;
 }
 
 function loadAssets (config) {

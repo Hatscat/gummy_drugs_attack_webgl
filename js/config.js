@@ -10,9 +10,10 @@ function getConfig() {
 	config.gravity = 0.00016;
 	config.fog_start = 0;
 	config.fog_end = 70;
-	config.map_side_n = 2;
-	config.map_visibility_n = 1;
+	config.map_side_n = 1;
+	config.map_visibility_n = 3; // config.fog_end / 10 | 0
 	config.cube_size = 10;
+	config.light_color = new BABYLON.Color3(0.5, 0, 1);
 
 	config.meshes = {};
 	config.imgs= {};
