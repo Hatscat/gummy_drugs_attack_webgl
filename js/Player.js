@@ -6,6 +6,7 @@ var Player = function (config) {
 	this.height = 2;
 	this.speed = 0.016;
 	this.jmp_str = 0.05;
+	this.y_step_str = 0.0125;
 	this.y_step_max = 1;
     this.canTakeDammage = true;
     this.dammageCoolDown = 1000;
@@ -129,6 +130,7 @@ Player.prototype.update = function () {
 
 	this.current_map_y = this.next_map_y;
 	this.next_map_y = this.config.map.get_raw_y(this.config.map.get_index_from_xz(this.next_pos.x, this.next_pos.z)) + this.height;
+	//this.next_map_y = this.config.map.get_smooth_y_from_xz(this.next_pos.x, this.next_pos.z) + this.height;
 
 	if (this.next_pos.y <= this.next_map_y && Math.abs(this.next_map_y - this.current_map_y) > this.y_step_max) {
 
@@ -164,8 +166,9 @@ Player.prototype.update = function () {
 			this.force_y = 0;
 			this.can_jmp = true;
 
-			this.next_pos.y = this.next_map_y;
-			//this.camera.position.y = lerp(this.current_map_y, this.next_map_y, );
+			this.next_pos.y = Math.min(this.next_map_y, this.next_pos.y + this.y_step_str * deltaTime);
+			//this.next_pos.y = this.next_map_y;
+			//this.next_pos.y += Math.max(this.next_map_y, this.next_pos.y + this.config.gravity * deltaTime);
 		}
 
 		var col = this.config.map.get_col_from_x(this.position.x);

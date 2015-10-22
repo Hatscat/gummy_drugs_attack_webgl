@@ -73,7 +73,7 @@ function getConfig () {
 	config.AITouchingDistance = 5;
 	config.AIRotOffset = 3*Math.PI/4;
 	config.AIspeed = 0.005;
-	config.maxAINb = 500;
+	//config.maxAINb = 500;
 	config.AIDirChangeTimer = 1000;
 	config.AIJumpTimer = 500;
 	config.AIJumpRandomTimer = 500;
