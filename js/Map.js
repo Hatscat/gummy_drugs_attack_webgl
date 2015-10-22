@@ -84,7 +84,7 @@ Map.prototype.create = function () {
 
 	//ctx.putImageData(imgData, 0, 0)
 	
-	document.body.appendChild(canvas)
+	//document.body.appendChild(canvas)
 
 /*
 	var buffer = new Uint8ClampedArray(this.vals_nb << 2);
@@ -129,7 +129,7 @@ Map.prototype.diamond_sqrt = function (len) {
 	var half_rows_len = rows_len >> 1;
 	var subdivs = parseInt(this.side_len / cols_len);
 	var sqrts_nb = subdivs * subdivs;
-	var noise_len = cols_len >> 1;
+	var noise_len = cols_len * this.config.map_noise_coef;
 
 //	console.log("<<<<<<<<<<<<<<<<<<<<<")
 	//console.log(cols_len)
@@ -356,7 +356,7 @@ Map.prototype.set_all_cubes_pos = function (x, z) {
 		//console.log(this.cubes[i].position.x, this.cubes[i].position.z)
 		//console.log("-------------")
 
-		this.cubes[i].position.y = this.values[this.get_index_from_col_row(col, row)] - this.y_half_max;
+		this.cubes[i].position.y = this.get_raw_y(this.get_index_from_col_row(col, row)) - this.y_half_max;
 		//console.log("-------------")
 		//console.log(this.cubes[i].position.y)
 	}
@@ -379,7 +379,7 @@ Map.prototype.set_cubes_pos = function (x, z, dir_x, dir_z) {
 			var cube_i = i * this.cubes_side_len + c;
 			this.cubes[cube_i].col = new_col;
 			this.cubes[cube_i].position.x = this.x0 + new_col * this.config.cube_size;
-			this.cubes[cube_i].position.y = this.values[this.get_index_from_col_row(new_col, this.cubes[cube_i].row)] - this.y_half_max;
+			this.cubes[cube_i].position.y = this.get_raw_y(this.get_index_from_col_row(new_col, this.cubes[cube_i].row)) - this.y_half_max;
 		}
 	}
 
@@ -394,13 +394,13 @@ Map.prototype.set_cubes_pos = function (x, z, dir_x, dir_z) {
 			var cube_i = i + r;
 			this.cubes[cube_i].row = new_row;
 			this.cubes[cube_i].position.z = this.z0 + new_row * this.config.cube_size;
-			this.cubes[cube_i].position.y = this.values[this.get_index_from_col_row(this.cubes[cube_i].col, new_row)] - this.y_half_max;
+			this.cubes[cube_i].position.y = this.get_raw_y(this.get_index_from_col_row(this.cubes[cube_i].col, new_row)) - this.y_half_max;
 		}
 	}
 }
 
 Map.prototype.get_raw_y = function (cell_index) {
-	return this.values[cell_index];
+	return this.values[cell_index] * this.config.cube_height;
 }
 
 /*
