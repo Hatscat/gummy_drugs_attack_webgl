@@ -116,6 +116,7 @@ Player.prototype.update = function () {
 
 		this.next_pos.x = this.position.x;
 		this.next_pos.z = this.position.z;
+		this.can_jmp = true;
 
 	} else {
 
