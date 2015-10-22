@@ -173,7 +173,7 @@ Player.prototype.update = function () {
 
 		// new cell
 		if (col != this.next_cell_col || row != this.next_cell_row) {
-			console.log("new cell")
+			//console.log("new cell")
 			//this.current_map_y = this.next_map_y;
 			this.next_cell_col = col;
 			this.next_cell_row = row;
@@ -197,8 +197,8 @@ Player.prototype.update = function () {
 }
 
 Player.prototype.fire = function () {
-		console.log(">>", this.config.map.get_col_from_x(this.camera.position.x), this.config.map.get_row_from_z(this.camera.position.z))
-		console.log(">>>", this.next_cell);
+		//console.log(">>", this.config.map.get_col_from_x(this.camera.position.x), this.config.map.get_row_from_z(this.camera.position.z))
+		//console.log(">>>", this.next_cell);
     window.scene.beginAnimation(this.weapon, 0, 100, false, 10, function() {
         //console.log("endAnim");
     });

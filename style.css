@@ -7,6 +7,9 @@ html, body {
     position: fixed;
     background: #000;
 }
+canvas {
+	position: fixed;
+}
 #gunsight {
     position:absolute;
     top:50%;
