@@ -15,7 +15,12 @@ function update (config) {
 		config.GUI.drawScore();
 		config.scoreUpdateTimer = config.scoreUpdateInterval;
 	}
-	
+
+	config.player.currentShootCoolDown -= deltaTime;
+	if(config.isMouseDown && config.player.currentShootCoolDown <= 0) {
+		config.player.currentShootCoolDown = config.player.shootCoolDown;
+		config.player.bindedFire();
+	}
 	config.player.update();
 	config.AIManager.updateAllAI(config);
 }

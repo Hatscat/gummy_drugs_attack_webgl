@@ -1,11 +1,13 @@
 "use strict"
 
-var AI = function(config, x, z) {
+var AI = function(config, x, z, name) {
 	this.config = config;
 	this.CanfollowPlayer = true;
 	this.canRandomMove = true;
 	this.canJump = true;
 	this.stop = false;
+	this.maxHp = 3;
+	this.hp = this.maxHp;
 
 	this.detectionDistance = 150;
 	this.touchingDistance = 5;
@@ -21,8 +23,7 @@ var AI = function(config, x, z) {
 	this.angle = Math.PI;
 	this.nextDirectionTimer = 0;
 	this.nextJumpTimer = this.jumpTimer + Math.random()*this.jumpRandomTimer;
-
-	this.mesh = config.meshes.enemy.clone();
+	this.mesh = config.meshes.enemy.createInstance(name);
 	this.mesh.isVisible = true;
 	this.mesh.position.x = x;
 	this.mesh.position.z = z;

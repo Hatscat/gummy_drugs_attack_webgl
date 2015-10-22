@@ -14,7 +14,14 @@ function init_events (config) {
 			config.player.respawn();
 		}
 
-		config.player.bindedFire(evt);
+	}, false);
+
+	document.addEventListener("mousedown", function (evt) {
+		config.isMouseDown = true;
+	}, false);
+
+	document.addEventListener("mouseup", function (evt) {
+		config.isMouseDown = false;
 	}, false);
 
 	document.addEventListener("keydown", function (evt) {

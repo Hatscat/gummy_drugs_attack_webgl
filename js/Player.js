@@ -9,6 +9,9 @@ var Player = function (config) {
 	this.y_step_max = 1;
     this.canTakeDammage = true;
     this.dammageCoolDown = 1000;
+    this.shootCoolDown = 100;
+    this.currentShootCoolDown = 0;
+    this.shotDammage = 1;
 	
 	this.reset();
 
@@ -154,6 +157,14 @@ Player.prototype.fire = function () {
     window.scene.beginAnimation(this.weapon, 0, 100, false, 10, function() {
         //console.log("endAnim");
     });
+    var pickedInfo = scene.pick(window.innerWidth/2, window.innerHeight/2, null, false);
+    if(pickedInfo.pickedMesh) {
+        if(pickedInfo.pickedMesh.name.indexOf("enemy") != -1) {
+            this.config.AIManager.hurtAI(pickedInfo.pickedMesh.name, this.shotDammage);
+        }
+        config.ParticlesManager.impactLaunch(pickedInfo.pickedPoint);
+    }
+
 }
 Player.prototype.takeDammage = function (dam) {
     if(!this.canTakeDammage) {
