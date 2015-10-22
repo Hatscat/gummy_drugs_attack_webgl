@@ -14,7 +14,7 @@ var Player = function (config) {
 	this.reset();
 
     /* --- CAMERA --- */
-    this.camera = new BABYLON.FreeCamera("camera", this.start_pos, window.scene); // change with a simpler camera
+    this.camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(this.next_pos.x, this.next_pos.y, this.next_pos.z), window.scene); // change with a simpler camera
     window.scene.activeCamera = this.camera;
 
     this.camera.attachControl(window.render_canvas);
@@ -31,8 +31,8 @@ var Player = function (config) {
     this.camera.speed = 0;
     this.camera.inertia = 0;
     this.camera.angularSensibility = 500; // lower is more sensible
-	
-    this.position = this.camera.position;
+
+    	this.position = this.camera.position;
 
     /* --- WEAPON --- */
     this.weapon = this.config.meshes.gun;
@@ -88,20 +88,20 @@ var Player = function (config) {
 }
 
 Player.prototype.reset = function () {
+
 	this.next_cell_col = this.config.map.get_col_from_x(0);
 	this.current_cell_col = this.next_cell_col;
 	this.next_cell_row = this.config.map.get_row_from_z(0);
 	this.current_cell_row = this.next_cell_row;
-	this.next_map_y = config.map.get_raw_y(this.config.map.get_index_from_col_row(this.next_cell_col, this.next_cell_row)) + this.height;
-	this.start_pos = new BABYLON.Vector3(0, this.next_map_y, 0);
-	this.next_pos = { x: this.start_pos.x, y: this.start_pos.y, z: this.start_pos.z };
+	this.next_map_y = this.config.map.get_raw_y(this.config.map.get_index_from_col_row(this.next_cell_col, this.next_cell_row)) + this.height;
 	this.current_map_y = this.next_map_y;
+	this.next_pos = { x: 0, y: this.next_map_y, z: 0 };
 	this.dir_z = 0;
 	this.dir_x = 0;
 	this.force_y = 0;
 	this.can_jmp = true;
 	this.hp = this.hp_max;
-	this.config.map.set_all_cubes_pos(0, 0);
+	this.config.map.set_all_cubes_pos(this.next_pos.x, this.next_pos.z);
 }
 
 Player.prototype.update = function () {
@@ -111,12 +111,14 @@ Player.prototype.update = function () {
 	this.current_map_y = this.next_map_y;
 	this.next_map_y = this.config.map.get_raw_y(this.config.map.get_index_from_xz(this.next_pos.x, this.next_pos.z)) + this.height;
 
+	// collision avec un mur
 	if (this.next_pos.y <= this.next_map_y && Math.abs(this.next_map_y - this.current_map_y) > this.y_step_max) {
 
 		this.next_pos.x = this.position.x;
 		this.next_pos.z = this.position.z;
 
 	} else {
+
 		this.position.x = this.next_pos.x;
 		this.position.z = this.next_pos.z;
 		this.position.y = this.next_pos.y;
@@ -141,7 +143,7 @@ Player.prototype.update = function () {
 			this.force_y = 0;
 			this.can_jmp = true;
 
-			this.next_pos.y = Math.min(this.next_map_y, this.next_pos.y + this.y_step_str * deltaTime);
+			this.next_pos.y = Math.min(this.next_map_y, this.next_pos.y + Math.max(1, this.next_map_y - this.next_pos.y) * this.y_step_str * deltaTime);
 		}
 
 		var col = this.config.map.get_col_from_x(this.position.x);
@@ -163,7 +165,6 @@ Player.prototype.update = function () {
 			this.current_cell_row = this.next_cell_row;
 		}
 	}
-
 }
 
 Player.prototype.fire = function () {
@@ -230,8 +231,11 @@ Player.prototype.die = function() {
     window.scene.activeCamera = window.menuCamera;
     drawDeadScreen(this.config.imgs.title, this.config.score);
 }
-
+/*
 Player.prototype.respawn = function() {
+	this.config.map.diamond_sqrt(this.config.map.side_len);
+	this.config.map.set_all_cubes_pos(0, 0);
+
     window.scene.activeCamera = this.camera;
     gunsight.style.visibility = "visible";
     this.reset();
@@ -239,4 +243,4 @@ Player.prototype.respawn = function() {
     this.config.healthCircle.fillPercent = 1;
     inGameGUI(this.config);
 }
-
+*/

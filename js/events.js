@@ -11,7 +11,17 @@ function init_events (config) {
 		}
 
 		if (config.player.hp <= 0) {
-			config.player.respawn();
+
+			config.map.diamond_sqrt(config.map.side_len);
+			config.map.set_all_cubes_pos(0, 0);
+
+			window.scene.activeCamera = config.player.camera;
+			gunsight.style.visibility = "visible";
+			config.score = 0;
+			config.healthCircle.fillPercent = 1;
+			inGameGUI(config);
+			
+			config.player.reset();
 		}
 
 		config.player.bindedFire(evt);
