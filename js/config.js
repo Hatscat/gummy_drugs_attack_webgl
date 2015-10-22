@@ -14,10 +14,15 @@ function getConfig() {
 	config.cube_size = 10;
 
 	config.meshes = {};
-	config.imgs= {};
+	config.imgs = {};
+	config.textures = {};
 
 	config.imgToLoad = {
 		"title": "assets/title" + (Math.random()*4 | 0) + ".png" // to choose a title font img in random,
+	}
+
+	config.texturesToLoad = {
+		"gunImpactParticle": "assets/gunImpactParticle.png"
 	}
 
 	config.meshesToLoad = {
