@@ -5,9 +5,9 @@ var Player = function (config) {
 	this.hp_max = 100;
 	this.height = 2;
 	this.speed = 0.016;
-	this.jmp_str = 0.05;
+	this.jmp_str = 0.055;
 	this.y_step_str = 0.0125;
-	this.y_step_max = 1;
+	this.y_step_max = 1.25;
     this.canTakeDammage = true;
     this.dammageCoolDown = 1000;
 	
@@ -44,25 +44,7 @@ var Player = function (config) {
     //this.weapon.material.wireframe = true;
     this.weapon.scaling = new BABYLON.Vector3(0.001, 0.001, 0.001);
     this.weapon.position = new BABYLON.Vector3(0.002, -0.0035, 0.0025);
-/*
-    var end_rotation = this.weapon.rotation.clone();
-    end_rotation.x -= Math.PI / 12;
-    var display = new BABYLON.Animation("fire", "rotation", 60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-    var anim_keys = [
-        {
-            frame: 0,
-            value: this.weapon.rotation
-        },
-        {
-            frame: 10,
-            value: end_rotation
-        },
-        {
-            frame: 100,
-            value: this.weapon.rotation
-        }
-    ];
-  */
+
 	var end_position = this.weapon.position.clone();
 	end_position.z -= 0.001;
 	var display = new BABYLON.Animation("fire", "position", 60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
@@ -110,9 +92,7 @@ Player.prototype.reset = function () {
 	this.current_cell_col = this.next_cell_col;
 	this.next_cell_row = this.config.map.get_row_from_z(0);
 	this.current_cell_row = this.next_cell_row;
-	this.next_cell = this.config.map.get_index_from_col_row(this.next_cell_col, this.next_cell_row);
-	this.current_cell = this.next_cell;
-	this.next_map_y = config.map.get_raw_y(this.next_cell) + this.height;
+	this.next_map_y = config.map.get_raw_y(this.config.map.get_index_from_col_row(this.next_cell_col, this.next_cell_row)) + this.height;
 	this.start_pos = new BABYLON.Vector3(0, this.next_map_y, 0);
 	this.next_pos = { x: this.start_pos.x, y: this.start_pos.y, z: this.start_pos.z };
 	this.current_map_y = this.next_map_y;
@@ -130,21 +110,16 @@ Player.prototype.update = function () {
 
 	this.current_map_y = this.next_map_y;
 	this.next_map_y = this.config.map.get_raw_y(this.config.map.get_index_from_xz(this.next_pos.x, this.next_pos.z)) + this.height;
-	//this.next_map_y = this.config.map.get_smooth_y_from_xz(this.next_pos.x, this.next_pos.z) + this.height;
 
 	if (this.next_pos.y <= this.next_map_y && Math.abs(this.next_map_y - this.current_map_y) > this.y_step_max) {
 
-		this.next_pos.x = this.camera.position.x;
-		this.next_pos.z = this.camera.position.z;
-		//this.next_cell_col = this.current_cell_col;
-		//this.next_cell_row = this.current_cell_row;
-		//this.next_cell = this.current_cell;
+		this.next_pos.x = this.position.x;
+		this.next_pos.z = this.position.z;
 
 	} else {
-
-		this.camera.position.x = this.next_pos.x;
-		this.camera.position.z = this.next_pos.z;
-		this.camera.position.y = this.next_pos.y;
+		this.position.x = this.next_pos.x;
+		this.position.z = this.next_pos.z;
+		this.position.y = this.next_pos.y;
 
 		if (this.dir_x || this.dir_z) { // déplacements
 			
@@ -167,8 +142,6 @@ Player.prototype.update = function () {
 			this.can_jmp = true;
 
 			this.next_pos.y = Math.min(this.next_map_y, this.next_pos.y + this.y_step_str * deltaTime);
-			//this.next_pos.y = this.next_map_y;
-			//this.next_pos.y += Math.max(this.next_map_y, this.next_pos.y + this.config.gravity * deltaTime);
 		}
 
 		var col = this.config.map.get_col_from_x(this.position.x);
@@ -176,13 +149,9 @@ Player.prototype.update = function () {
 
 		// new cell
 		if (col != this.next_cell_col || row != this.next_cell_row) {
-			//console.log("new cell")
-			//this.current_map_y = this.next_map_y;
+
 			this.next_cell_col = col;
 			this.next_cell_row = row;
-			//this.next_cell = this.config.map.get_index_from_col_row(this.next_cell_col, this.next_cell_row);
-			//this.next_map_y = this.config.map.get_raw_y(this.next_cell) + this.height;
-			//this.next_map_y = this.config.map.get_raw_y(this.config.map.get_index_from_col_row(this.next_cell_col, this.next_cell_row)) + this.height;
 
 			// update de la map visible
 			var dir_x = this.next_cell_col - this.current_cell_col;
@@ -193,15 +162,11 @@ Player.prototype.update = function () {
 			this.current_cell_col = this.next_cell_col;
 			this.current_cell_row = this.next_cell_row;
 		}
-
-		//this.current_cell = this.next_cell;
 	}
 
 }
 
 Player.prototype.fire = function () {
-		//console.log(">>", this.config.map.get_col_from_x(this.camera.position.x), this.config.map.get_row_from_z(this.camera.position.z))
-		//console.log(">>>", this.next_cell);
     window.scene.beginAnimation(this.weapon, 0, 100, false, 10, function() {
         //console.log("endAnim");
     });

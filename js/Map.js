@@ -53,7 +53,8 @@ Map.prototype.create = function () {
 	}
 	origin_box.setEnabled(false);
 
-/*  // pour visualiser la map généré en image :	
+/*
+	// pour visualiser la map générée en image :	
 	var px_size = innerHeight / this.side_len | 0;
 	var canvas = document.createElement("canvas")
 	canvas.width = canvas.height = this.side_len * px_size
@@ -197,35 +198,6 @@ Map.prototype.set_cubes_pos = function (x, z, dir_x, dir_z) {
 
 Map.prototype.get_raw_y = function (cell_index) {
 	return this.values[cell_index] * this.config.cube_height;
-}
-
-Map.prototype.get_smooth_y_from_xz = function (x, z) {
-	var c = (x - this.x0 + this.half_cube_size) / this.config.cube_size;
-	var r = (z - this.z0 + this.half_cube_size) / this.config.cube_size;
-	var fc = Math.abs(c % 1);
-	var fr = Math.abs(r % 1);
-	//var c0, c1, r0, r1;
-	/*
-	if (fc < 0.5) {
-		c0 = Math.floor(c);
-		c1 = Math.ceil(c);
-	} else {
-		c0 = 
-		c1 = Math.floor(0);
-	}
-	*/
-	var c0 = Math.floor(c);
-	var c1 = c0 + (fc < 0.5 ? -1 : 1) * sign(c);
-	var r0 = Math.floor(r);
-	var r1 = r0 + (fr < 0.5 ? -1 : 1) * sign(r);
-	var val0 = this.get_raw_y(this.get_index_from_col_row(c0, r0));
-	var val1 = this.get_raw_y(this.get_index_from_col_row(c0, r1));
-	var val2 = this.get_raw_y(this.get_index_from_col_row(c1, r0));
-	var val3 = this.get_raw_y(this.get_index_from_col_row(c1, r1));
-	var lc = lerp(val0, val2, fc);
-	var lr = lerp(val1, val3, fr);
-
-	return lerp( lc, lr, fc / fr );
 }
 
 Map.prototype.get_index_from_xz = function (x, z) {
