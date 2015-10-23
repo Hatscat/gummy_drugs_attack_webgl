@@ -69,22 +69,6 @@ var Player = function (config) {
     display.setKeys(anim_keys);
     this.weapon.animations.push(display);
 
-
-    /*this.particleSystem = new BABYLON.ParticleSystem("particles", 100, scene );
-    this.particleSystem.emitter = this.weapon; // the starting object, the emitter
-    this.particleSystem.particleTexture = new BABYLON.Texture("assets/particles/gunshot_125.png", scene);
-    this.particleSystem.emitRate = 5;
-    this.particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_STANDARD;
-    this.particleSystem.minEmitPower = 1;
-    this.particleSystem.maxEmitPower = 3;
-    this.particleSystem.colorDead = new BABYLON.Color4(1, 1, 1, 0.0);
-    this.particleSystem.minLifeTime = 0.2;
-    this.particleSystem.maxLifeTime = 0.2;
-    this.particleSystem.updateSpeed = 0.02;*/
-
-    //particleSystem.start();
-
-
     this.bindedFire = this.fire.bind(this);
     this.bindedSetCanTakeDammage = this.setCanTakeDammage.bind(this);
 }

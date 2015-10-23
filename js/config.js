@@ -13,7 +13,7 @@ function getConfig () {
 	config.map_side_n = 9;
 	config.cube_size = 10;
 	config.cube_height = 0.5;
-	config.map_noise_coef = 3;
+	config.map_noise_coef = 2;
 	config.map_visibility_n = Math.ceil(config.fog_end / config.cube_size) + 2;
 	config.light_color = new BABYLON.Color3(0.7, 0, 0);
 
