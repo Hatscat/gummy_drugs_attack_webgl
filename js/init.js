@@ -5,7 +5,7 @@ function init () {
 	render_canvas.width = window.innerWidth;
 	render_canvas.height = window.innerHeight;
 
-	window.config = getConfig();
+	window.config = getConfig(); //TMP
 
 	createScene(config);
 	loadAssets(config);
@@ -31,6 +31,7 @@ function loadAssets (config) {
 
 	var meshLoadedBinded =  meshLoaded.bind(window, config);
 	var imgLoadBinded =  imgLoaded.bind(window, config);
+	var textureLoadBinded =  textureLoaded.bind(window, config);
 
 	for(var i in config.meshesToLoad) {
 		var task = loader.addMeshTask(i, '', config.meshesToLoad[i][0], config.meshesToLoad[i][1]);
@@ -40,6 +41,11 @@ function loadAssets (config) {
 	for(var i in config.imgToLoad) {
 		var img = loader.addImageTask(i, config.imgToLoad[i]);
 		img.onSuccess = imgLoadBinded;
+		img.onError = loadError;
+	}
+	for(var i in config.texturesToLoad) {
+		var img = loader.addTextureTask(i, config.texturesToLoad[i]);
+		img.onSuccess = textureLoadBinded;
 		img.onError = loadError;
 	}
 
@@ -59,11 +65,15 @@ function imgLoaded(config, task) {
 	config.imgs[task.name] = task.image;
 }
 
+function textureLoaded(config, task) {
+	config.textures[task.name] = task.texture;
+}
+
 function onAssetsLoaded (config) {
 	config.meshes.enemy.isVisible = false;
 
-	initUI(config);
-	drawTitleScreen(config.imgs.title);
+	config.GUI = new GUI(config);
+	config.GUI.drawTitleScreen();
 
 	config.map = new Map(config);
 
@@ -84,21 +94,18 @@ function play(config) {
 	document.removeEventListener("click", window.playBinded, false);
 	window.playBinded = null;
 
-	// TMP:
-		console.log(config.meshes)
-
-	//config.map.reset(); // ça fait des trucs chelou
-
 	config.player = new Player(config);
+	config.AIManager = new AIManager(config)
+	config.ParticlesManager = new ParticlesManager(config);
 
 	init_events(config);
 	render_canvas.click();
 
-	for(var i=0; i<config.maxAINb; i++) {
-		spawnAI(config);
-	}
+	/*for(var i=0; i< config.AIManager.maxAINb; i++) {
+		config.AIManager.spawnAI(config);
+	}*/
 
-	inGameGUI(config);
+	config.GUI.inGameGUI();
 
 	config.is_game_title = false;
 }

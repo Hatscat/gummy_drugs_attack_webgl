@@ -10,6 +10,9 @@ var Player = function (config) {
 	this.y_step_max = 1.25;
     this.canTakeDammage = true;
     this.dammageCoolDown = 1000;
+    this.shootCoolDown = 100;
+    this.currentShootCoolDown = 0;
+    this.shotDammage = 1;
 	
 	this.reset();
 
@@ -80,7 +83,6 @@ var Player = function (config) {
     this.particleSystem.updateSpeed = 0.02;*/
 
     //particleSystem.start();
-
 
 
     this.bindedFire = this.fire.bind(this);
@@ -172,6 +174,14 @@ Player.prototype.fire = function () {
     window.scene.beginAnimation(this.weapon, 0, 100, false, 10, function() {
         //console.log("endAnim");
     });
+    var pickedInfo = scene.pick(window.innerWidth/2, window.innerHeight/2, null, false);
+    if(pickedInfo.pickedMesh) {
+        if(pickedInfo.pickedMesh.name.indexOf("enemy") != -1) {
+            this.config.AIManager.hurtAI(pickedInfo.pickedMesh.name, this.shotDammage);
+        }
+        config.ParticlesManager.impactLaunch(pickedInfo.pickedPoint);
+    }
+
 }
 Player.prototype.takeDammage = function (dam) {
     if(!this.canTakeDammage) {
@@ -190,8 +200,7 @@ Player.prototype.takeDammage = function (dam) {
         }
     }
 
-    this.config.healthCircle.fillPercent = Math.max(0, (this.hp/this.hp_max));
-    drawCircle(this.config.healthCircle);
+    this.config.GUI.drawCircle('healthCircle', Math.max(0, (this.hp/this.hp_max)));
 
     this.canTakeDammage = false;
     window.setTimeout(this.bindedSetCanTakeDammage, this.dammageCoolDown);
@@ -230,6 +239,6 @@ Player.prototype.onKeyUp = function (keyCode) {
 Player.prototype.die = function() {
     gunsight.style.visibility = "hidden";
     window.scene.activeCamera = window.menuCamera;
-    drawDeadScreen(this.config.imgs.title, this.config.score);
+    this.config.GUI.drawDeadScreen();
 }
 

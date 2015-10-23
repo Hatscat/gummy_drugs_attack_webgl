@@ -9,14 +9,19 @@ function update (config) {
 	}
 	
 	config.scoreUpdateTimer -= deltaTime;
-	//config.score += config.pointsPerSecond * deltaTime/1000 | 0; // horrible...
+	config.score += config.pointsPerMiliSecond * deltaTime | 0;
 	
 	if (config.scoreUpdateTimer <= 0) {
-		drawScore(config.score);
+		config.GUI.drawScore();
 		config.scoreUpdateTimer = config.scoreUpdateInterval;
 	}
-	
+
+	config.player.currentShootCoolDown -= deltaTime;
+	if(config.isMouseDown && config.player.currentShootCoolDown <= 0) {
+		config.player.currentShootCoolDown = config.player.shootCoolDown;
+		config.player.bindedFire();
+	}
 	config.player.update();
-	updateAIs(config);
+	config.AIManager.updateAllAI(config);
 }
 
