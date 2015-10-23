@@ -9,6 +9,25 @@ function sign (n) {
 }
 
 function dist_3d_sqrt (a, b) {
-	return (a.x-b.x) * (a.x-b.x) + (a.y-b.y) * (a.y-b.y) + (a.z-b.z) * (a.z-b.z);
+	var dx = a.x - b.x;
+	var dy = a.y - b.y;
+	var dz = a.z - b.z;
+	return dx * dx + dy * dy + dz * dz;
+}
+
+function loop_index (index, length) {
+	return (length + (index % length)) % length;
+}
+
+function sum () {
+	var sum = 0;
+	for (var i = arguments.length; i--;) {
+		sum += arguments[i];
+	}
+	return sum;
+}
+
+function average () {
+	return sum.apply(null, arguments) / arguments.length;
 }
 

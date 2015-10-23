@@ -12,7 +12,6 @@ function update (config) {
 	//config.score += config.pointsPerSecond * deltaTime/1000 | 0; // horrible...
 	
 	if (config.scoreUpdateTimer <= 0) {
-	
 		drawScore(config.score);
 		config.scoreUpdateTimer = config.scoreUpdateInterval;
 	}

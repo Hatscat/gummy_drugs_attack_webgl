@@ -3,8 +3,9 @@
 function spawnAI(config) {
 	var AI = config.meshes.enemy.clone();
 	AI.isVisible = true;
-	AI.position.x = Math.random()*150 - 75 | 0;
-	AI.position.z = Math.random()*150 - 75 | 0;
+	var angle = Math.random() * Math.PI * 2;
+	AI.position.x = config.player.position.x + Math.cos(angle) * config.fog_end;
+	AI.position.z = config.player.position.z - Math.sin(angle) * config.fog_end;
 	AI.position.y = config.map.get_raw_y(config.map.get_index_from_xz(AI.position.x,AI.position.z));
 	AI.scaling.x = AI.scaling.z = AI.scaling.y = 0.5;
 	AI.force_y = 0;
@@ -36,7 +37,7 @@ function updateAIs(config) {
 			var AIDistanceFromPlayer = dist_3d_sqrt(AI.position, config.player.camera.position)
 
 			
-			if(config.AICanfollowPlayer && !config.is_player_dead){
+			if(config.AICanfollowPlayer && config.player.hp > 0){
 				if(AIDistanceFromPlayer < config.AIDetectionDistance) {
 					AI.angle = Math.atan2(AI.position.x - config.player.camera.position.x, AI.position.z - config.player.camera.position.z) - config.AIRotOffset; //angle between player and AI
 					AI.rotation.y = AI.angle + config.AIRotOffset;
@@ -60,7 +61,7 @@ function updateAIs(config) {
 				AI.nextJumpTimer = config.AIJumpTimer + Math.random()*config.AIJumpRandomTimer;
 				AI.force_y = 0.03;
 			}
-			if(AIDistanceFromPlayer < config.AITouchingDistance && !config.is_player_dead) {
+			if(AIDistanceFromPlayer < config.AITouchingDistance && config.player.hp > 0) {
 				config.player.takeDammage(config.AIDammage);
 				AI.stop = true;
 			}
