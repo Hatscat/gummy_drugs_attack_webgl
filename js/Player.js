@@ -155,9 +155,7 @@ Player.prototype.update = function () {
 }
 
 Player.prototype.fire = function () {
-    window.scene.beginAnimation(this.weapon, 0, 100, false, 10, function() {
-        //console.log("endAnim");
-    });
+    window.scene.beginAnimation(this.weapon, 0, 100, false, 10, null);
     var pickedInfo = scene.pick(window.innerWidth/2, window.innerHeight/2, null, false);
     if(pickedInfo.pickedMesh) {
         if(pickedInfo.pickedMesh.name.indexOf("enemy") != -1) {
@@ -222,7 +220,9 @@ Player.prototype.onKeyUp = function (keyCode) {
 
 Player.prototype.die = function() {
     gunsight.style.visibility = "hidden";
+    window.menuCamera.target = this.position;
     window.scene.activeCamera = window.menuCamera;
+    window.scene.beginAnimation(window.menuCamera, 0, 100, false, 1, null);
     this.config.GUI.drawDeadScreen();
 }
 

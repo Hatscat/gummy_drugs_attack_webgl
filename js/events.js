@@ -18,8 +18,8 @@ function init_events (config) {
 			window.scene.activeCamera = config.player.camera;
 			gunsight.style.visibility = "visible";
 			config.score = 0;
-			config.healthCircle.fillPercent = 1;
-			inGameGUI(config);
+			config.elapsedTime = 0;
+			config.GUI.inGameGUI();
 			
 			config.player.reset();
 		}

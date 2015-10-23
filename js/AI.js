@@ -40,7 +40,6 @@ AI.prototype.update = function(deltaTime) {
 	var distanceFromPlayer = dist_3d_sqrt(this.mesh.position, this.config.player.camera.position);
 
 	if (!this.config.map.is_in_map(this.mesh.position.x, this.mesh.position.z) || distanceFromPlayer > (this.config.fog_end*1.1)*(this.config.fog_end*1.1)) {
-		this.mesh.dispose();
 		return false; // return false if manager needs to destroy me
 	}
 

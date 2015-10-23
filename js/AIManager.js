@@ -35,13 +35,17 @@ AIManager.prototype.hurtAI = function(name, dammage) {
 }
 AIManager.prototype.killAI = function(name, isFromPlayer) {
 	//TODO particles
+
+	if(isFromPlayer) {
+		var b = BABYLON.Mesh.CreateBox("box", 0.5, window.scene);
+		b.position = this.AIs[name].mesh.position.clone();
+		this.config.score += this.config.pointPerEnemyKilled;
+	}
+	
 	this.AIs[name].mesh.dispose();
 	delete this.AIs[name]; // remove key i from structure
 	this.AICount--;
 
-	if(isFromPlayer) {
-		this.config.score += this.config.pointPerEnemyKilled;
-	}
 }
 
 AIManager.prototype.updateAllAI = function() {
