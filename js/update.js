@@ -2,6 +2,7 @@
 
 function update (config) {
 	var deltaTime = window.engine.getDeltaTime();
+	config.elapsedTime += deltaTime;
 
 	if (config.is_game_title || config.player.hp <= 0) {
 		window.menuCamera.alpha -= config.titleScreenCameraSpeed * deltaTime;

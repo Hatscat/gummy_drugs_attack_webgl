@@ -101,10 +101,6 @@ function play(config) {
 	init_events(config);
 	render_canvas.click();
 
-	/*for(var i=0; i< config.AIManager.maxAINb; i++) {
-		config.AIManager.spawnAI(config);
-	}*/
-
 	config.GUI.inGameGUI();
 
 	config.is_game_title = false;

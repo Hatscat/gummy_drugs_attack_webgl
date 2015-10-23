@@ -52,5 +52,7 @@ function getConfig () {
 	config.scoreUpdateTimer = 100;
 	config.scoreUpdateInterval = 100;
 
+	config.elapsedTime = 0;
+
 	return config;
 }
