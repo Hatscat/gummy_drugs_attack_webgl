@@ -13,8 +13,6 @@ function Map (config) {
 	this.y_half_max = this.y_max * 0.5;
 	this.values = new Uint8ClampedArray(this.vals_nb);
 	this.half_cube_size = this.config.cube_size * 0.5;
-	this.x0 = (1 - this.side_len) * this.half_cube_size;
-	this.z0 = (1 - this.side_len) * this.half_cube_size;
 
 	this.create();
 }
@@ -26,10 +24,10 @@ Map.prototype.create = function () {
 	var bot_left = this.side_len * (this.side_len - 1);
 	var bot_right = this.side_len * this.side_len - 1;
 
-	this.values[top_left] = Math.random() * this.y_max;
-	this.values[top_right] = 0;
-	this.values[bot_left] = this.y_max;
-	this.values[bot_right] = Math.random() * this.y_max;
+	this.values[top_left] = this.y_max;
+	this.values[top_right] = Math.random() * this.y_max;
+	this.values[bot_left] = Math.random() * this.y_max;
+	this.values[bot_right] = 0;
 	
 	this.diamond_sqrt(this.side_len);
 
@@ -57,6 +55,8 @@ Map.prototype.create = function () {
 	// pour visualiser la map générée en image :	
 	var px_size = innerHeight / this.side_len | 0;
 	var canvas = document.createElement("canvas")
+	canvas.style.position = "fixed"
+	canvas.style.top = canvas.style.left = 0
 	canvas.width = canvas.height = this.side_len * px_size
 	var ctx = canvas.getContext("2d")
 	for (var i = 0; i < this.vals_nb; ++i) {
@@ -158,8 +158,8 @@ Map.prototype.set_all_cubes_pos = function (x, z) {
 		var row = Math.floor(r0 + i / this.cubes_side_len);
 		this.cubes[i].col = col;
 		this.cubes[i].row = row;
-		this.cubes[i].position.x = this.x0 + col * this.config.cube_size;
-		this.cubes[i].position.z = this.z0 + row * this.config.cube_size;
+		this.cubes[i].position.x = col * this.config.cube_size;
+		this.cubes[i].position.z = row * this.config.cube_size;
 		this.cubes[i].position.y = this.get_raw_y(this.get_index_from_col_row(col, row)) - this.y_half_max;
 	}
 }
@@ -176,7 +176,7 @@ Map.prototype.set_cubes_pos = function (x, z, dir_x, dir_z) {
 		for (var i = 0; i < this.cubes_side_len; ++i) {
 			var cube_i = i * this.cubes_side_len + c;
 			this.cubes[cube_i].col = new_col;
-			this.cubes[cube_i].position.x = this.x0 + new_col * this.config.cube_size;
+			this.cubes[cube_i].position.x = new_col * this.config.cube_size;
 			this.cubes[cube_i].position.y = this.get_raw_y(this.get_index_from_col_row(new_col, this.cubes[cube_i].row)) - this.y_half_max;
 		}
 	}
@@ -190,7 +190,7 @@ Map.prototype.set_cubes_pos = function (x, z, dir_x, dir_z) {
 		for (var i = 0; i < this.cubes_side_len; ++i) {
 			var cube_i = i + r;
 			this.cubes[cube_i].row = new_row;
-			this.cubes[cube_i].position.z = this.z0 + new_row * this.config.cube_size;
+			this.cubes[cube_i].position.z = new_row * this.config.cube_size;
 			this.cubes[cube_i].position.y = this.get_raw_y(this.get_index_from_col_row(this.cubes[cube_i].col, new_row)) - this.y_half_max;
 		}
 	}
@@ -202,10 +202,6 @@ Map.prototype.get_raw_y = function (cell_index) {
 
 Map.prototype.get_index_from_xz = function (x, z) {
 	return this.get_index_from_col_row(this.get_col_from_x(x), this.get_row_from_z(z));
-}
-
-Map.prototype.is_in_map = function (x, z) {
-	return x > this.x0 - this.half_cube_size && x < this.half_cube_size - this.x0 && z > this.z0 - this.half_cube_size && z < this.half_cube_size - this.z0;
 }
 
 Map.prototype.get_yoyo_axis = function (axis) {
@@ -226,11 +222,11 @@ Map.prototype.get_row_from_index = function (index) {
 }
 
 Map.prototype.get_col_from_x = function (x) {
-	return Math.floor((x - this.x0 + this.half_cube_size) / this.config.cube_size);
+	return Math.floor((x + this.half_cube_size) / this.config.cube_size);
 }
 
 Map.prototype.get_row_from_z = function (z) {
-	return Math.floor((z - this.z0 + this.half_cube_size) / this.config.cube_size);
+	return Math.floor((z + this.half_cube_size) / this.config.cube_size);
 }
 
 function get_noise (len) {
