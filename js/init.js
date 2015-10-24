@@ -79,6 +79,20 @@ function onAssetsLoaded (config) {
 
 	window.menuCamera = new BABYLON.ArcRotateCamera("Camera", 0, config.titleScreenCameraBeta, config.titleScreenCameraRadius, BABYLON.Vector3.Zero(), scene);
 	menuCamera.fov = 90;
+	var display = new BABYLON.Animation("death", "radius", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+	var anim_keys = [
+		{
+			frame: 0,
+			value: 10
+		},
+		{
+			frame: 100,
+			value: config.titleScreenCameraRadius
+		}
+	];
+
+    display.setKeys(anim_keys);
+    menuCamera.animations.push(display);
 
 
 	function renderLoop () {

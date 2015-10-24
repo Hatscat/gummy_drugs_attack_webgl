@@ -222,7 +222,7 @@ Player.prototype.die = function() {
     gunsight.style.visibility = "hidden";
     window.menuCamera.target = this.position;
     window.scene.activeCamera = window.menuCamera;
-    window.scene.beginAnimation(window.menuCamera, 0, 100, false, 1, null);
+    window.scene.beginAnimation(window.menuCamera, 0, 100, true);
     this.config.GUI.drawDeadScreen();
 }
 
