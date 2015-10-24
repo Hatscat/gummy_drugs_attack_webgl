@@ -38,21 +38,16 @@ Map.prototype.create = function () {
 	origin_box.material.specularColor = new BABYLON.Color3(0.5, 0, 0);
 	origin_box.material.checkReadyOnEveryCall = false;
 
-	//origin_box.material = new BABYLON.ShaderMaterial("ground", scene, "./shaders/ground",
-        //{
-        //    attributes: ["position", "normal", "uv"],
-        //    uniforms: ["world", "worldViewProjection"]
-        //});
-	
 	this.cubes = [];
 
 	for (var i = 0; i < this.cubes_nb; ++i) {
 		this.cubes[i] = origin_box.createInstance("box" + i);
 	}
+
 	origin_box.setEnabled(false);
 
+	// dé-commenter ci-dessous pour visualiser la map générée en image :	
 /*
-	// pour visualiser la map générée en image :	
 	var px_size = innerHeight / this.side_len | 0;
 	var canvas = document.createElement("canvas")
 	canvas.style.position = "fixed"
@@ -64,7 +59,7 @@ Map.prototype.create = function () {
 		ctx.fillRect((i%this.side_len)*px_size, (i/this.side_len|0)*px_size, px_size, px_size)
 	}
 	document.body.appendChild(canvas)
-*/
+//*/
 }
 
 Map.prototype.diamond_sqrt = function (len) {
