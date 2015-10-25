@@ -76,6 +76,7 @@ function onAssetsLoaded (config) {
 	config.GUI.drawTitleScreen();
 
 	config.map = new Map(config);
+	config.drug = new Drug_effect(config);
 
 	window.menuCamera = new BABYLON.ArcRotateCamera("Camera", 0, config.titleScreenCameraBeta, config.titleScreenCameraRadius, BABYLON.Vector3.Zero(), scene);
 	menuCamera.fov = 90;

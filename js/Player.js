@@ -34,7 +34,8 @@ var Player = function (config) {
     this.camera.speed = 0;
     this.camera.inertia = 0;
     this.camera.angularSensibility = 500; // lower is more sensible
-
+    this.camera.attachPostProcess(this.config.drug.post_process);
+	
     	this.position = this.camera.position;
 
     /* --- WEAPON --- */
@@ -201,11 +202,13 @@ Player.prototype.onKeyDown = function (keyCode) {
 			this.force_y = this.jmp_str;
 			this.can_jmp = false;
 		}
-	} else if (this.config.keyBindings.forward.indexOf(keyCode) != -1) {
+	}
+	if (this.config.keyBindings.forward.indexOf(keyCode) != -1) {
 		this.dir_z = 1;
 	} else if (this.config.keyBindings.backward.indexOf(keyCode) != -1) {
 		this.dir_z = -1;
-	} else if (this.config.keyBindings.left.indexOf(keyCode) != -1) {
+	}
+	if (this.config.keyBindings.left.indexOf(keyCode) != -1) {
 		this.dir_x = 1;
 	} else if (this.config.keyBindings.right.indexOf(keyCode) != -1) {
 		this.dir_x = -1;
@@ -217,6 +220,10 @@ Player.prototype.onKeyUp = function (keyCode) {
 		this.dir_z = 0;
 	} else if (this.config.keyBindings.left.indexOf(keyCode) != -1 || this.config.keyBindings.right.indexOf(keyCode) != -1) {
 		this.dir_x = 0;
+	}
+
+	if (/*this.config.is_dev_mode &&*/ keyCode == 49) { // & 
+		this.config.drug.add();
 	}
 }
 
