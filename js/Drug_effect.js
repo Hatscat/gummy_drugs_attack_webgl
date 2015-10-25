@@ -15,6 +15,7 @@ Drug_effect.prototype.reset = function () {
 	
 	this.drug_lvl = 0;
 	this.target_drug_lvl = 0;
+	this.drug_ratio = 0;
 	this.time = 0;
 
 	this.post_process.onApply = this.update.bind(this);
@@ -38,10 +39,12 @@ Drug_effect.prototype.update = function (effect) {
 		this.drug_lvl = Math.max( 0, this.drug_lvl - (delta_time / this.decrease_duration) );
 		this.target_drug_lvl = this.drug_lvl | 0;
 	}
+
+	this.drug_ratio = this.drug_lvl / this.drug_lvl_max;
 	
 	// post processing
 	effect.setFloat2("resolution", window.render_canvas.width, window.render_canvas.height);
 	effect.setFloat("time", this.time);
-	effect.setFloat("drug_lvl", this.drug_lvl / this.drug_lvl_max);
+	effect.setFloat("drug_lvl", this.drug_ratio);
 }
 
