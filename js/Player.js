@@ -46,7 +46,7 @@ var Player = function (config) {
 
     /* --- WEAPON --- */
     this.weapon = this.config.meshes.gun;
-    this.weapon.isVisible = true;
+    this.weapon.setEnabled(true);
     this.weapon.parent = this.camera; // The weapon will move with the player camera
     this.weapon.material = new BABYLON.StandardMaterial("weaponMat", window.scene);
     this.weapon.material.diffuseColor = new BABYLON.Color3(0, 0, 0);
@@ -95,7 +95,6 @@ Player.prototype.reset = function () {
 	this.can_jmp = true;
 	this.hp = this.hp_max;
 	this.drugLevel = 0
-	this.config.map.set_all_cubes_pos(this.next_pos.x, this.next_pos.z);
 }
 
 Player.prototype.update = function () {

@@ -59,6 +59,7 @@ function loadError(err) {
 
 function meshLoaded (config, task) {
 	config.meshes[task.name] = task.loadedMeshes[0]; // one mesh per task ! currently we have no multimesh
+	config.meshes[task.name].setEnabled(false);
 }
 
 function imgLoaded(config, task) {
@@ -70,15 +71,17 @@ function textureLoaded(config, task) {
 }
 
 function onAssetsLoaded (config) {
-	config.meshes.enemy.isVisible = false;
 
 	config.GUI = new GUI(config);
 	config.GUI.drawTitleScreen();
 
 	config.map = new Map(config);
+	config.map.set_all_cubes_pos(0, 0);
 
-	window.menuCamera = new BABYLON.ArcRotateCamera("Camera", 0, config.titleScreenCameraBeta, config.titleScreenCameraRadius, BABYLON.Vector3.Zero(), scene);
+	var radius = config.map.get_raw_y(config.map.get_index_from_xz(0,0)) + config.titleScreenCameraRadius;
+	window.menuCamera = new BABYLON.ArcRotateCamera("Camera", 0, config.titleScreenCameraBeta, radius, BABYLON.Vector3.Zero(), scene);
 	menuCamera.fov = 90;
+
 	var display = new BABYLON.Animation("death", "radius", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
 	var anim_keys = [
 		{

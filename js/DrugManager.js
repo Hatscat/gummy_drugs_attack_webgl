@@ -6,6 +6,7 @@ var DrugManager = function() {
 	this.drugsMaterialsNb = 10;
 	this.drugsNameCount = 0;
 	config.meshes.drug = BABYLON.Mesh.CreateSphere("sphere", 10.0, 1.0, window.scene);
+	config.meshes.drug.setEnabled(false);
 
 	this.createMaterials();
 }
