@@ -3,16 +3,23 @@ var Player = function (config) {
 	this.config = config;
 
 	this.hp_max = 100;
+	this.drugLevel = 0;
+	this.drugLevelMax = 10;
 	this.height = 2;
-	this.speed = 0.016;
+	this.minSpeed = 0.014;
+	this.maxSpeed = 0.018;
 	this.jmp_str = 0.055;
 	this.y_step_str = 0.0125;
 	this.y_step_max = 1.25;
     this.canTakeDammage = true;
     this.dammageCoolDown = 1000;
-    this.shootCoolDown = 100;
+    this.minShootCoolDown = 50;
+    this.maxShootCoolDown = 200;
+    this.drugCoolDown = 5000;
     this.currentShootCoolDown = 0;
+    this.currentDrugCoolDown = 0;
     this.shotDammage = 1;
+    this.drugToEat = null;
 	
 	this.reset();
 
@@ -87,6 +94,7 @@ Player.prototype.reset = function () {
 	this.force_y = 0;
 	this.can_jmp = true;
 	this.hp = this.hp_max;
+	this.drugLevel = 0
 	this.config.map.set_all_cubes_pos(this.next_pos.x, this.next_pos.z);
 }
 
@@ -110,17 +118,17 @@ Player.prototype.update = function () {
 		this.position.z = this.next_pos.z;
 		this.position.y = this.next_pos.y;
 
-		if (this.dir_x || this.dir_z) { // déplacements
+		if (this.dir_x || this.dir_z) { // dÃ©placements
 			
 			var angle = this.camera.rotation.y;
-
-			this.next_pos.x -= Math.cos(angle) * this.dir_x * this.speed * deltaTime;
-			this.next_pos.z += Math.sin(angle) * this.dir_x * this.speed * deltaTime;
-			this.next_pos.x -= Math.cos(angle + this.config.half_PI) * this.dir_z * this.speed * deltaTime;
-			this.next_pos.z += Math.sin(angle + this.config.half_PI) * this.dir_z * this.speed * deltaTime;
+			var speed = this.drugLevel * this.maxSpeed / this.drugLevelMax + this.minSpeed;
+			this.next_pos.x -= Math.cos(angle) * this.dir_x * speed * deltaTime;
+			this.next_pos.z += Math.sin(angle) * this.dir_x * speed * deltaTime;
+			this.next_pos.x -= Math.cos(angle + this.config.half_PI) * this.dir_z * speed * deltaTime;
+			this.next_pos.z += Math.sin(angle + this.config.half_PI) * this.dir_z * speed * deltaTime;
 		}
 		
-		// gravité
+		// gravitÃ©
 		this.force_y -= this.config.gravity * deltaTime;
 		this.next_pos.y += this.force_y * deltaTime;
 		
@@ -151,13 +159,29 @@ Player.prototype.update = function () {
 			this.current_cell_col = this.next_cell_col;
 			this.current_cell_row = this.next_cell_row;
 		}
+
+		this.currentShootCoolDown -= deltaTime;
+		if(this.config.isMouseDown && this.currentShootCoolDown <= 0) {
+			var coolDown = this.maxShootCoolDown - (this.maxShootCoolDown - this.minShootCoolDown)/this.drugLevelMax * this.drugLevel;
+			this.currentShootCoolDown = coolDown;
+			this.bindedFire();
+		}		
+
+		if(this.drugLevel > 0) {
+			this.currentDrugCoolDown -= deltaTime;
+			if(this.currentDrugCoolDown <= 0) {
+				this.currentDrugCoolDown = this.drugCoolDown;
+				this.drugLevel--;
+				this.config.GUI.drawCircle('drugCircle', Math.max(0, (this.drugLevel/this.drugLevelMax)));
+			}
+		}
 	}
 }
 
 Player.prototype.fire = function () {
     window.scene.beginAnimation(this.weapon, 0, 100, false, 10, null);
     var pickedInfo = scene.pick(window.innerWidth/2, window.innerHeight/2, null, false);
-    if(pickedInfo.pickedMesh) {
+    if(pickedInfo.pickedMesh && pickedInfo.pickedMesh.name) {
         if(pickedInfo.pickedMesh.name.indexOf("enemy") != -1) {
             this.config.AIManager.hurtAI(pickedInfo.pickedMesh.name, this.shotDammage);
         }
@@ -207,7 +231,9 @@ Player.prototype.onKeyDown = function (keyCode) {
 		this.dir_x = 1;
 	} else if (this.config.keyBindings.right.indexOf(keyCode) != -1) {
 		this.dir_x = -1;
-	} 
+	} else if(this.config.keyBindings.eat.indexOf(keyCode) != -1) {
+		this.eat();
+	}
 }
 
 Player.prototype.onKeyUp = function (keyCode) {
@@ -222,7 +248,22 @@ Player.prototype.die = function() {
     gunsight.style.visibility = "hidden";
     window.menuCamera.target = this.position;
     window.scene.activeCamera = window.menuCamera;
-    window.scene.beginAnimation(window.menuCamera, 0, 100, true);
+    window.scene.beginAnimation(window.menuCamera, 0, 100, false);
     this.config.GUI.drawDeadScreen();
+}
+
+Player.prototype.eat = function() {
+	if(!this.drugToEat) {
+		return;
+	} 
+	this.config.DrugManager.deleteDrug(this.drugToEat);
+	this.drugToEat = null;
+	this.currentDrugCoolDown = this.drugCoolDown; 	
+
+	if(this.drugLevel < this.drugLevelMax) {
+		this.drugLevel++;
+		this.config.GUI.drawCircle('drugCircle', Math.max(0, (this.drugLevel/this.drugLevelMax)));
+	}
+
 }
 

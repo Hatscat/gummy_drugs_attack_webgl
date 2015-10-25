@@ -11,6 +11,8 @@ var GUI = function(config) {
 	this.scoreDeadHeight = 0.1;
 	this.scoreDeadY = 0.45;
 	
+	this.isEatHintShowed = false;
+
 	UI_canvas.width = window.innerWidth;
 	UI_canvas.height = window.innerHeight;
 
@@ -28,7 +30,7 @@ var GUI = function(config) {
 		radius: 0.05,
 		innerColor: '',
 		outterColor: "black",
-		fillPercent: 1
+		fillPercent: 0
 	}
 	this.drugCircle.innerColor = this.createRainbowGradient(this.drugCircle.x, this.drugCircle.y, this.drugCircle.radius);
 }
@@ -57,7 +59,7 @@ GUI.prototype.inGameGUI = function() {
 	gunsight.style.visibility = "visible"; //html div
 
 	this.drawCircle('healthCircle', 1);
-	this.drawCircle('drugCircle', 1);
+	this.drawCircle('drugCircle', 0);
 	this.drawScore(0);
 }
 
@@ -112,10 +114,12 @@ GUI.prototype.drawScore = function(overrideScore, overrideSize, overrideX, overr
 
 GUI.prototype.drawEatHint = function() {
 	var string = 'Press "F"!';
+	this.isEatHintShowed = true;
 	this.context.fillText(string, (window.innerWidth/2 - this.context.measureText(string).width/2 | 0), (this.hintY * window.innerHeight | 0));
 }
 GUI.prototype.clearEatHint = function() {
-	this.context.clearRect(0, this.hintY * window.innerHeight, window.innerWidth, this.fontHeight * window.innerHeight);
+	this.isEatHintShowed = false;
+	this.context.clearRect(0, this.hintY * window.innerHeight - this.fontHeight * window.innerHeight, window.innerWidth, this.fontHeight * window.innerHeight);
 }
 
 GUI.prototype.drawTitleScreen = function(overRideText) {

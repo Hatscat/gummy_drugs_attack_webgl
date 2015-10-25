@@ -39,7 +39,8 @@ function getConfig () {
 		"forward" :  [90], // Z
 		"backward" : [83], // S
 		"left" : 	 [81], // Q
-		"right" : 	 [68] // D
+		"right" : 	 [68], // D
+		"eat": [70] // F
 	};
 
 	config.titleScreenCameraBeta = Math.PI/4;

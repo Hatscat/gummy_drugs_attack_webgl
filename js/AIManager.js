@@ -37,8 +37,7 @@ AIManager.prototype.killAI = function(name, isFromPlayer) {
 	//TODO particles
 
 	if(isFromPlayer) {
-		var b = BABYLON.Mesh.CreateBox("box", 0.5, window.scene);
-		b.position = this.AIs[name].mesh.position.clone();
+		this.config.DrugManager.spawnDrug(this.AIs[name].mesh.position.x, this.AIs[name].mesh.position.z);
 		this.config.score += this.config.pointPerEnemyKilled;
 	}
 	
