@@ -1,10 +1,11 @@
+"use strict"
+// require tools.js
+
 var Player = function (config) {
 	
 	this.config = config;
 
 	this.hp_max = 100;
-	this.drugLevel = 0;
-	this.drugLevelMax = 10;
 	this.height = 2;
 	this.minSpeed = 0.014;
 	this.maxSpeed = 0.018;
@@ -15,9 +16,7 @@ var Player = function (config) {
     this.dammageCoolDown = 1000;
     this.minShootCoolDown = 50;
     this.maxShootCoolDown = 200;
-    this.drugCoolDown = 5000;
     this.currentShootCoolDown = 0;
-    this.currentDrugCoolDown = 0;
     this.shotDammage = 1;
     this.drugToEat = null;
 	
@@ -52,7 +51,6 @@ var Player = function (config) {
     this.weapon.material = new BABYLON.StandardMaterial("weaponMat", window.scene);
     this.weapon.material.diffuseColor = new BABYLON.Color3(0, 0, 0);
     this.weapon.material.specularColor = new BABYLON.Color3(1, 0, 0);
-    //this.weapon.material.wireframe = true;
     this.weapon.scaling = new BABYLON.Vector3(0.001, 0.001, 0.001);
     this.weapon.position = new BABYLON.Vector3(0.002, -0.0035, 0.0025);
 
@@ -95,7 +93,6 @@ Player.prototype.reset = function () {
 	this.force_y = 0;
 	this.can_jmp = true;
 	this.hp = this.hp_max;
-	this.drugLevel = 0
 }
 
 Player.prototype.update = function () {
@@ -121,7 +118,7 @@ Player.prototype.update = function () {
 		if (this.dir_x || this.dir_z) { // déplacements
 			
 			var angle = this.camera.rotation.y;
-			var speed = this.drugLevel * this.maxSpeed / this.drugLevelMax + this.minSpeed;
+			var speed = lerp(this.minSpeed, this.maxSpeed, this.config.drug.drug_ratio);
 			this.next_pos.x -= Math.cos(angle) * this.dir_x * speed * deltaTime;
 			this.next_pos.z += Math.sin(angle) * this.dir_x * speed * deltaTime;
 			this.next_pos.x -= Math.cos(angle + this.config.half_PI) * this.dir_z * speed * deltaTime;
@@ -162,19 +159,10 @@ Player.prototype.update = function () {
 
 		this.currentShootCoolDown -= deltaTime;
 		if(this.config.isMouseDown && this.currentShootCoolDown <= 0) {
-			var coolDown = this.maxShootCoolDown - (this.maxShootCoolDown - this.minShootCoolDown)/this.drugLevelMax * this.drugLevel;
+			var coolDown = lerp(this.minShootCoolDown, this.maxShootCoolDown, this.config.drug.drug_ratio);
 			this.currentShootCoolDown = coolDown;
 			this.bindedFire();
 		}		
-
-		if(this.drugLevel > 0) {
-			this.currentDrugCoolDown -= deltaTime;
-			if(this.currentDrugCoolDown <= 0) {
-				this.currentDrugCoolDown = this.drugCoolDown;
-				this.drugLevel--;
-				this.config.GUI.drawCircle('drugCircle', Math.max(0, (this.drugLevel/this.drugLevelMax)));
-			}
-		}
 	}
 }
 
@@ -268,12 +256,6 @@ Player.prototype.eat = function() {
 	this.config.sounds.eat.play();
 	this.config.DrugManager.deleteDrug(this.drugToEat);
 	this.drugToEat = null;
-	this.currentDrugCoolDown = this.drugCoolDown; 	
-
-	if(this.drugLevel < this.drugLevelMax) {
-		this.drugLevel++;
-		this.config.GUI.drawCircle('drugCircle', Math.max(0, (this.drugLevel/this.drugLevelMax)));
-	}
-
+	this.config.drug.add();
 }
 

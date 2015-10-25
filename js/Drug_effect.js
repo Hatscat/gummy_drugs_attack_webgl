@@ -4,11 +4,13 @@ function Drug_effect (config) {
 
 	this.config = config;
 	this.drug_lvl_max = 5;
-	this.increase_duration = 1;
-	this.decrease_duration = 20;
+	this.increase_duration = 2;
+	this.decrease_duration = 16;
 	this.post_process = new BABYLON.PostProcess("drug", "./shaders/drug", ["resolution", "time", "drug_lvl"], null, 1, null, BABYLON.Texture.BILINEAR_SAMPLINGMODE, window.engine, true);
 
 	this.reset();
+
+	this.post_process.onApply = this.update.bind(this);
 }
 
 Drug_effect.prototype.reset = function () {
@@ -17,8 +19,6 @@ Drug_effect.prototype.reset = function () {
 	this.target_drug_lvl = 0;
 	this.drug_ratio = 0;
 	this.time = 0;
-
-	this.post_process.onApply = this.update.bind(this);
 }
 
 Drug_effect.prototype.add = function () {

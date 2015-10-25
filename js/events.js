@@ -16,6 +16,7 @@ function init_events (config) {
 
 			config.map.diamond_sqrt(config.map.side_len);
 			config.map.set_all_cubes_pos(0, 0);
+			config.drug.reset();
 
 			window.scene.activeCamera = config.player.camera;
 			gunsight.style.visibility = "visible";

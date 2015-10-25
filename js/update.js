@@ -23,6 +23,10 @@ function update (config) {
 		config.GUI.clearEatHint();
 	}
 
+	if (config.drug.drug_ratio) {
+		config.GUI.drawCircle('drugCircle', config.drug.drug_ratio);
+	}
+
 	config.player.update();
 	config.AIManager.updateAllAI();
 	config.DrugManager.updateDrugs(deltaTime);
