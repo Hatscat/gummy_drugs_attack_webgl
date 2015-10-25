@@ -10,7 +10,7 @@ var AI = function(config, x, z, name) {
 	this.hp = this.maxHp;
 
 	this.detectionDistance = 150;
-	this.touchingDistance = 5;
+	this.touchingDistance = 2;
 	this.rotOffset = 3*Math.PI/4;
 	this.speed = 0.005;
 	this.jumpImpulsion = 0.03;
@@ -37,7 +37,7 @@ AI.prototype.update = function(deltaTime) {
 	
 	this.nextDirectionTimer -= deltaTime;
 	this.nextJumpTimer -= deltaTime;
-	var distanceFromPlayer = dist_3d_sqrt(this.mesh.position, this.config.player.camera.position);
+	var distanceFromPlayer = dist_2d_sqrt(this.mesh.position, this.config.player.camera.position);
 
 	if (!this.config.map.is_in_map(this.mesh.position.x, this.mesh.position.z) || distanceFromPlayer > (this.config.fog_end*1.1)*(this.config.fog_end*1.1)) {
 		return false; // return false if manager needs to destroy me

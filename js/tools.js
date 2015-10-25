@@ -15,6 +15,12 @@ function dist_3d_sqrt (a, b) {
 	return dx * dx + dy * dy + dz * dz;
 }
 
+function dist_2d_sqrt (a, b) {
+	var dx = a.x - b.x;
+	var dz = a.z - b.z;
+	return dx * dx + dz * dz;
+}
+
 function loop_index (index, length) {
 	return (length + (index % length)) % length;
 }
