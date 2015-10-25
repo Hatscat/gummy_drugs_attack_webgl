@@ -179,6 +179,8 @@ Player.prototype.update = function () {
 
 Player.prototype.fire = function () {
     window.scene.beginAnimation(this.weapon, 0, 100, false, 10, null);
+    this.config.sounds.shot.play();
+
     var pickedInfo = scene.pick(window.innerWidth/2, window.innerHeight/2, null, false);
     if(pickedInfo.pickedMesh && pickedInfo.pickedMesh.name) {
         if(pickedInfo.pickedMesh.name.indexOf("enemy") != -1) {
@@ -192,7 +194,6 @@ Player.prototype.takeDammage = function (dam) {
     if(!this.canTakeDammage) {
         return;
     }
-
     this.hp -= dam;
 
     if(this.hp <= 0) {
@@ -204,6 +205,7 @@ Player.prototype.takeDammage = function (dam) {
             return;
         }
     }
+    this.config.sounds.hurt.play();
 
     this.config.GUI.drawCircle('healthCircle', Math.max(0, (this.hp/this.hp_max)));
 
@@ -244,6 +246,7 @@ Player.prototype.onKeyUp = function (keyCode) {
 }
 
 Player.prototype.die = function() {
+	this.config.sounds.die.play();
     gunsight.style.visibility = "hidden";
     window.menuCamera.target = this.position;
     window.scene.activeCamera = window.menuCamera;
@@ -254,7 +257,8 @@ Player.prototype.die = function() {
 Player.prototype.eat = function() {
 	if(!this.drugToEat) {
 		return;
-	} 
+	}
+	this.config.sounds.eat.play();
 	this.config.DrugManager.deleteDrug(this.drugToEat);
 	this.drugToEat = null;
 	this.currentDrugCoolDown = this.drugCoolDown; 	

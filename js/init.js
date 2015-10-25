@@ -48,6 +48,9 @@ function loadAssets (config) {
 		img.onSuccess = textureLoadBinded;
 		img.onError = loadError;
 	}
+	for(var i in config.soundsConfig) {
+		config.sounds[i] = new BABYLON.Sound(i, config.soundsConfig[i].src, window.scene, null, config.soundsConfig[i].options);
+	}
 
 	loader.onFinish = onAssetsLoaded.bind(window, config);
 	loader.load(); // Démarre le chargement
@@ -105,10 +108,10 @@ function onAssetsLoaded (config) {
 	window.engine.runRenderLoop(renderLoop);
 
 	window.playBinded = play.bind(window, config);
-	document.addEventListener("click", window.playBinded, false)
+	document.addEventListener("mousedown", window.playBinded, false)
 }
 function play(config) {
-	document.removeEventListener("click", window.playBinded, false);
+	document.removeEventListener("mousedown", window.playBinded, false);
 	window.playBinded = null;
 
 	config.player = new Player(config);
