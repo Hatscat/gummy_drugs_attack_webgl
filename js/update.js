@@ -2,6 +2,7 @@
 
 function update (config) {
 	var deltaTime = window.engine.getDeltaTime();
+	config.elapsedTime += deltaTime;
 
 	if (config.is_game_title || config.player.hp <= 0) {
 		window.menuCamera.alpha -= config.titleScreenCameraSpeed * deltaTime;
@@ -15,13 +16,15 @@ function update (config) {
 		config.GUI.drawScore();
 		config.scoreUpdateTimer = config.scoreUpdateInterval;
 	}
-
-	config.player.currentShootCoolDown -= deltaTime;
-	if(config.isMouseDown && config.player.currentShootCoolDown <= 0) {
-		config.player.currentShootCoolDown = config.player.shootCoolDown;
-		config.player.bindedFire();
+	if(config.player.drugToEat && !config.GUI.isEatHintShowed) {
+		config.GUI.drawEatHint();
 	}
+	else if(!config.player.drugToEat && config.GUI.isEatHintShowed) {
+		config.GUI.clearEatHint();
+	}
+
 	config.player.update();
-	config.AIManager.updateAllAI(config);
+	config.AIManager.updateAllAI();
+	config.DrugManager.updateDrugs(deltaTime);
 }
 

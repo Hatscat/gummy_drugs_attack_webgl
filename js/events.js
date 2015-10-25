@@ -3,7 +3,9 @@
 function init_events (config) {
 	render_canvas.requestPointerLock = render_canvas.requestPointerLock || render_canvas.msRequestPointerLock || render_canvas.mozRequestPointerLock || render_canvas.webkitRequestPointerLock;
 
-	document.addEventListener("click", function (evt) {
+	document.addEventListener("mousedown", function (evt) {
+		config.isMouseDown = true;
+
 		if (render_canvas.requestPointerLock) {
 			render_canvas.requestPointerLock();
 		} else {
@@ -18,16 +20,12 @@ function init_events (config) {
 			window.scene.activeCamera = config.player.camera;
 			gunsight.style.visibility = "visible";
 			config.score = 0;
-			config.healthCircle.fillPercent = 1;
-			inGameGUI(config);
+			config.elapsedTime = 0;
+			config.GUI.inGameGUI();
 			
 			config.player.reset();
 		}
 
-	}, false);
-
-	document.addEventListener("mousedown", function (evt) {
-		config.isMouseDown = true;
 	}, false);
 
 	document.addEventListener("mouseup", function (evt) {

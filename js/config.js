@@ -20,6 +20,7 @@ function getConfig () {
 	config.meshes = {};
 	config.imgs = {};
 	config.textures = {};
+	config.sounds = {};
 
 	config.imgToLoad = {
 		"title": "assets/title" + (Math.random()*4 | 0) + ".png" // to choose a title font img in random,
@@ -27,6 +28,14 @@ function getConfig () {
 
 	config.texturesToLoad = {
 		"gunImpactParticle": "assets/gunImpactParticle.png"
+	}
+
+	config.soundsConfig = {
+		"shot" : {src:"assets/sounds/pew.mp3", options: {volume: 0.5} },
+		"hurt" :  {src:"assets/sounds/hurt.mp3" },
+		"eat" :  {src:"assets/sounds/eat.mp3" },
+		"die" :  {src:"assets/sounds/die.mp3", options: {volume: 1.1} },
+		"BGM" : {src:"assets/sounds/RunAmok.mp3", options: { loop: true, autoplay: true } }
 	}
 
 	config.meshesToLoad = {
@@ -39,11 +48,12 @@ function getConfig () {
 		"forward" :  [90], // Z
 		"backward" : [83], // S
 		"left" : 	 [81], // Q
-		"right" : 	 [68] // D
+		"right" : 	 [68], // D
+		"eat": [70] // F
 	};
 
 	config.titleScreenCameraBeta = Math.PI/6;
-	config.titleScreenCameraRadius = 150;
+	config.titleScreenCameraRadius = 25;
 	config.titleScreenCameraSpeed = 0.00005;
 
 	config.score = 0;
@@ -51,6 +61,8 @@ function getConfig () {
 	config.pointPerEnemyKilled = 250;
 	config.scoreUpdateTimer = 100;
 	config.scoreUpdateInterval = 100;
+
+	config.elapsedTime = 0;
 
 	return config;
 }

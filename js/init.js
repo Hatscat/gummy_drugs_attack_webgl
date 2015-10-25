@@ -48,6 +48,9 @@ function loadAssets (config) {
 		img.onSuccess = textureLoadBinded;
 		img.onError = loadError;
 	}
+	for(var i in config.soundsConfig) {
+		config.sounds[i] = new BABYLON.Sound(i, config.soundsConfig[i].src, window.scene, null, config.soundsConfig[i].options);
+	}
 
 	loader.onFinish = onAssetsLoaded.bind(window, config);
 	loader.load(); // Démarre le chargement
@@ -59,6 +62,7 @@ function loadError(err) {
 
 function meshLoaded (config, task) {
 	config.meshes[task.name] = task.loadedMeshes[0]; // one mesh per task ! currently we have no multimesh
+	config.meshes[task.name].setEnabled(false);
 }
 
 function imgLoaded(config, task) {
@@ -70,16 +74,32 @@ function textureLoaded(config, task) {
 }
 
 function onAssetsLoaded (config) {
-	config.meshes.enemy.isVisible = false;
 
 	config.GUI = new GUI(config);
 	config.GUI.drawTitleScreen();
 
 	config.map = new Map(config);
 	config.drug = new Drug_effect(config);
+//	config.map.set_all_cubes_pos(0, 0);
 
-	window.menuCamera = new BABYLON.ArcRotateCamera("Camera", 0, config.titleScreenCameraBeta, config.titleScreenCameraRadius, BABYLON.Vector3.Zero(), scene);
+	var radius = config.map.get_raw_y(config.map.get_index_from_xz(0,0)) + config.titleScreenCameraRadius;
+	window.menuCamera = new BABYLON.ArcRotateCamera("Camera", 0, config.titleScreenCameraBeta, radius, BABYLON.Vector3.Zero(), scene);
 	menuCamera.fov = 90;
+
+	var display = new BABYLON.Animation("death", "radius", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+	var anim_keys = [
+		{
+			frame: 0,
+			value: 10
+		},
+		{
+			frame: 100,
+			value: config.titleScreenCameraRadius
+		}
+	];
+
+    display.setKeys(anim_keys);
+    menuCamera.animations.push(display);
 
 
 	function renderLoop () {
@@ -89,22 +109,19 @@ function onAssetsLoaded (config) {
 	window.engine.runRenderLoop(renderLoop);
 
 	window.playBinded = play.bind(window, config);
-	document.addEventListener("click", window.playBinded, false)
+	document.addEventListener("mousedown", window.playBinded, false)
 }
 function play(config) {
-	document.removeEventListener("click", window.playBinded, false);
+	document.removeEventListener("mousedown", window.playBinded, false);
 	window.playBinded = null;
 
 	config.player = new Player(config);
 	config.AIManager = new AIManager(config)
 	config.ParticlesManager = new ParticlesManager(config);
+	config.DrugManager = new DrugManager(config);
 
 	init_events(config);
 	render_canvas.click();
-
-	/*for(var i=0; i< config.AIManager.maxAINb; i++) {
-		config.AIManager.spawnAI(config);
-	}*/
 
 	config.GUI.inGameGUI();
 

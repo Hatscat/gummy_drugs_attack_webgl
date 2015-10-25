@@ -4,34 +4,47 @@ var AIManager = function(config) {
 	this.config = config;
 	this.AIs = {};
 	this.maxAINb = 500;
-	this.AIcount = 0;
+	this.AINameCount = 0;
+	this.AICount = 0;
+	this.spawnCapTime = 300000; // time when the spawn is limited to the maximum sprites
 }
 
 AIManager.prototype.spawnAI = function() {
-	var x = Math.random()*150 - 75 | 0 //TODO a real spawn algo
-	var z = Math.random()*150 - 75 | 0 //TODO a real spawn algo
-	var name = "enemy" + this.AIcount;
+	var angle = Math.random() * Math.PI * 2;
+	var x = this.config.player.position.x + Math.cos(angle) * this.config.fog_end;
+	var z = this.config.player.position.z - Math.sin(angle) * this.config.fog_end;
+	var name = "enemy" + this.AINameCount;
 	this.AIs[name] = new AI(config, x, z, name);
-	this.AIcount++;
+	this.AINameCount++;
+	this.AICount++;
 }
 
 AIManager.prototype.deleteAllAI = function() {
 	for(var i in this.AIs) {
 		this.AIs[i].mesh.dispose();
 	}
+	this.AICount = 0;
+	this.AINameCount = 0;
 	this.AIs = {}; 
 }
 AIManager.prototype.hurtAI = function(name, dammage) {
 	this.AIs[name].hp -= dammage;
 	if(this.AIs[name].hp <= 0) {
-		this.killAI(name);
+		this.killAI(name, true);
 	}
 }
-AIManager.prototype.killAI = function(name) {
+AIManager.prototype.killAI = function(name, isFromPlayer) {
 	//TODO particles
+
+	if(isFromPlayer) {
+		this.config.DrugManager.spawnDrug(this.AIs[name].mesh.position.x, this.AIs[name].mesh.position.z);
+		this.config.score += this.config.pointPerEnemyKilled;
+	}
+	
 	this.AIs[name].mesh.dispose();
-	this.config.score += this.config.pointPerEnemyKilled;
 	delete this.AIs[name]; // remove key i from structure
+	this.AICount--;
+
 }
 
 AIManager.prototype.updateAllAI = function() {
@@ -39,8 +52,15 @@ AIManager.prototype.updateAllAI = function() {
 	for(var i in this.AIs) {
 		var isUpdateNormal = this.AIs[i].update(deltaTime); // if the AI needs to be removed, its update returns false
 		if(!isUpdateNormal) {
-			delete this.AIs[i]; // remove key i from structure
+			this.killAI(i, false);
 			continue;
+		}
+	}
+
+	if(this.AICount < this.maxAINb) {
+		var enemyToSpawnNb = this.config.elapsedTime * this.maxAINb / this.spawnCapTime - this.AICount | 0;
+		for(var i=0; i<enemyToSpawnNb; i++) {
+			this.spawnAI();
 		}
 	}
 }
