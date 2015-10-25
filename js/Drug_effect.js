@@ -23,7 +23,7 @@ Drug_effect.prototype.reset = function () {
 
 Drug_effect.prototype.add = function () {
 	if (this.target_drug_lvl < this.config.drug.drug_lvl_max) {
-		this.target_drug_lvl = Math.min( this.config.drug.drug_lvl_max, Math.max( this.target_drug_lvl + 1, parseInt(this.drug_lvl + 1.5) ) );
+		this.target_drug_lvl = Math.max( this.target_drug_lvl + 1, parseInt(this.drug_lvl + 1.5) );
 	}
 }
 
