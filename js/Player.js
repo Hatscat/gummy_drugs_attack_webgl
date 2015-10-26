@@ -158,9 +158,8 @@ Player.prototype.update = function () {
 		}
 
 		this.currentShootCoolDown -= deltaTime;
-		if(this.config.isMouseDown && this.currentShootCoolDown <= 0) {
-			var coolDown = lerp(this.minShootCoolDown, this.maxShootCoolDown, this.config.drug.drug_ratio);
-			this.currentShootCoolDown = coolDown;
+		if (this.config.isMouseDown && this.currentShootCoolDown <= 0) {
+			this.currentShootCoolDown = lerp(this.maxShootCoolDown, this.minShootCoolDown, this.config.drug.drug_ratio);
 			this.bindedFire();
 		}		
 	}

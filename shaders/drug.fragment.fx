@@ -1,5 +1,5 @@
-#define P_SPEED_X 3.3963473381008953
-#define P_SPEED_Y 2.3373457256238908
+#define P_SPEED_X 2.3963473381008953
+#define P_SPEED_Y 1.3373457256238908
 #define DEF_SPEED_X 2.372859517345205
 #define DEF_SPEED_Y 3.276329489191994
 #define MIX_SPEED_X 1.452705320669338
@@ -47,7 +47,7 @@ void main (void)
 	tex.g *= mix(1., pow(tex.g, COLOR_COEF * drug_lvl), cos(time * GREEN_SPEED));
 	tex.b *= mix(1., pow(tex.b, COLOR_COEF * drug_lvl), sin(time * BLUE_SPEED));
 
-	//gl_FragColor = mix(tex, vec4(1.,0.,0.,1.), step(length(p - uv), .1)); // pour visualiser le centre de deformation
+	//gl_FragColor = mix(tex, vec4(0., 1., 0., 1.), step(length(p - uv), .1)); // pour visualiser le centre de deformation
 	gl_FragColor = tex;
 }
 
