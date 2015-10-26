@@ -1,4 +1,6 @@
-var DrugPillsManager = function() {
+"use strict"
+
+var DrugPillsManager = function (config) {
 	this.config = config;
 
 	this.drugs = {};
@@ -30,7 +32,12 @@ DrugPillsManager.prototype.updateDrugs = function(deltaTime) {
 	for(var i in this.drugs) {
 		var isUpdateNormal = this.drugs[i].update(deltaTime); // if the drugs needs to be removed, its update returns false
 		if(!isUpdateNormal) {
-			this.deleteDrug(i);
+
+			this.drugs[i].force_y -= this.config.gravity * deltaTime;
+			this.drugs[i].mesh.position.y += this.drugs[i].force_y;
+			if (this.drugs[i].mesh.position.y < this.drugs[i].y_limit) {
+				this.deleteDrug(i);
+			}
 		}
 	}
 }

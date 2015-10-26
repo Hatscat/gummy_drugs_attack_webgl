@@ -6,11 +6,11 @@ var Player = function (config) {
 	this.config = config;
 
 	this.hp_max = 100;
-	this.hp_drug_heal = 4; 
+	this.hp_drug_heal = 5; 
 	this.height = 2;
 	this.minSpeed = 0.014;
-	this.maxSpeed = 0.018;
-	this.jmp_str = 0.04;
+	this.maxSpeed = 0.022;
+	this.jmp_str = 0.03;
 	this.y_step_str = 0.0125;
 	this.y_step_max = 1.25;
     this.canTakeDammage = true;
@@ -40,7 +40,7 @@ var Player = function (config) {
     this.camera.keysRight = [];
     this.camera.speed = 0;
     this.camera.inertia = 0;
-    this.camera.angularSensibility = 500; // lower is more sensible
+    this.camera.angularSensibility = 400; // lower is more sensible
     this.camera.attachPostProcess(this.config.drug.post_process);
 	
     	this.position = this.camera.position;
@@ -170,7 +170,7 @@ Player.prototype.fire = function () {
     window.scene.beginAnimation(this.weapon, 0, 100, false, 10, null);
     this.config.sounds.shot.play();
 
-    var pickedInfo = scene.pick(window.innerWidth/2, window.innerHeight/2, null, false);
+    var pickedInfo = window.scene.pick(window.innerWidth * 0.5, window.innerHeight * 0.5, null, true);
     if(pickedInfo.pickedMesh && pickedInfo.pickedMesh.name) {
         if(pickedInfo.pickedMesh.name.indexOf("enemy") != -1) {
             this.config.AIManager.hurtAI(pickedInfo.pickedMesh.name, this.shotDammage);

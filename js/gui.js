@@ -58,7 +58,7 @@ GUI.prototype.inGameGUI = function() {
 
 	gunsight.style.visibility = "visible"; //html div
 
-	this.drawCircle('healthCircle', this.config.player.hp / this.config.player.hp_max);
+	this.drawCircle('healthCircle', this.config.player.hp / this.config.player.hp_max || 1);
 	this.drawCircle('drugCircle', this.config.drug.drug_ratio);
 	this.drawScore(this.config.score);
 }
@@ -124,7 +124,7 @@ GUI.prototype.clearEatHint = function() {
 
 GUI.prototype.drawTitleScreen = function(overRideText) {
 	this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-	this.context.drawImage(this.config.imgs.title, window.innerWidth/2 - config.imgs.title.naturalWidth/2, window.innerHeight * this.titleY - config.imgs.title.naturalHeight/2);
+	this.context.drawImage(this.config.imgs.title, window.innerWidth/2 - this.config.imgs.title.naturalWidth/2, window.innerHeight * this.titleY - this.config.imgs.title.naturalHeight/2);
 
 	this.context.font = this.fontHeight/2 * window.innerHeight +"px " + this.currentFont;
 	var string = overRideText || 'Click to play!';

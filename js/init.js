@@ -5,7 +5,7 @@ function init () {
 	render_canvas.width = window.innerWidth;
 	render_canvas.height = window.innerHeight;
 
-	window.config = getConfig(); //TMP
+	var config = getConfig();
 
 	createScene(config);
 	loadAssets(config);
@@ -80,7 +80,7 @@ function onAssetsLoaded (config) {
 	config.drug = new Drug_effect(config);
 	config.map.set_all_cubes_pos(0, 0);
 
-	var radius = config.map.get_raw_y(config.map.get_index_from_xz(0,0)) + config.titleScreenCameraRadius;
+	var radius = config.map.get_raw_y(config.map.get_index_from_xz(0, 0)) + config.titleScreenCameraRadius;
 	window.menuCamera = new BABYLON.ArcRotateCamera("Camera", 0, config.titleScreenCameraBeta, radius, BABYLON.Vector3.Zero(), scene);
 	menuCamera.fov = config.half_PI;
 

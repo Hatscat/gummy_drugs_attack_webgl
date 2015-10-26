@@ -14,7 +14,7 @@ AIManager.prototype.spawnAI = function() {
 	var x = this.config.player.position.x + Math.cos(angle) * this.config.fog_end;
 	var z = this.config.player.position.z - Math.sin(angle) * this.config.fog_end;
 	var name = "enemy" + this.AINameCount;
-	this.AIs[name] = new AI(config, x, z, name);
+	this.AIs[name] = new AI(this.config, x, z, name);
 	this.AINameCount++;
 	this.AICount++;
 }
@@ -30,16 +30,16 @@ AIManager.prototype.deleteAllAI = function() {
 AIManager.prototype.hurtAI = function(name, dammage) {
 	this.AIs[name].hp -= dammage;
 	if(this.AIs[name].hp <= 0) {
-		this.killAI(name, true);
+		this.AIs[name].force_y = this.AIs[name].jumpImpulsion * 0.4;
+		this.AIs[name].is_alive = false;
+		this.config.ParticlesManager.launch("AIDeath", this.AIs[name].mesh.position);
 	}
 }
 AIManager.prototype.killAI = function(name, isFromPlayer) {
-	//TODO particles
 
 	if(isFromPlayer) {
 		this.config.DrugPillsManager.spawnDrug(this.AIs[name].mesh.position.x, this.AIs[name].mesh.position.z);
-		this.config.score += this.config.pointPerEnemyKilled * (config.drug.drug_lvl+1) | 0;
-		this.config.ParticlesManager.launch("AIDeath", this.AIs[name].mesh.position);
+		this.config.score += this.config.pointPerEnemyKilled * (this.config.drug.drug_lvl+1) | 0;
 	}
 
 	this.AIs[name].mesh.dispose();

@@ -2,7 +2,7 @@
 
 var DrugPill = function(config, x, z, name) {
 	this.config = config;
-	this.timeBeforeDeletion = 5000;
+	this.timeBeforeDeletion = 8000;
 	this.touchingDistance = 10;
 	this.size = 1;
 
@@ -12,6 +12,9 @@ var DrugPill = function(config, x, z, name) {
 	this.mesh.position.z = z;
 	this.mesh.position.y = config.map.get_raw_y(config.map.get_index_from_xz(x,z)) + this.size/2;
 	this.mesh.material = config.DrugPillsManager.drugsMaterials[(Math.random() * config.DrugPillsManager.drugsMaterialsNb | 0)];
+
+	this.force_y = 0;
+	this.y_limit = this.mesh.position.y - this.size;
 }
 
 DrugPill.prototype.update = function(deltaTime) {
