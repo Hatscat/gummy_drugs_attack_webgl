@@ -46,20 +46,18 @@ Map.prototype.create = function () {
 
 	origin_box.setEnabled(false);
 
-	// dé-commenter ci-dessous pour visualiser la map générée en image :	
-/*
-	var px_size = innerHeight / this.side_len | 0;
-	var canvas = document.createElement("canvas")
-	canvas.style.position = "fixed"
-	canvas.style.top = canvas.style.left = 0
-	canvas.width = canvas.height = this.side_len * px_size
-	var ctx = canvas.getContext("2d")
-	for (var i = 0; i < this.vals_nb; ++i) {
-		ctx.fillStyle = 'rgb('+ this.values[i] + ',' + this.values[i] + ',' + this.values[i] + ')'
-		ctx.fillRect((i%this.side_len)*px_size, (i/this.side_len|0)*px_size, px_size, px_size)
+	if (this.config.is_dev_mode) {
+		var canvas = document.createElement("canvas");
+		canvas.style.position = "fixed";
+		canvas.style.top = canvas.style.left = 0;
+		canvas.width = canvas.height = this.side_len;
+		var ctx = canvas.getContext("2d");
+		for (var i = 0; i < this.vals_nb; ++i) {
+			ctx.fillStyle = '#0' + ((this.values[i] >> 4) & 0xf).toString(16) + (this.values[i] & 0xf).toString(16);
+			ctx.fillRect((i%this.side_len), (i/this.side_len|0), 1, 1);
+		}
+		document.body.appendChild(canvas);
 	}
-	document.body.appendChild(canvas)
-//*/
 }
 
 Map.prototype.diamond_sqrt = function (len) {

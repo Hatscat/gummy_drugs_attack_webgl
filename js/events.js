@@ -46,5 +46,6 @@ function init_events (config) {
 		if (window.engine) {
 			window.engine.resize();
 		}
+		// gui clear
 	}, false);
 }

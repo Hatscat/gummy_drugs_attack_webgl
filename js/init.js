@@ -12,17 +12,16 @@ function init () {
 }
 
 function createScene (config) {
-	window.engine = new BABYLON.Engine(render_canvas, true);
+	window.engine = new BABYLON.Engine(render_canvas, false);
 	window.scene = new BABYLON.Scene(window.engine);
-	var map_side_size = config.cube_size * (Math.pow(2,config.map_side_n) + 1);
+	var map_side_size = config.cube_size * (Math.pow(2, config.map_side_n) + 1);
 	config.light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(-map_side_size >> 1, map_side_size << 1, map_side_size >> 1), window.scene);
 
 	window.scene.fogMode = BABYLON.Scene.FOGMODE_LINEAR;
-	//window.scene.fogDensity = 0.03;
 	window.scene.fogStart = config.fog_start;
 	window.scene.fogEnd = config.fog_end;
 	window.scene.clearColor = config.light_color;
-	window.scene.fogColor = config.is_dev_mode ? new BABYLON.Color3(0, 1, 0) : config.light_color;
+	window.scene.fogColor = config.is_dev_mode ? new BABYLON.Color3(1, 0.5, 0) : config.light_color;
 	config.light.groundColor = config.light_color;
 }
 
@@ -36,28 +35,27 @@ function loadAssets (config) {
 	for(var i in config.meshesToLoad) {
 		var task = loader.addMeshTask(i, '', config.meshesToLoad[i][0], config.meshesToLoad[i][1]);
 		task.onSuccess = meshLoadedBinded;
-		task.onError = loadError;
+		task.onError = console.error;
 	}
 	for(var i in config.imgToLoad) {
 		var img = loader.addImageTask(i, config.imgToLoad[i]);
 		img.onSuccess = imgLoadBinded;
-		img.onError = loadError;
+		img.onError = console.error;
 	}
 	for(var i in config.texturesToLoad) {
 		var img = loader.addTextureTask(i, config.texturesToLoad[i]);
 		img.onSuccess = textureLoadBinded;
-		img.onError = loadError;
+		img.onError = console.error;
 	}
 	for(var i in config.soundsConfig) {
+		if (config.is_dev_mode) {
+			config.soundsConfig[i].options = { volume: 0 };
+		}
 		config.sounds[i] = new BABYLON.Sound(i, config.soundsConfig[i].src, window.scene, null, config.soundsConfig[i].options);
 	}
 
 	loader.onFinish = onAssetsLoaded.bind(window, config);
 	loader.load(); // Démarre le chargement
-}
-
-function loadError(err) {
-	console.error(err)
 }
 
 function meshLoaded (config, task) {

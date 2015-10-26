@@ -234,7 +234,7 @@ Player.prototype.onKeyUp = function (keyCode) {
 		this.dir_x = 0;
 	}
 
-	if (/*this.config.is_dev_mode &&*/ keyCode == 49) { // & 
+	if (this.config.is_dev_mode && keyCode == 49) { // & 
 		this.config.drug.add();
 	}
 }
