@@ -2,6 +2,7 @@
 
 var AI = function(config, x, z, name) {
 	this.config = config;
+	this.canMove = false;
 	this.CanfollowPlayer = true;
 	this.canRandomMove = true;
 	this.canJump = true;
@@ -12,11 +13,11 @@ var AI = function(config, x, z, name) {
 	this.detectionDistance = 150;
 	this.touchingDistance = 5;
 	this.rotOffset = Math.PI/2;
-	this.speed = 0.005;
-	this.jumpImpulsion = 0.03;
+	this.speed = 0.008;
+	this.jumpImpulsion = 0.04;
 	this.dirChangeTimer = 1000;
 	this.jumpTimer = 500;
-	this.jumpRandomTimer = 500;
+	this.jumpRandomTimer = 250;
 	this.dammage = 10;
 
 	this.force_y = 0;
@@ -77,12 +78,12 @@ AI.prototype.update = function(deltaTime) {
 	}
 
 	// if this can move then move
-	if(!this.stop) { 
+	if(!this.stop && (this.canMove || (this.force_y != 0 && this.canJump) ) ) { 
 		this.mesh.position.x -= Math.cos(this.angle) * this.speed * deltaTime;
 		this.mesh.position.z += Math.sin(this.angle) * this.speed * deltaTime;
 	}
 
-	// gravity		
+	// gravity
 	this.force_y -= this.config.gravity * deltaTime;
 	this.mesh.position.y += this.force_y * deltaTime;
 
