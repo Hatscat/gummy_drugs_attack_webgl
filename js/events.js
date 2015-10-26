@@ -42,10 +42,10 @@ function init_events (config) {
 	}, false);
 	
 	// Resize the babylon engine when the window is resized
-	document.addEventListener("resize", function () {
+	window.addEventListener("resize", function () {
 		if (window.engine) {
 			window.engine.resize();
 		}
-		// gui clear
+		config.GUI.inGameGUI();
 	}, false);
 }

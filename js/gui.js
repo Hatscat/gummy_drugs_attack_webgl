@@ -58,9 +58,9 @@ GUI.prototype.inGameGUI = function() {
 
 	gunsight.style.visibility = "visible"; //html div
 
-	this.drawCircle('healthCircle', 1);
-	this.drawCircle('drugCircle', 0);
-	this.drawScore(0);
+	this.drawCircle('healthCircle', this.config.player.hp / this.config.player.hp_max);
+	this.drawCircle('drugCircle', this.config.drug.drug_ratio);
+	this.drawScore(this.config.score);
 }
 
 GUI.prototype.drawCircle = function(circleName, newPercent) {
