@@ -1,7 +1,7 @@
 var GUI = function(config) {
 	this.config = config;
 	this.context = UI_canvas.getContext('2d');
-	this.currentFont = "fantasy";
+	this.currentFont = "fantasy, Impact, Georgia";
 
 	this.scoreY = 0.06;
 	this.hintY = 0.4;
