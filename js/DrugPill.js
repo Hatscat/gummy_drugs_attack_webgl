@@ -3,7 +3,7 @@
 var DrugPill = function(config, x, z, name) {
 	this.config = config;
 	this.timeBeforeDeletion = 5000;
-	this.touchingDistance = 5;
+	this.touchingDistance = 10;
 	this.size = 1;
 
 	this.mesh = config.meshes.drug.clone(name);
