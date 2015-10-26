@@ -16,14 +16,11 @@ var AI = function(config, x, z, name) {
 	this.speed = 0.008;
 	this.jumpImpulsion = 0.04;
 	this.dirChangeTimer = 1000;
-	this.jumpTimer = 500;
-	this.jumpRandomTimer = 250;
-	this.dammage = 10;
+	this.dammage = 1.5;
 
 	this.force_y = 0;
 	this.angle = Math.PI;
 	this.nextDirectionTimer = 0;
-	this.nextJumpTimer = this.jumpTimer + Math.random()*this.jumpRandomTimer;
 	this.mesh = config.meshes.enemy.createInstance(name);
 	this.mesh.isVisible = true;
 	this.mesh.position.x = x;
@@ -37,7 +34,6 @@ AI.prototype.update = function(deltaTime) {
 	
 	
 	this.nextDirectionTimer -= deltaTime;
-	this.nextJumpTimer -= deltaTime;
 	var distanceFromPlayer = dist_2d_sqrt(this.mesh.position, this.config.player.camera.position);
 
 	if (distanceFromPlayer > (this.config.fog_end*1.1)*(this.config.fog_end*1.1)) {
@@ -65,9 +61,9 @@ AI.prototype.update = function(deltaTime) {
 		this.stop = false;
 	} 
 
-	if(this.force_y == 0 && this.canJump && !this.stop && this.nextJumpTimer <= 0) {
-		this.nextJumpTimer = this.jumpTimer + Math.random()*this.jumpRandomTimer;
+	if(this.force_y == 0 && this.canJump && !this.stop) {
 		this.force_y = this.jumpImpulsion;
+		this.canJump = false;
 	}
 	if(distanceFromPlayer < this.touchingDistance && this.config.player.hp > 0) {
 		var distance3d = dist_3d_sqrt(this.mesh.position, this.config.player.camera.position);
@@ -78,7 +74,7 @@ AI.prototype.update = function(deltaTime) {
 	}
 
 	// if this can move then move
-	if(!this.stop && (this.canMove || (this.force_y != 0 && this.canJump) ) ) { 
+	if(!this.stop && (this.canMove || (this.force_y != 0 && !this.canJump) ) ) { 
 		this.mesh.position.x -= Math.cos(this.angle) * this.speed * deltaTime;
 		this.mesh.position.z += Math.sin(this.angle) * this.speed * deltaTime;
 	}
@@ -90,6 +86,7 @@ AI.prototype.update = function(deltaTime) {
 	// map collision
 	if (this.mesh.position.y <= next_map_y) {
 		this.force_y = 0;
+		this.canJump = true;
 		this.mesh.position.y = next_map_y;
 	}
 

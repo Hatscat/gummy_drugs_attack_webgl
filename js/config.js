@@ -52,8 +52,8 @@ function getConfig () {
 		"eat": [70] // F
 	};
 
-	config.titleScreenCameraBeta = Math.PI/6;
-	config.titleScreenCameraRadius = 25;
+	config.titleScreenCameraBeta = Math.PI * 0.15;
+	config.titleScreenCameraRadius = 33;
 	config.titleScreenCameraSpeed = 0.00005;
 
 	config.score = 0;

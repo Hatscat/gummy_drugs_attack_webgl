@@ -6,6 +6,7 @@ var Player = function (config) {
 	this.config = config;
 
 	this.hp_max = 100;
+	this.hp_drug_heal = 4; 
 	this.height = 2;
 	this.minSpeed = 0.014;
 	this.maxSpeed = 0.018;
@@ -13,7 +14,7 @@ var Player = function (config) {
 	this.y_step_str = 0.0125;
 	this.y_step_max = 1.25;
     this.canTakeDammage = true;
-    this.dammageCoolDown = 1000;
+    this.dammageCoolDown = 100;
     this.minShootCoolDown = 50;
     this.maxShootCoolDown = 200;
     this.currentShootCoolDown = 0;
@@ -195,7 +196,7 @@ Player.prototype.takeDammage = function (dam) {
     }
     this.config.sounds.hurt.play();
 
-    this.config.GUI.drawCircle('healthCircle', Math.max(0, (this.hp/this.hp_max)));
+    this.config.GUI.drawCircle('healthCircle', Math.max(0, (this.hp / this.hp_max)));
 
     this.canTakeDammage = false;
     window.setTimeout(this.bindedSetCanTakeDammage, this.dammageCoolDown);
@@ -256,5 +257,7 @@ Player.prototype.eat = function() {
 	this.config.DrugPillsManager.deleteDrug(this.drugToEat);
 	this.drugToEat = null;
 	this.config.drug.add();
+	this.hp = Math.min(this.hp_max, this.hp + this.hp_drug_heal);
+	this.config.GUI.drawCircle('healthCircle', Math.max(0, (this.hp / this.hp_max)));
 }
 
