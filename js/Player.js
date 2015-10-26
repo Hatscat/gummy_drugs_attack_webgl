@@ -242,6 +242,7 @@ Player.prototype.onKeyUp = function (keyCode) {
 
 Player.prototype.die = function() {
 	this.config.sounds.die.play();
+	this.hp = 0;
     gunsight.style.visibility = "hidden";
     window.menuCamera.target = this.position;
     window.scene.activeCamera = window.menuCamera;
