@@ -65,7 +65,7 @@ AI.prototype.update = function(deltaTime) {
 		this.stop = false;
 	} 
 
-	if(this.canJump && !this.stop && this.nextJumpTimer <= 0) {
+	if(this.force_y == 0 && this.canJump && !this.stop && this.nextJumpTimer <= 0) {
 		this.nextJumpTimer = this.jumpTimer + Math.random()*this.jumpRandomTimer;
 		this.force_y = this.jumpImpulsion;
 	}
