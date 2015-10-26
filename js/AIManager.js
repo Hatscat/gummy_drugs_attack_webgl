@@ -38,9 +38,10 @@ AIManager.prototype.killAI = function(name, isFromPlayer) {
 
 	if(isFromPlayer) {
 		this.config.DrugPillsManager.spawnDrug(this.AIs[name].mesh.position.x, this.AIs[name].mesh.position.z);
-		this.config.score += this.config.pointPerEnemyKilled;
+		this.config.score += this.config.pointPerEnemyKilled * (config.drug.drug_lvl+1) | 0;
+		this.config.ParticlesManager.launch("AIDeath", this.AIs[name].mesh.position);
 	}
-	
+
 	this.AIs[name].mesh.dispose();
 	delete this.AIs[name]; // remove key i from structure
 	this.AICount--;

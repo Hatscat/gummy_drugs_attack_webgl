@@ -10,7 +10,7 @@ function update (config) {
 	
 	config.elapsedTime += deltaTime;
 	config.scoreUpdateTimer -= deltaTime;
-	config.score += config.pointsPerMiliSecond * deltaTime | 0;
+	config.score += config.pointsPerMiliSecond * (config.drug.drug_lvl+1) * deltaTime | 0;
 	
 	if (config.scoreUpdateTimer <= 0) {
 		config.GUI.drawScore();

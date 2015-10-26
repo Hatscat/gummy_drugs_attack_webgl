@@ -175,7 +175,7 @@ Player.prototype.fire = function () {
         if(pickedInfo.pickedMesh.name.indexOf("enemy") != -1) {
             this.config.AIManager.hurtAI(pickedInfo.pickedMesh.name, this.shotDammage);
         }
-        config.ParticlesManager.impactLaunch(pickedInfo.pickedPoint);
+        this.config.ParticlesManager.launch("impact", pickedInfo.pickedPoint);
     }
 
 }
