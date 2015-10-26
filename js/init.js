@@ -118,7 +118,7 @@ function play(config) {
 	config.player = new Player(config);
 	config.AIManager = new AIManager(config)
 	config.ParticlesManager = new ParticlesManager(config);
-	config.DrugManager = new DrugManager(config);
+	config.DrugPillsManager = new DrugPillsManager(config);
 
 	init_events(config);
 	render_canvas.click();

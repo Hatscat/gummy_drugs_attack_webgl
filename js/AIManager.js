@@ -3,7 +3,7 @@
 var AIManager = function(config) {
 	this.config = config;
 	this.AIs = {};
-	this.maxAINb = 500;
+	this.maxAINb = 1000;
 	this.AINameCount = 0;
 	this.AICount = 0;
 	this.spawnCapTime = 300000; // time when the spawn is limited to the maximum sprites
@@ -37,7 +37,7 @@ AIManager.prototype.killAI = function(name, isFromPlayer) {
 	//TODO particles
 
 	if(isFromPlayer) {
-		this.config.DrugManager.spawnDrug(this.AIs[name].mesh.position.x, this.AIs[name].mesh.position.z);
+		this.config.DrugPillsManager.spawnDrug(this.AIs[name].mesh.position.x, this.AIs[name].mesh.position.z);
 		this.config.score += this.config.pointPerEnemyKilled;
 	}
 	

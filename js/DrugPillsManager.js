@@ -1,5 +1,3 @@
-"use strict"
-
 var DrugPillsManager = function() {
 	this.config = config;
 
