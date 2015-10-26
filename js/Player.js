@@ -253,7 +253,7 @@ Player.prototype.eat = function() {
 		return;
 	}
 	this.config.sounds.eat.play();
-	this.config.DrugManager.deleteDrug(this.drugToEat);
+	this.config.DrugPillsManager.deleteDrug(this.drugToEat);
 	this.drugToEat = null;
 	this.config.drug.add();
 }

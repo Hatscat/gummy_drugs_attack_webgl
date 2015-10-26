@@ -2,13 +2,13 @@
 
 function update (config) {
 	var deltaTime = window.engine.getDeltaTime();
-	config.elapsedTime += deltaTime;
 
 	if (config.is_game_title || config.player.hp <= 0) {
 		window.menuCamera.alpha -= config.titleScreenCameraSpeed * deltaTime;
 		return;
 	}
 	
+	config.elapsedTime += deltaTime;
 	config.scoreUpdateTimer -= deltaTime;
 	config.score += config.pointsPerMiliSecond * deltaTime | 0;
 	
@@ -29,6 +29,6 @@ function update (config) {
 
 	config.player.update();
 	config.AIManager.updateAllAI();
-	config.DrugManager.updateDrugs(deltaTime);
+	config.DrugPillsManager.updateDrugs(deltaTime);
 }
 
