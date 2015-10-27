@@ -10,8 +10,8 @@ var Player = function (config) {
 	this.height = 2;
 	this.minSpeed = 0.014;
 	this.maxSpeed = 0.022;
-	this.jmp_str_min = 0.02;
-	this.jmp_str_min = 0.04;
+	this.jmp_str_min = 0.025;
+	this.jmp_str_max = 0.05;
 	this.y_step_str = 0.0125;
 	this.y_step_max = 1.25;
 	this.canTakeDammage = true;
@@ -254,6 +254,8 @@ Player.prototype.die = function() {
 Player.prototype.eat = function() {
 	this.config.sounds.eat.play();
 	this.config.drug.add();
+	this.config.score += this.config.drug_pill_score_value;
+	this.config.GUI.drawScore();
 	this.hp = Math.min(this.hp_max, this.hp + this.hp_drug_heal);
 	this.config.GUI.drawCircle('healthCircle', Math.max(0, (this.hp / this.hp_max)));
 }

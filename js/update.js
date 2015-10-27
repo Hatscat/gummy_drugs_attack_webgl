@@ -8,16 +8,8 @@ function update (config) {
 		window.menuCamera.alpha -= config.titleScreenCameraSpeed * deltaTime;
 		return;
 	}
-	
-	config.elapsedTime += deltaTime;
-	config.scoreUpdateTimer -= deltaTime;
-	
-	if (config.scoreUpdateTimer <= 0) {
 
-		config.scoreUpdateTimer = config.scoreUpdateInterval;
-		++config.score;
-		config.GUI.drawScore();
-	}
+	config.elapsedTime += deltaTime;
 	
 	if (config.DrugPillsManager.yum_timer > 0) {
 

@@ -27,7 +27,7 @@ DrugPillsManager.prototype.createMaterials = function() {
 DrugPillsManager.prototype.spawnDrug = function(x,z) {
 	var name = "drug" + this.drugsNameCount;
 	this.drugs[name] = new DrugPill(this.config, x, z, name);
-	this.drugsNameCount++;
+	++this.drugsNameCount;
 }
 
 DrugPillsManager.prototype.updateDrugs = function(deltaTime) {

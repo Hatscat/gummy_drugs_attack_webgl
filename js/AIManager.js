@@ -15,8 +15,8 @@ AIManager.prototype.spawnAI = function() {
 	var z = this.config.player.position.z - Math.sin(angle) * this.config.fog_end;
 	var name = "enemy" + this.AINameCount;
 	this.AIs[name] = new AI(this.config, x, z, name);
-	this.AINameCount++;
-	this.AICount++;
+	++this.AINameCount;
+	++this.AICount;
 }
 
 AIManager.prototype.deleteAllAI = function() {
@@ -39,12 +39,11 @@ AIManager.prototype.killAI = function(name, isFromPlayer) {
 
 	if(isFromPlayer) {
 		this.config.DrugPillsManager.spawnDrug(this.AIs[name].mesh.position.x, this.AIs[name].mesh.position.z);
-		this.config.score += this.config.pointPerEnemyKilled * (this.config.drug.drug_lvl+1) | 0;
 	}
 
 	this.AIs[name].mesh.dispose();
 	delete this.AIs[name]; // remove key i from structure
-	this.AICount--;
+	--this.AICount;
 
 }
 

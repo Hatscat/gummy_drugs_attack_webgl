@@ -106,12 +106,12 @@ GUI.prototype.drawScore = function (overrideScore, overrideSize, overrideX, over
 		this.context.font = overrideSize*window.innerHeight + "px " + this.currentFont;
 	}
 	var score = overrideScore || this.config.score;
-	var string = score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "); // espace les nombres (merci stackoverflow)
+	var string = (draw_highscore ? "Score: " : "") + score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "); // espace les nombres (merci stackoverflow)
 	var x = overrideX * window.innerWidth || (window.innerWidth - this.context.measureText(string).width) >> 1;
 	var y = overrideY * window.innerHeight || this.scoreY * window.innerHeight | 0;
 	this.context.clearRect(0, (y-this.fontHeight* window.innerHeight | 0), window.innerWidth, (this.fontHeight* 2* window.innerHeight | 0));
 
-	this.context.fillText((draw_highscore ? "Score: " : "") + string, x, y);
+	this.context.fillText(string, x, y);
 
 	if (draw_highscore) {
 		string = "High score: " + this.config.highscore.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");

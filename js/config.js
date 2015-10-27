@@ -57,11 +57,10 @@ function getConfig () {
 
 	config.score = 0;
 	config.highscore = localStorage.drugs_attack_highscore | 0;
-	config.pointPerEnemyKilled = 100;
-	config.scoreUpdateTimer = 500;
-	config.scoreUpdateInterval = 500;
-
+	config.drug_pill_score_value = 42;
+	
 	config.elapsedTime = 0;
 
 	return config;
 }
+
