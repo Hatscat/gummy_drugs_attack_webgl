@@ -15,7 +15,7 @@ var AI = function(config, x, z, name) {
 	this.speed = 0.007;
 	this.jumpImpulsion = 0.03;
 	this.dirChangeTimer = 1000;
-	this.dammage = 1.5;
+	this.dammage = 2;
 	this.death_impulsion = 3;
 	this.height = 3;
 

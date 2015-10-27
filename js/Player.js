@@ -14,7 +14,7 @@ var Player = function (config) {
 	this.y_step_str = 0.0125;
 	this.y_step_max = 1.25;
 	this.canTakeDammage = true;
-	this.dammageCoolDown = 100;
+	this.dammageCoolDown = 150;
 	this.minShootCoolDown = 50;
 	this.maxShootCoolDown = 200;
 	this.currentShootCoolDown = 0;
@@ -40,7 +40,7 @@ var Player = function (config) {
 	this.camera.keysRight = [];
 	this.camera.speed = 0;
 	this.camera.inertia = 0;
-	this.camera.angularSensibility = 400; // lower is more sensible
+	this.camera.angularSensibility = 300; // lower is more sensible
 	this.camera.attachPostProcess(this.config.drug.post_process);
 
 	this.position = this.camera.position;
@@ -243,7 +243,7 @@ Player.prototype.onKeyUp = function (keyCode) {
 Player.prototype.die = function() {
 	this.config.sounds.die.play();
 	this.hp = 0;
-	if (this.config.score > this.config.highscore) {
+	if (this.config.score > this.config.highscore && !this.config.is_dev_mode) {
 		window.localStorage.drugs_attack_highscore = this.config.highscore = this.config.score;
 	}
 	gunsight.style.visibility = "hidden";

@@ -113,7 +113,7 @@ GUI.prototype.drawScore = function(overrideScore, overrideSize, overrideX, overr
 	this.context.fillText(string, x, y);
 
 	if (draw_highscore) {
-		string = "HighScore: " + this.config.highscore.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+		string = "High Score: " + this.config.highscore.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 		this.context.fillText(string, (window.innerWidth - this.context.measureText(string).width) >> 1, this.highscore_y * window.innerHeight);
 	}
 }

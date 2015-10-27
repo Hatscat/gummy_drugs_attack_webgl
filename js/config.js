@@ -9,7 +9,7 @@ function getConfig () {
 	config.half_PI = Math.PI * 0.5;
 	config.gravity = 0.00008;
 	config.fog_start = 0;
-	config.fog_end = 70;
+	config.fog_end = 80;
 	config.map_side_n = 9;
 	config.cube_size = 10;
 	config.cube_height = 0.5;
@@ -45,9 +45,9 @@ function getConfig () {
 
 	config.keyBindings = {
 		"jump": [32],
-		"forward" :  [90], // Z
+		"forward" :  [90, 87], // Z, W
 		"backward" : [83], // S
-		"left" : 	 [81], // Q
+		"left" : 	 [81, 65], // Q, A
 		"right" : 	 [68], // D
 		"eat": [70] // F
 	};
