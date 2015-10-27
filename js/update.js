@@ -10,11 +10,11 @@ function update (config) {
 	
 	config.elapsedTime += deltaTime;
 	config.scoreUpdateTimer -= deltaTime;
-	config.score += config.pointsPerMiliSecond * (config.drug.drug_lvl+1) * deltaTime | 0;
 	
 	if (config.scoreUpdateTimer <= 0) {
-		config.GUI.drawScore();
 		config.scoreUpdateTimer = config.scoreUpdateInterval;
+		++config.score;
+		config.GUI.drawScore();
 	}
 	if(config.player.drugToEat && !config.GUI.isEatHintShowed) {
 		config.GUI.drawEatHint();

@@ -10,6 +10,7 @@ var GUI = function(config) {
 	this.titleBottomTextY = 0.9;
 	this.scoreDeadHeight = 0.1;
 	this.scoreDeadY = 0.45;
+	this.highscore_y = 0.65;
 	
 	this.isEatHintShowed = false;
 
@@ -99,17 +100,22 @@ GUI.prototype.drawCircle = function(circleName, newPercent) {
 	this.context.stroke();
 }
 
-GUI.prototype.drawScore = function(overrideScore, overrideSize, overrideX, overrideY) {
+GUI.prototype.drawScore = function(overrideScore, overrideSize, overrideX, overrideY, draw_highscore) {
 	if(overrideSize) {
 		this.context.font = overrideSize*window.innerHeight + "px " + this.currentFont
 	}
 	var score = overrideScore || this.config.score;
 	var string = "Score: " + score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "); // espace les nombres (merci stackoverflow)
-	var x = overrideX * window.innerWidth || window.innerWidth/2 - this.context.measureText(string).width/2 | 0;
-	var y = overrideY * window.innerHeight || this.scoreY * window.innerHeight | 0
+	var x = overrideX * window.innerWidth || (window.innerWidth - this.context.measureText(string).width) >> 1;
+	var y = overrideY * window.innerHeight || this.scoreY * window.innerHeight | 0;
 	this.context.clearRect(0, (y-this.fontHeight* window.innerHeight | 0), window.innerWidth, (this.fontHeight* 2* window.innerHeight | 0));
 
 	this.context.fillText(string, x, y);
+
+	if (draw_highscore) {
+		string = "HighScore: " + this.config.highscore.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+		this.context.fillText(string, (window.innerWidth - this.context.measureText(string).width) >> 1, this.highscore_y * window.innerHeight);
+	}
 }
 
 GUI.prototype.drawEatHint = function() {
@@ -133,5 +139,5 @@ GUI.prototype.drawTitleScreen = function(overRideText) {
 
 GUI.prototype.drawDeadScreen = function() {
 	this.drawTitleScreen("Click to respawn!");
-	this.drawScore(null, this.scoreDeadHeight, false, this.scoreDeadY);
+	this.drawScore(null, this.scoreDeadHeight, false, this.scoreDeadY, true);
 }

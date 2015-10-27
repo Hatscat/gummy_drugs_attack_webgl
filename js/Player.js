@@ -2,7 +2,7 @@
 // require tools.js
 
 var Player = function (config) {
-	
+
 	this.config = config;
 
 	this.hp_max = 100;
@@ -13,71 +13,71 @@ var Player = function (config) {
 	this.jmp_str = 0.03;
 	this.y_step_str = 0.0125;
 	this.y_step_max = 1.25;
-    this.canTakeDammage = true;
-    this.dammageCoolDown = 100;
-    this.minShootCoolDown = 50;
-    this.maxShootCoolDown = 200;
-    this.currentShootCoolDown = 0;
-    this.shotDammage = 1;
-    this.drugToEat = null;
-	
+	this.canTakeDammage = true;
+	this.dammageCoolDown = 100;
+	this.minShootCoolDown = 50;
+	this.maxShootCoolDown = 200;
+	this.currentShootCoolDown = 0;
+	this.shotDammage = 1;
+	this.drugToEat = null;
+
 	this.reset();
 
-    /* --- CAMERA --- */
-    this.camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(this.next_pos.x, this.next_pos.y, this.next_pos.z), window.scene); // change with a simpler camera
-    window.scene.activeCamera = this.camera;
+	/* --- CAMERA --- */
+	this.camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(this.next_pos.x, this.next_pos.y, this.next_pos.z), window.scene); // change with a simpler camera
+	window.scene.activeCamera = this.camera;
 
-    this.camera.attachControl(window.render_canvas);
-    this.camera.fov = this.config.half_PI;
-    this.camera.minZ = 0.001;
-    this.camera.maxZ = this.config.fog_end;
-    this.camera.ellipsoid = null;
-    this.camera.checkCollisions = false;
-    this.camera.applyGravity = false;
-    this.camera.keysUp = [];
-    this.camera.keysDown = [];
-    this.camera.keysLeft = [];
-    this.camera.keysRight = [];
-    this.camera.speed = 0;
-    this.camera.inertia = 0;
-    this.camera.angularSensibility = 400; // lower is more sensible
-    this.camera.attachPostProcess(this.config.drug.post_process);
-	
-    	this.position = this.camera.position;
+	this.camera.attachControl(window.render_canvas);
+	this.camera.fov = this.config.half_PI;
+	this.camera.minZ = 0.001;
+	this.camera.maxZ = this.config.fog_end;
+	this.camera.ellipsoid = null;
+	this.camera.checkCollisions = false;
+	this.camera.applyGravity = false;
+	this.camera.keysUp = [];
+	this.camera.keysDown = [];
+	this.camera.keysLeft = [];
+	this.camera.keysRight = [];
+	this.camera.speed = 0;
+	this.camera.inertia = 0;
+	this.camera.angularSensibility = 400; // lower is more sensible
+	this.camera.attachPostProcess(this.config.drug.post_process);
 
-    /* --- WEAPON --- */
-    this.weapon = this.config.meshes.gun;
-    this.weapon.setEnabled(true);
-    this.weapon.parent = this.camera; // The weapon will move with the player camera
-    this.weapon.material = new BABYLON.StandardMaterial("weaponMat", window.scene);
-    this.weapon.material.diffuseColor = new BABYLON.Color3(0, 0, 0);
-    this.weapon.material.specularColor = new BABYLON.Color3(1, 0, 0);
-    this.weapon.scaling = new BABYLON.Vector3(0.001, 0.001, 0.001);
-    this.weapon.position = new BABYLON.Vector3(0.002, -0.0035, 0.0025);
+	this.position = this.camera.position;
+
+	/* --- WEAPON --- */
+	this.weapon = this.config.meshes.gun;
+	this.weapon.setEnabled(true);
+	this.weapon.parent = this.camera; // The weapon will move with the player camera
+	this.weapon.material = new BABYLON.StandardMaterial("weaponMat", window.scene);
+	this.weapon.material.diffuseColor = new BABYLON.Color3(0, 0, 0);
+	this.weapon.material.specularColor = new BABYLON.Color3(1, 0, 0);
+	this.weapon.scaling = new BABYLON.Vector3(0.001, 0.001, 0.001);
+	this.weapon.position = new BABYLON.Vector3(0.002, -0.0035, 0.0025);
 
 	var end_position = this.weapon.position.clone();
 	end_position.z -= 0.001;
 	var display = new BABYLON.Animation("fire", "position", 60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
 	var anim_keys = [
-		{
-			frame: 0,
+	{
+		frame: 0,
 			value: this.weapon.position
-		},
-		{
-			frame: 10,
-			value: end_position
-		},
-		{
-			frame: 100,
-			value: this.weapon.position
-		}
+	},
+	{
+		frame: 10,
+		value: end_position
+	},
+	{
+		frame: 100,
+		value: this.weapon.position
+	}
 	];
 
-    display.setKeys(anim_keys);
-    this.weapon.animations.push(display);
+	display.setKeys(anim_keys);
+	this.weapon.animations.push(display);
 
-    this.bindedFire = this.fire.bind(this);
-    this.bindedSetCanTakeDammage = this.setCanTakeDammage.bind(this);
+	this.bindedFire = this.fire.bind(this);
+	this.bindedSetCanTakeDammage = this.setCanTakeDammage.bind(this);
 }
 
 Player.prototype.reset = function () {
@@ -97,7 +97,7 @@ Player.prototype.reset = function () {
 }
 
 Player.prototype.update = function () {
-	
+
 	var deltaTime = window.engine.getDeltaTime();
 
 	this.current_map_y = this.next_map_y;
@@ -117,7 +117,7 @@ Player.prototype.update = function () {
 		this.position.y = this.next_pos.y;
 
 		if (this.dir_x || this.dir_z) { // déplacements
-			
+
 			var angle = this.camera.rotation.y;
 			var speed = lerp(this.minSpeed, this.maxSpeed, this.config.drug.drug_ratio);
 			this.next_pos.x -= Math.cos(angle) * this.dir_x * speed * deltaTime;
@@ -125,11 +125,11 @@ Player.prototype.update = function () {
 			this.next_pos.x -= Math.cos(angle + this.config.half_PI) * this.dir_z * speed * deltaTime;
 			this.next_pos.z += Math.sin(angle + this.config.half_PI) * this.dir_z * speed * deltaTime;
 		}
-		
+
 		// gravité
 		this.force_y -= this.config.gravity * deltaTime;
 		this.next_pos.y += this.force_y * deltaTime;
-		
+
 		// collision avec le terrain
 		if (this.next_pos.y <= this.next_map_y) {
 
@@ -167,44 +167,44 @@ Player.prototype.update = function () {
 }
 
 Player.prototype.fire = function () {
-    window.scene.beginAnimation(this.weapon, 0, 100, false, 10, null);
-    this.config.sounds.shot.play();
+	window.scene.beginAnimation(this.weapon, 0, 100, false, 10, null);
+	this.config.sounds.shot.play();
 
-    var pickedInfo = window.scene.pick(window.innerWidth * 0.5, window.innerHeight * 0.5, null, true);
-    if(pickedInfo.pickedMesh && pickedInfo.pickedMesh.name) {
-        if(pickedInfo.pickedMesh.name.indexOf("enemy") != -1) {
-            this.config.AIManager.hurtAI(pickedInfo.pickedMesh.name, this.shotDammage);
-        }
-        this.config.ParticlesManager.launch("impact", pickedInfo.pickedPoint);
-    }
+	var pickedInfo = window.scene.pick(window.innerWidth * 0.5, window.innerHeight * 0.5, null, true);
+	if(pickedInfo.pickedMesh && pickedInfo.pickedMesh.name) {
+		if(pickedInfo.pickedMesh.name.indexOf("enemy") != -1) {
+			this.config.AIManager.hurtAI(pickedInfo.pickedMesh.name, this.shotDammage);
+		}
+		this.config.ParticlesManager.launch("impact", pickedInfo.pickedPoint);
+	}
 
 }
 Player.prototype.takeDammage = function (dam) {
-    if(!this.canTakeDammage) {
-        return;
-    }
-    this.hp -= dam;
+	if(!this.canTakeDammage) {
+		return;
+	}
+	this.hp -= dam;
 
-    if(this.hp <= 0) {
-        if(this.config.is_dev_mode) {
-            this.hp = this.hp_max;
-        }
-        else {
-            this.die();
-            return;
-        }
-    }
-    this.config.sounds.hurt.play();
+	if(this.hp <= 0) {
+		if(this.config.is_dev_mode) {
+			this.hp = this.hp_max;
+		}
+		else {
+			this.die();
+			return;
+		}
+	}
+	this.config.sounds.hurt.play();
 
-    this.config.GUI.drawCircle('healthCircle', Math.max(0, (this.hp / this.hp_max)));
+	this.config.GUI.drawCircle('healthCircle', Math.max(0, (this.hp / this.hp_max)));
 
-    this.canTakeDammage = false;
-    window.setTimeout(this.bindedSetCanTakeDammage, this.dammageCoolDown);
+	this.canTakeDammage = false;
+	window.setTimeout(this.bindedSetCanTakeDammage, this.dammageCoolDown);
 
 }
 
 Player.prototype.setCanTakeDammage = function() {
-    this.canTakeDammage = true;
+	this.canTakeDammage = true;
 }
 
 Player.prototype.onKeyDown = function (keyCode) {
@@ -243,11 +243,14 @@ Player.prototype.onKeyUp = function (keyCode) {
 Player.prototype.die = function() {
 	this.config.sounds.die.play();
 	this.hp = 0;
-    gunsight.style.visibility = "hidden";
-    window.menuCamera.target = this.position;
-    window.scene.activeCamera = window.menuCamera;
-    window.scene.beginAnimation(window.menuCamera, 0, 100, false);
-    this.config.GUI.drawDeadScreen();
+	if (this.config.score > this.config.highscore) {
+		window.localStorage.drugs_attack_highscore = this.config.highscore = this.config.score;
+	}
+	gunsight.style.visibility = "hidden";
+	window.menuCamera.target = this.position;
+	window.scene.activeCamera = window.menuCamera;
+	window.scene.beginAnimation(window.menuCamera, 0, 100, false);
+	this.config.GUI.drawDeadScreen();
 }
 
 Player.prototype.eat = function() {

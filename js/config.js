@@ -57,8 +57,8 @@ function getConfig () {
 	config.titleScreenCameraSpeed = 0.00005;
 
 	config.score = 0;
-	config.pointsPerMiliSecond = 0.1;
-	config.pointPerEnemyKilled = 250;
+	config.highscore = localStorage.drugs_attack_highscore | 0;
+	config.pointPerEnemyKilled = 100;
 	config.scoreUpdateTimer = 500;
 	config.scoreUpdateInterval = 500;
 
