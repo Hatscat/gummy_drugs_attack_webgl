@@ -9,16 +9,15 @@ var AI = function (config, x, z, name) {
 	this.is_alive = true;
 	this.is_recovering = false;
 
-	this.detectionDistance = 200;
+	this.detectionDistance = 225;
 	this.touchingDistance = 5;
-	this.rotOffset = Math.PI/2;
 	this.speed = 0.007;
 	this.jump_pulse = 0.03;
-	this.time_between_jumps = 200;
+	this.time_between_jumps = 150;
 	this.jump_timer = 0;
 	this.dirChangeTimer = 1000;
 	this.damage = 3;
-	this.recovering_pulse = 0.01;
+	this.recovering_pulse = 0.008;
 	this.death_pulse = 0.022;
 	this.height = 3;
 
@@ -74,7 +73,7 @@ AI.prototype.update = function (deltaTime) {
 				if (distanceFromPlayer < this.detectionDistance) {
 
 					this.angle = -Math.atan2(this.mesh.position.z - this.config.player.position.z, this.mesh.position.x - this.config.player.position.x); //angle between player and this
-					this.mesh.rotation.y = this.angle + this.rotOffset;
+					this.mesh.rotation.y = this.angle + this.config.half_PI;
 
 					if (distanceFromPlayer < this.touchingDistance && dist_3d_sqrt(this.mesh.position, this.config.player.position) < this.touchingDistance) {
 						this.config.player.takeDammage(this.damage);
@@ -87,7 +86,7 @@ AI.prototype.update = function (deltaTime) {
 				if (this.nextDirectionTimer <= 0) {
 					this.nextDirectionTimer = this.dirChangeTimer;
 					this.angle = Math.random() * Math.PI * 2;
-					this.mesh.rotation.y = this.angle + this.rotOffset;
+					this.mesh.rotation.y = this.angle + this.config.half_PI;
 				}
 
 				if (this.canJump) {

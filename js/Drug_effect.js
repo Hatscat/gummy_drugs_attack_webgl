@@ -3,9 +3,9 @@
 function Drug_effect (config) {
 
 	this.config = config;
-	this.drug_lvl_max = 9;
+	this.drug_lvl_max = 8;
 	this.increase_duration = 1;
-	this.decrease_duration = 3;
+	this.decrease_duration = 4;
 	this.post_process = new BABYLON.PostProcess("drug", "./shaders/drug", ["resolution", "time", "drug_lvl"], null, 1, null, BABYLON.Texture.BILINEAR_SAMPLINGMODE, window.engine, true);
 
 	this.reset();
