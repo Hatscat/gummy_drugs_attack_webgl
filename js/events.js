@@ -43,9 +43,9 @@ function init_events (config) {
 	
 	// Resize the babylon engine when the window is resized
 	window.addEventListener("resize", function () {
-		if (window.engine) {
-			window.engine.resize();
-		}
+		window.render_canvas.width = window.innerWidth;
+		window.render_canvas.heigth = window.innerHeigth;
+		window.engine.resize();
 		config.GUI.inGameGUI();
 	}, false);
 }

@@ -17,17 +17,17 @@ var GUI = function(config) {
 	UI_canvas.height = window.innerHeight;
 
 	this.healthCircle = {
-		x: -0.44, //screenPercent from middle
+		x: -0.42, //screenPercent from middle
 		y: 0.01, //screenPercent from bottom
-		radius: 0.05, //screenWidthPercent
+		radius: 0.06, //screenWidthPercent
 		innerColor: "red",
 		outterColor: "black",
 		fillPercent: 1
 	}
 	this.drugCircle = {
-		x: 0.44,
+		x: 0.42,
 		y: 0.01,
-		radius: 0.05,
+		radius: 0.06,
 		innerColor: '',
 		outterColor: "black",
 		fillPercent: 0
