@@ -6,11 +6,12 @@ var Player = function (config) {
 	this.config = config;
 
 	this.hp_max = 100;
-	this.hp_drug_heal = 5; 
+	this.hp_drug_heal = 3; 
 	this.height = 2;
 	this.minSpeed = 0.014;
 	this.maxSpeed = 0.022;
-	this.jmp_str = 0.03;
+	this.jmp_str_min = 0.02;
+	this.jmp_str_min = 0.04;
 	this.y_step_str = 0.0125;
 	this.y_step_max = 1.25;
 	this.canTakeDammage = true;
@@ -19,7 +20,6 @@ var Player = function (config) {
 	this.maxShootCoolDown = 200;
 	this.currentShootCoolDown = 0;
 	this.shotDammage = 1;
-	this.drugToEat = null;
 
 	this.reset();
 
@@ -53,7 +53,7 @@ var Player = function (config) {
 	this.weapon.material.diffuseColor = new BABYLON.Color3(0, 0, 0);
 	this.weapon.material.specularColor = new BABYLON.Color3(1, 0, 0);
 	this.weapon.scaling = new BABYLON.Vector3(0.001, 0.001, 0.001);
-	this.weapon.position = new BABYLON.Vector3(0.002, -0.0035, 0.0025);
+	this.weapon.position = new BABYLON.Vector3(window.innerWidth * 1.1e-6, -0.0035, 0.0025);
 
 	var end_position = this.weapon.position.clone();
 	end_position.z -= 0.001;
@@ -210,7 +210,7 @@ Player.prototype.setCanTakeDammage = function() {
 Player.prototype.onKeyDown = function (keyCode) {
 	if (this.config.keyBindings.jump.indexOf(keyCode) != -1) {
 		if (this.can_jmp) {
-			this.force_y = this.jmp_str;
+			this.force_y = lerp(this.jmp_str_min, this.jmp_str_max, this.config.drug.drug_ratio);
 			this.can_jmp = false;
 		}
 	}
@@ -223,8 +223,6 @@ Player.prototype.onKeyDown = function (keyCode) {
 		this.dir_x = 1;
 	} else if (this.config.keyBindings.right.indexOf(keyCode) != -1) {
 		this.dir_x = -1;
-	} else if(this.config.keyBindings.eat.indexOf(keyCode) != -1) {
-		this.eat();
 	}
 }
 
@@ -254,12 +252,7 @@ Player.prototype.die = function() {
 }
 
 Player.prototype.eat = function() {
-	if(!this.drugToEat) {
-		return;
-	}
 	this.config.sounds.eat.play();
-	this.config.DrugPillsManager.deleteDrug(this.drugToEat);
-	this.drugToEat = null;
 	this.config.drug.add();
 	this.hp = Math.min(this.hp_max, this.hp + this.hp_drug_heal);
 	this.config.GUI.drawCircle('healthCircle', Math.max(0, (this.hp / this.hp_max)));

@@ -1,6 +1,7 @@
 "use strict"
 
 function update (config) {
+
 	var deltaTime = window.engine.getDeltaTime();
 
 	if (config.is_game_title || config.player.hp <= 0) {
@@ -12,18 +13,28 @@ function update (config) {
 	config.scoreUpdateTimer -= deltaTime;
 	
 	if (config.scoreUpdateTimer <= 0) {
+
 		config.scoreUpdateTimer = config.scoreUpdateInterval;
 		++config.score;
 		config.GUI.drawScore();
 	}
-	if(config.player.drugToEat && !config.GUI.isEatHintShowed) {
-		config.GUI.drawEatHint();
-	}
-	else if(!config.player.drugToEat && config.GUI.isEatHintShowed) {
+	
+	if (config.DrugPillsManager.yum_timer > 0) {
+
+		config.DrugPillsManager.yum_timer -= deltaTime;
+
+		if (!config.GUI.isEatHintShowed) {
+			config.GUI.drawEatHint();
+		}
+
+	} else if (config.GUI.isEatHintShowed) {
+
+		config.DrugPillsManager.yum_timer = 0;
 		config.GUI.clearEatHint();
 	}
 
 	if (config.drug.drug_ratio) {
+
 		config.GUI.drawCircle('drugCircle', config.drug.drug_ratio);
 	}
 

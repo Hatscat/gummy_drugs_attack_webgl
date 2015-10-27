@@ -44,12 +44,11 @@ function getConfig () {
 	};
 
 	config.keyBindings = {
-		"jump": [32],
-		"forward" :  [90, 87], // Z, W
-		"backward" : [83], // S
-		"left" : 	 [81, 65], // Q, A
-		"right" : 	 [68], // D
-		"eat": [70] // F
+		"jump": [32], // <space>
+		"forward": [90, 87], // Z, W
+		"backward": [83], // S
+		"left": [81, 65], // Q, A
+		"right": [68] // D
 	};
 
 	config.titleScreenCameraBeta = Math.PI * 0.15;

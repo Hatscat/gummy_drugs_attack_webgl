@@ -4,15 +4,16 @@ var GUI = function(config) {
 	this.currentFont = "fantasy, Impact, Georgia";
 
 	this.scoreY = 0.06;
-	this.hintY = 0.4;
+	this.hintY = 0.2;
 	this.titleY = 0.1;
 	this.fontHeight = 0.05;
 	this.titleBottomTextY = 0.9;
-	this.scoreDeadHeight = 0.1;
+	this.scoreDeadHeight = 0.08;
 	this.scoreDeadY = 0.45;
 	this.highscore_y = 0.65;
 	
 	this.isEatHintShowed = false;
+	this.yum_msg = [ "Delicious!", "Sweet!", "Tasty!", "Divine!" ];
 
 	UI_canvas.width = window.innerWidth;
 	UI_canvas.height = window.innerHeight;
@@ -60,7 +61,7 @@ GUI.prototype.inGameGUI = function() {
 	gunsight.style.visibility = "visible"; //html div
 
 	this.drawCircle('healthCircle', this.config.player.hp / this.config.player.hp_max || 1);
-	this.drawCircle('drugCircle', this.config.drug.drug_ratio);
+	this.drawCircle('drugCircle', this.config.drug.drug_ratio || 0);
 	this.drawScore(this.config.score);
 }
 
@@ -100,32 +101,32 @@ GUI.prototype.drawCircle = function(circleName, newPercent) {
 	this.context.stroke();
 }
 
-GUI.prototype.drawScore = function(overrideScore, overrideSize, overrideX, overrideY, draw_highscore) {
+GUI.prototype.drawScore = function (overrideScore, overrideSize, overrideX, overrideY, draw_highscore) {
 	if(overrideSize) {
-		this.context.font = overrideSize*window.innerHeight + "px " + this.currentFont
+		this.context.font = overrideSize*window.innerHeight + "px " + this.currentFont;
 	}
 	var score = overrideScore || this.config.score;
-	var string = "Score: " + score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "); // espace les nombres (merci stackoverflow)
+	var string = score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "); // espace les nombres (merci stackoverflow)
 	var x = overrideX * window.innerWidth || (window.innerWidth - this.context.measureText(string).width) >> 1;
 	var y = overrideY * window.innerHeight || this.scoreY * window.innerHeight | 0;
 	this.context.clearRect(0, (y-this.fontHeight* window.innerHeight | 0), window.innerWidth, (this.fontHeight* 2* window.innerHeight | 0));
 
-	this.context.fillText(string, x, y);
+	this.context.fillText((draw_highscore ? "Score: " : "") + string, x, y);
 
 	if (draw_highscore) {
-		string = "High Score: " + this.config.highscore.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+		string = "High score: " + this.config.highscore.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 		this.context.fillText(string, (window.innerWidth - this.context.measureText(string).width) >> 1, this.highscore_y * window.innerHeight);
 	}
 }
 
 GUI.prototype.drawEatHint = function() {
-	var string = 'Press "F"!';
+	var msg = this.yum_msg[Math.random() * this.yum_msg.length | 0];
 	this.isEatHintShowed = true;
-	this.context.fillText(string, (window.innerWidth/2 - this.context.measureText(string).width/2 | 0), (this.hintY * window.innerHeight | 0));
+	this.context.fillText(msg, (window.innerWidth - this.context.measureText(msg).width) >> 1, this.hintY * window.innerHeight);
 }
 GUI.prototype.clearEatHint = function() {
 	this.isEatHintShowed = false;
-	this.context.clearRect(0, this.hintY * window.innerHeight - this.fontHeight * window.innerHeight, window.innerWidth, this.fontHeight * window.innerHeight);
+	this.context.clearRect(0, this.hintY * window.innerHeight - this.fontHeight * window.innerHeight, window.innerWidth, this.fontHeight * window.innerHeight * 1.1);
 }
 
 GUI.prototype.drawTitleScreen = function(overRideText) {

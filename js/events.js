@@ -45,6 +45,8 @@ function init_events (config) {
 	window.addEventListener("resize", function () {
 		window.render_canvas.width = window.innerWidth;
 		window.render_canvas.heigth = window.innerHeigth;
+		window.UI_canvas.width = window.innerWidth;
+		window.UI_canvas.heigth = window.innerHeigth;
 		window.engine.resize();
 		config.GUI.inGameGUI();
 	}, false);

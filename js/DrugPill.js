@@ -2,8 +2,8 @@
 
 var DrugPill = function(config, x, z, name) {
 	this.config = config;
-	this.timeBeforeDeletion = 8000;
-	this.touchingDistance = 10;
+	this.timeBeforeDeletion = 6000;
+	this.touchingDistance = 6;
 	this.size = 1;
 
 	this.mesh = config.meshes.drug.clone(name);
@@ -19,13 +19,13 @@ var DrugPill = function(config, x, z, name) {
 
 DrugPill.prototype.update = function(deltaTime) {
 	this.timeBeforeDeletion -= deltaTime;
-	if(!this.config.player.drugToEat) {
-		var distanceFromPlayer = dist_3d_sqrt(this.mesh.position, this.config.player.camera.position);
-		if(distanceFromPlayer <= this.touchingDistance) {
-			this.config.player.drugToEat = this.mesh.name;
-		}
+	if (dist_3d_sqrt(this.mesh.position, this.config.player.camera.position) <= this.touchingDistance) {
+		this.config.player.eat();
+		this.config.DrugPillsManager.deleteDrug(this.mesh.name);
+		this.config.DrugPillsManager.yum_timer = this.config.DrugPillsManager.yum_timer_max;
+		return true;
 	}
-	if(this.timeBeforeDeletion <= 0) {
+	if (this.timeBeforeDeletion <= 0) {
 		return false; // return false if manager needs to destroy me
 	}
 	return true; // update happend normally

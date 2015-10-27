@@ -7,6 +7,9 @@ var DrugPillsManager = function (config) {
 	this.drugsMaterials = [];
 	this.drugsMaterialsNb = 10;
 	this.drugsNameCount = 0;
+	this.yum_timer_max = 1000;
+	this.yum_timer = 0;
+
 	config.meshes.drug = BABYLON.Mesh.CreateSphere("sphere", 10.0, 1.0, window.scene);
 	config.meshes.drug.setEnabled(false);
 
@@ -28,11 +31,8 @@ DrugPillsManager.prototype.spawnDrug = function(x,z) {
 }
 
 DrugPillsManager.prototype.updateDrugs = function(deltaTime) {
-	this.config.player.drugToEat = null;
-	for(var i in this.drugs) {
-		var isUpdateNormal = this.drugs[i].update(deltaTime); // if the drugs needs to be removed, its update returns false
-		if(!isUpdateNormal) {
-
+	for( var i in this.drugs) {
+		if (!this.drugs[i].update(deltaTime)) { // if the drugs needs to be removed, its update returns false
 			this.drugs[i].force_y -= this.config.gravity * deltaTime;
 			this.drugs[i].mesh.position.y += this.drugs[i].force_y;
 			if (this.drugs[i].mesh.position.y < this.drugs[i].y_limit) {
