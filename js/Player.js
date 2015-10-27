@@ -170,9 +170,10 @@ Player.prototype.fire = function () {
 	window.scene.beginAnimation(this.weapon, 0, 100, false, 10, null);
 	this.config.sounds.shot.play();
 
-	var pickedInfo = window.scene.pick(window.innerWidth * 0.5, window.innerHeight * 0.5, null, true);
-	if(pickedInfo.pickedMesh && pickedInfo.pickedMesh.name) {
-		if(pickedInfo.pickedMesh.name.indexOf("enemy") != -1) {
+	var pickedInfo = window.scene.pick(window.innerWidth * 0.5, window.innerHeight * 0.5, null, false);
+
+	if (pickedInfo.pickedMesh && pickedInfo.pickedMesh.name) {
+		if (pickedInfo.pickedMesh.name.indexOf("enemy") != -1) {
 			this.config.AIManager.hurtAI(pickedInfo.pickedMesh.name, this.shotDammage);
 		}
 		this.config.ParticlesManager.launch("impact", pickedInfo.pickedPoint);

@@ -1,22 +1,25 @@
 "use strict"
 
-var AI = function(config, x, z, name) {
+var AI = function (config, x, z, name) {
+
 	this.config = config;
-	this.canMove = false;
 	this.canJump = true;
-	this.stop = false;
 	this.maxHp = 1;
 	this.hp = this.maxHp;
 	this.is_alive = true;
+	this.is_recovering = false;
 
-	this.detectionDistance = 150;
+	this.detectionDistance = 200;
 	this.touchingDistance = 5;
 	this.rotOffset = Math.PI/2;
 	this.speed = 0.007;
-	this.jumpImpulsion = 0.03;
+	this.jump_pulse = 0.03;
+	this.time_between_jumps = 200;
+	this.jump_timer = 0;
 	this.dirChangeTimer = 1000;
-	this.dammage = 2;
-	this.death_impulsion = 3;
+	this.damage = 3;
+	this.recovering_pulse = 0.01;
+	this.death_pulse = 0.022;
 	this.height = 3;
 
 	this.force_y = 0;
@@ -29,10 +32,10 @@ var AI = function(config, x, z, name) {
 	this.mesh.position.y = config.map.get_raw_y(config.map.get_index_from_xz(x,z));
 	this.mesh.scaling.x = this.mesh.scaling.z = this.mesh.scaling.y = 0.5;
 }
-AI.prototype.update = function(deltaTime) {
+
+AI.prototype.update = function (deltaTime) {
 	
-	var cell = this.config.map.get_index_from_xz(this.mesh.position.x, this.mesh.position.z);
-	var next_map_y = this.config.map.get_raw_y(cell);
+	var next_map_y = this.config.map.get_raw_y(this.config.map.get_index_from_xz(this.mesh.position.x, this.mesh.position.z));
 	
 	// gravity
 	this.force_y -= this.config.gravity * deltaTime;
@@ -41,56 +44,66 @@ AI.prototype.update = function(deltaTime) {
 	if (this.is_alive) {
 		
 		// map collision
-		if (this.mesh.position.y <= next_map_y) {
+		if (this.mesh.position.y < next_map_y) {
+
 			this.force_y = 0;
-			this.canJump = true;
+			this.is_recovering = false;
 			this.mesh.position.y = next_map_y;
-		}
 
-		this.nextDirectionTimer -= deltaTime;
-		var distanceFromPlayer = dist_2d_sqrt(this.mesh.position, this.config.player.position);
+			this.jump_timer -= deltaTime;
 
-		if (distanceFromPlayer > (this.config.fog_end*1.1)*(this.config.fog_end*1.1)) {
-			return false; // return false if manager needs to destroy me
-		}
-
-		
-		if(this.config.player.hp > 0){
-			if(distanceFromPlayer < this.detectionDistance) {
-				this.angle = -Math.atan2(this.mesh.position.z - this.config.player.position.z, this.mesh.position.x - this.config.player.position.x); //angle between player and this
-				this.mesh.rotation.y = this.angle + this.rotOffset;
+			if (this.jump_timer < 0) {
+				this.canJump = true;
 			}
 		}
 
-		if(this.nextDirectionTimer <= 0) {
-			this.nextDirectionTimer = this.dirChangeTimer;
-			this.angle = Math.random()*Math.PI*2;
-			this.mesh.rotation.y = this.angle + this.rotOffset;
-		}
+		if (this.is_recovering) {
 
-		if(this.force_y == 0 && this.canJump && !this.stop) {
-			this.force_y = this.jumpImpulsion;
-			this.canJump = false;
-		}
-		if(distanceFromPlayer < this.touchingDistance && dist_3d_sqrt(this.mesh.position, this.config.player.position) < this.touchingDistance && this.config.player.hp > 0) {
-			this.config.player.takeDammage(this.dammage);
-			this.stop = true;
-			this.canJump = false;
+			this.pulse_from_player(this.recovering_pulse * deltaTime);
+
 		} else {
-			this.stop = false;
-		}
 
-		// if this can move then move
-		if(!this.stop && (this.canMove || (this.force_y != 0 && !this.canJump) ) ) { 
-			this.mesh.position.x -= Math.cos(this.angle) * this.speed * deltaTime;
-			this.mesh.position.z += Math.sin(this.angle) * this.speed * deltaTime;
+			var distanceFromPlayer = dist_2d_sqrt(this.mesh.position, this.config.player.position);
+
+			if (distanceFromPlayer > (this.config.fog_end * 1.1) * (this.config.fog_end * 1.1)) {
+				return false; // return false if manager needs to destroy me
+			}
+
+			if (this.config.player.hp > 0) {
+
+				if (distanceFromPlayer < this.detectionDistance) {
+
+					this.angle = -Math.atan2(this.mesh.position.z - this.config.player.position.z, this.mesh.position.x - this.config.player.position.x); //angle between player and this
+					this.mesh.rotation.y = this.angle + this.rotOffset;
+
+					if (distanceFromPlayer < this.touchingDistance && dist_3d_sqrt(this.mesh.position, this.config.player.position) < this.touchingDistance) {
+						this.config.player.takeDammage(this.damage);
+						this.is_recovering = true;
+					}
+				}
+
+				this.nextDirectionTimer -= deltaTime;
+
+				if (this.nextDirectionTimer <= 0) {
+					this.nextDirectionTimer = this.dirChangeTimer;
+					this.angle = Math.random() * Math.PI * 2;
+					this.mesh.rotation.y = this.angle + this.rotOffset;
+				}
+
+				if (this.canJump) {
+					this.canJump = false;
+					this.jump_timer = this.time_between_jumps;
+					this.force_y = this.jump_pulse;
+				} else if (this.jump_timer == this.time_between_jumps) {
+					this.mesh.position.x -= Math.cos(this.angle) * this.speed * deltaTime;
+					this.mesh.position.z += Math.sin(this.angle) * this.speed * deltaTime;
+				}
+			}
 		}
 
 	} else {
-
-		this.angle = this.config.player.camera.rotation.y + this.config.half_PI;
-		this.mesh.position.x -= Math.cos(this.angle) * this.speed * this.death_impulsion * deltaTime;
-		this.mesh.position.z += Math.sin(this.angle) * this.speed * this.death_impulsion * deltaTime;
+		
+		this.pulse_from_player(this.death_pulse * deltaTime);
 
 		if (this.mesh.position.y < next_map_y - this.height) {
 			this.config.AIManager.killAI(this.mesh.name, true);
@@ -99,3 +112,11 @@ AI.prototype.update = function(deltaTime) {
 
 	return true; // update happend normally
 }
+
+AI.prototype.pulse_from_player = function (pulse_str) {
+
+	this.angle = this.config.player.camera.rotation.y + this.config.half_PI;
+	this.mesh.position.x -= Math.cos(this.angle) * pulse_str;
+	this.mesh.position.z += Math.sin(this.angle) * pulse_str;
+}
+

@@ -26,6 +26,7 @@ uniform float drug_lvl;
 
 void main (void)
 {
+	float drug_lvl_root = sqrt(drug_lvl);
 	float drug_lvl_2 = drug_lvl * drug_lvl;
 	float drug_lvl_3 = drug_lvl_2 * drug_lvl;
 
@@ -35,8 +36,8 @@ void main (void)
 	vec2 p = vec2(0.5 + cos(time * P_SPEED_X) * DEF_MOV * drug_lvl_2, 0.5 + sin(time * P_SPEED_Y) * DEF_MOV * drug_lvl_2);
 
 	// deformations
-	float def_x = mix(1., pow(uv.x, DEF_COEF * drug_lvl), (p.x - uv.x) * sin(time * DEF_SPEED_X));
-	float def_y = mix(1., pow(uv.y, DEF_COEF * drug_lvl), (p.y - uv.y) * cos(time * DEF_SPEED_Y));
+	float def_x = mix(1., pow(uv.x, DEF_COEF * drug_lvl_root), (p.x - uv.x) * sin(time * DEF_SPEED_X));
+	float def_y = mix(1., pow(uv.y, DEF_COEF * drug_lvl_root), (p.y - uv.y) * cos(time * DEF_SPEED_Y));
 	uv.x *= mix(def_x, def_y, sin(time * MIX_SPEED_X) * MIX_COEF * drug_lvl_3);
 	uv.y *= mix(def_y, def_x, cos(time * MIX_SPEED_Y) * MIX_COEF * drug_lvl_3);
 
