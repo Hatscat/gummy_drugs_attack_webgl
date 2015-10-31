@@ -6,7 +6,8 @@ function Map (config) {
 	this.config = config;
 	this.side_len = Math.pow(2, this.config.map_side_n) + 1;
 	this.vals_nb = this.side_len * this.side_len;
-	this.cubes_side_len = this.config.map_visibility_n * 2 + 1;
+	this.map_visibility_n = this.config.map_visibility + 2;
+	this.cubes_side_len = this.map_visibility_n * 2 + 1;
 	this.cubes_nb = this.cubes_side_len * this.cubes_side_len;
 	this.y_min  = 0;
 	this.y_max  = 0xff;
@@ -143,8 +144,8 @@ Map.prototype.set_all_cubes_pos = function (x, z) {
 	this.moves_x = 0;
 	this.moves_z = 0;
 
-	var c0 = this.get_col_from_x(x) - this.config.map_visibility_n;
-	var r0 = this.get_row_from_z(z) - this.config.map_visibility_n;
+	var c0 = this.get_col_from_x(x) - this.map_visibility_n;
+	var r0 = this.get_row_from_z(z) - this.map_visibility_n;
 
 	for (var i = 0; i < this.cubes_nb; ++i) {
 		var col = c0 + i % this.cubes_side_len;
@@ -163,7 +164,7 @@ Map.prototype.set_cubes_pos = function (x, z, dir_x, dir_z) {
 	if (dir_x == 1 || dir_x == -1) {
 		
 		var c = loop_index(dir_x == 1 ? this.moves_x : this.cubes_side_len - 1 + this.moves_x, this.cubes_side_len); 
-		var new_col = this.get_col_from_x(x) + this.config.map_visibility_n * dir_x;
+		var new_col = this.get_col_from_x(x) + this.map_visibility_n * dir_x;
 		this.moves_x += dir_x;
 
 		for (var i = 0; i < this.cubes_side_len; ++i) {
@@ -177,7 +178,7 @@ Map.prototype.set_cubes_pos = function (x, z, dir_x, dir_z) {
 	if (dir_z == 1 || dir_z == -1) {
 
 		var r = loop_index(dir_z == 1 ? this.moves_z : this.cubes_side_len - 1 + this.moves_z, this.cubes_side_len) * this.cubes_side_len; 
-		var new_row = this.get_row_from_z(z) + this.config.map_visibility_n * dir_z;
+		var new_row = this.get_row_from_z(z) + this.map_visibility_n * dir_z;
 		this.moves_z += dir_z;
 
 		for (var i = 0; i < this.cubes_side_len; ++i) {

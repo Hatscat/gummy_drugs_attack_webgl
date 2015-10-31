@@ -9,12 +9,12 @@ function getConfig () {
 	config.half_PI = Math.PI * 0.5;
 	config.gravity = 0.00008;
 	config.fog_start = 0;
-	config.fog_end = 80;
 	config.map_side_n = 9;
-	config.cube_size = 10;
+	config.cube_size = 11;
 	config.cube_height = 0.5;
 	config.map_noise_coef = 2;
-	config.map_visibility_n = Math.ceil(config.fog_end / config.cube_size) + 2;
+	config.map_visibility = 7;
+	config.fog_end = config.cube_size * config.map_visibility;
 	config.light_color = new BABYLON.Color3(0.7, 0, 0);
 
 	config.meshes = {};
