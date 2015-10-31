@@ -17,14 +17,14 @@ var AI = function (config, x, z, name) {
 	this.jump_timer = 0;
 	this.dirChangeTimer = 1000;
 	this.damage = 3;
-	this.recovering_pulse = 0.008;
+	this.recovering_pulse = 0.004;
 	this.death_pulse = 0.022;
 	this.height = 3;
 
 	this.force_y = 0;
 	this.angle = Math.PI;
 	this.nextDirectionTimer = 0;
-	this.mesh = config.meshes.enemy.createInstance(name);
+	this.mesh = config.meshes.ai.createInstance(name);
 	this.mesh.isVisible = true;
 	this.mesh.position.x = x;
 	this.mesh.position.z = z;

@@ -39,7 +39,7 @@ function getConfig () {
 	}
 
 	config.meshesToLoad = {
-		"enemy" : ["assets/mushroom_final/", "mushroom_final.babylon"],
+		"ai" : ["assets/mushroom_final/", "mushroom_final.babylon"],
 		"gun" : ["assets/PowerRifle/", "PowerRifle.babylon"]
 	};
 

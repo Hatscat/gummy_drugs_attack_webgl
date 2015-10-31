@@ -13,7 +13,7 @@ var GUI = function(config) {
 	this.highscore_y = 0.65;
 	
 	this.isEatHintShowed = false;
-	this.yum_msg = [ "Delicious!", "Sweet!", "Tasty!", "Divine!" ];
+	this.yum_msg = [ "Delicious!", "Sweet!", "Tasty!" ];
 
 	UI_canvas.width = window.innerWidth;
 	UI_canvas.height = window.innerHeight;
@@ -37,7 +37,7 @@ var GUI = function(config) {
 	this.drugCircle.innerColor = this.createRainbowGradient(this.drugCircle.x, this.drugCircle.y, this.drugCircle.radius);
 }
 
-GUI.prototype.createRainbowGradient = function(x, y, radius) {
+GUI.prototype.createRainbowGradient = function (x, y, radius) {
 	var radius = radius*window.innerWidth | 0;
 	var centerX = window.innerWidth/2 + window.innerWidth*x | 0;
 	var centerY = window.innerHeight - window.innerHeight*y - radius | 0;

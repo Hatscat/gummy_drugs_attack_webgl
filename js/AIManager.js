@@ -29,7 +29,7 @@ AIManager.prototype.deleteAllAI = function() {
 }
 AIManager.prototype.hurtAI = function(name, dammage) {
 	this.AIs[name].hp -= dammage;
-	if(this.AIs[name].hp <= 0) {
+	if(this.AIs[name].is_alive && this.AIs[name].hp <= 0) {
 		this.AIs[name].force_y = this.AIs[name].jump_pulse * 0.4;
 		this.AIs[name].is_alive = false;
 		this.config.ParticlesManager.launch("AIDeath", this.AIs[name].mesh.position);
