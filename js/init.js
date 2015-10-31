@@ -61,13 +61,16 @@ function loadAssets (config) {
 function meshLoaded (config, task) {
 	config.meshes[task.name] = task.loadedMeshes[0]; // one mesh per task ! currently we have no multimesh
 	config.meshes[task.name].setEnabled(false);
+	/*if (task.name == "ai") {
+		window.scene.beginAnimation(task.loadedSkeletons[0], 0, 100, true, 1.5);
+	}*/
 }
 
-function imgLoaded(config, task) {
+function imgLoaded (config, task) {
 	config.imgs[task.name] = task.image;
 }
 
-function textureLoaded(config, task) {
+function textureLoaded (config, task) {
 	config.textures[task.name] = task.texture;
 }
 

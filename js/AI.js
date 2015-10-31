@@ -79,14 +79,16 @@ AI.prototype.update = function (deltaTime) {
 						this.config.player.takeDammage(this.damage);
 						this.is_recovering = true;
 					}
-				}
 
-				this.nextDirectionTimer -= deltaTime;
+				} else {
 
-				if (this.nextDirectionTimer <= 0) {
-					this.nextDirectionTimer = this.dirChangeTimer;
-					this.angle = Math.random() * Math.PI * 2;
-					this.mesh.rotation.y = this.angle + this.config.half_PI;
+					this.nextDirectionTimer -= deltaTime;
+
+					if (this.nextDirectionTimer <= 0) {
+						this.nextDirectionTimer = this.dirChangeTimer;
+						this.angle = Math.random() * Math.PI * 2;
+						this.mesh.rotation.y = this.angle + this.config.half_PI;
+					}
 				}
 
 				if (this.canJump) {
