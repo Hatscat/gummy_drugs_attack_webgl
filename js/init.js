@@ -62,7 +62,7 @@ function meshLoaded (config, task) {
 	config.meshes[task.name] = task.loadedMeshes[0]; // one mesh per task ! currently we have no multimesh
 	config.meshes[task.name].setEnabled(false);
 	/*if (task.name == "ai") {
-		window.scene.beginAnimation(task.loadedSkeletons[0], 0, 100, true, 1.5);
+		window.scene.beginAnimation(task.loadedSkeletons[0], 0, 100, true, 1);
 	}*/
 }
 
@@ -112,7 +112,8 @@ function onAssetsLoaded (config) {
 	window.playBinded = play.bind(window, config);
 	document.addEventListener("mousedown", window.playBinded, false)
 }
-function play(config) {
+function play (config) {
+
 	document.removeEventListener("mousedown", window.playBinded, false);
 	window.playBinded = null;
 

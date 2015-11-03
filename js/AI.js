@@ -13,7 +13,7 @@ var AI = function (config, x, z, name) {
 	this.touchingDistance = 5;
 	this.speed = 0.007;
 	this.jump_pulse = 0.03;
-	this.time_between_jumps = 150;
+	this.time_between_jumps = 180;
 	this.jump_timer = 0;
 	this.dirChangeTimer = 1000;
 	this.damage = 3;
@@ -58,7 +58,7 @@ AI.prototype.update = function (deltaTime) {
 
 		if (this.is_recovering) {
 
-			this.pulse_from_player(this.recovering_pulse * deltaTime);
+			this.bounce(this.recovering_pulse * deltaTime);
 
 		} else {
 
@@ -120,4 +120,12 @@ AI.prototype.pulse_from_player = function (pulse_str) {
 	this.mesh.position.x -= Math.cos(this.angle) * pulse_str;
 	this.mesh.position.z += Math.sin(this.angle) * pulse_str;
 }
+
+AI.prototype.bounce = function (pulse_str) {
+
+	this.angle = this.mesh.rotation.y + this.config.half_PI;
+	this.mesh.position.x -= Math.cos(this.angle) * pulse_str;
+	this.mesh.position.z += Math.sin(this.angle) * pulse_str;
+}
+
 
