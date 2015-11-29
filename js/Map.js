@@ -69,14 +69,14 @@ Map.prototype.diamond_sqrt = function (len) {
 	var half_cols_len = cols_len >> 1;
 	var rows_len = this.side_len * cols_len;
 	var half_rows_len = rows_len >> 1;
-	var subdivs = parseInt(this.side_len / cols_len);
+	var subdivs = Math.floor(this.side_len / cols_len);
 	var sqrts_nb = subdivs * subdivs;
 	var noise_len = cols_len * this.config.map_noise_coef;
 
 	// diamond_step, non factorisé
 	for (var i = 0; i < sqrts_nb; ++i) {
 		var x0 = i % subdivs;
-		var y0 = parseInt(i / subdivs);
+		var y0 = Math.floor(i / subdivs);
 		var tl = (x0 + y0 * this.side_len) * cols_len;
 		var tr = tl + cols_len;
 		var bl = tl + rows_len;
@@ -89,7 +89,7 @@ Map.prototype.diamond_sqrt = function (len) {
 	// sqrt_step, non factorisé
 	for (var i = 0; i < sqrts_nb; ++i) {
 		var x0 = i % subdivs;
-		var y0 = parseInt(i / subdivs);
+		var y0 = Math.floor(i / subdivs);
 		var tl = (x0 + y0 * this.side_len) * cols_len;
 		var tr = tl + cols_len;
 		var bl = tl + rows_len;
